@@ -1,0 +1,22 @@
+
+.containerBanniere {
+
+    background-color: var(--background-color3);
+    box-shadow: var(--box-shadow2);
+    border-radius: 20px;
+    min-height: 200px;
+    width: auto;
+
+    img {
+        max-height: 300px;
+        width: 40%;
+        border-radius: 20px;
+        padding: 10px;
+    }
+
+    .imageAvatar {
+        height: 70px;
+        width: auto;
+
+    }
+}

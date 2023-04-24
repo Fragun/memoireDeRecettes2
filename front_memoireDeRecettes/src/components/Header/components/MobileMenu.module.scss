@@ -1,0 +1,19 @@
+.menuContainer{
+    position: absolute;
+    top: 68px;
+    right: 20px;
+    width: 200px;
+    li{
+        padding: 10px 15px;
+        cursor: pointer;
+        border-radius: 20px;
+        transition: background-color 0.2s, color 0.2s;
+        margin: 10px;
+        display: flex;
+        justify-content: center;
+        &:hover{
+            background-color: var(--primary);
+            color: aliceblue;
+        }
+    }
+}

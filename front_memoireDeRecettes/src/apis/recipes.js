@@ -1,0 +1,1 @@
+const API_RECIPES = "/api/requete";

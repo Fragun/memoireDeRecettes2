@@ -1,0 +1,44 @@
+@use "./mixins" as mixin; 
+
+* {
+    box-sizing: border-box;
+}
+
+body{
+    color: var(--text-color);
+    margin: 0;
+    font-family: var(--font-family);
+}
+
+h1, h2, h3 {
+    margin: 0;
+}
+
+h1{
+    font-size : 30px;
+    @include mixin.md-lt {
+        font-size: 25px;
+    }
+    @include mixin.sm {
+        font-size: 23px;
+    }
+    @include mixin.xs {
+        font-size: 20px;
+    }
+}
+h2{
+    
+    @include mixin.sm {
+        font-size: 15px;
+    }
+    @include mixin.xs {
+        font-size: 15px;
+    }
+}
+
+ul{
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+}
+

@@ -1,0 +1,43 @@
+.article {
+    border-radius: 20px;
+    //height: 400px;
+    cursor: pointer;
+
+    .imgContainer {
+        height: 250px;
+        overflow: hidden;
+        border-radius: 20px 20px 0 0;
+        position: relative;
+
+        .image {
+            height: 250px;
+            width: 350px;
+            transition: 1s transform;
+            position: absolute;
+            z-index: 1;
+
+            &:hover {
+                transform: scale(1.05);
+            }
+        }
+        .avatar{
+            position: absolute;
+            z-index: 2;
+        }
+    }
+
+    .title {
+        height: 100px;
+        border: 1px solid var(--gray-2);
+        border-bottom-left-radius: 20px;
+        border-bottom-right-radius: 20px;
+        transition: 0.6s color;
+        text-align: center;
+
+        h3 {
+            &:hover {
+                color: var(--error);
+            }
+        }
+    }
+}

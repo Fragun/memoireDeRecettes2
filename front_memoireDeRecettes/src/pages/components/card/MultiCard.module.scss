@@ -1,0 +1,136 @@
+@use "../../../assets/styles/mixins" as mixin; 
+
+
+.multiCard {
+
+    background-color: var(--background-color2);
+    border-radius: 20px;
+    box-shadow: var(--box-shadow2);
+    cursor: pointer;
+    
+
+    .imgPrincipale {
+        position:relative;
+        height:  250px;
+        width: 100%;
+        overflow: hidden;
+        border-radius: 20px 20px 0 0;
+
+        .arrierePlan{
+            position:absolute;
+            z-index:1;
+            
+        }
+        .premierPlan{
+            height: auto;
+            width: 100%;
+            position:absolute; 
+            z-index:2;
+            display: flex;
+            flex-direction: column;
+        }
+        .focus {
+            height: 250px;
+            width: 350px;
+            transition: 1s transform;
+            &:hover{
+                transform: scale(1.05);
+            }
+        }
+        .titreMultiCard {
+            color : black ;
+            font-weight: bold;
+            font-size: 25px;
+            -webkit-text-stroke: 0.4px white;
+            background-color: var(--background-color-transparent);
+            border-radius: 10px;
+        }
+        .nbrRecetteMultiCard{
+
+            color : black ;
+            font-size: 20px;
+            font-weight: bold;
+            -webkit-text-stroke: 0.4px white;
+            background-color: var(--background-color-transparent);
+            border-radius: 10px;
+            margin-top: 120px;
+            margin-left: 70%;
+           
+            @include mixin.sm {
+                margin-top: 110px;
+                margin-left: 55%;
+            }
+            @include mixin.xs {
+                margin-top: 100px;
+                margin-left: 55%;
+            }
+        }
+    }
+    
+    .miniCard {
+        height: 270px;
+        //min-width: 116px;
+        border: 1px solid var(--gray-2);
+        border-bottom-left-radius: 20px;
+        border-bottom-right-radius: 20px;
+        transition: 0.6s color;
+
+
+        
+
+        p{
+            margin: 0;
+            padding: 1px;
+            font-size: 16px;
+            @include mixin.xs {
+                font-size: 10px;
+            }
+
+        }
+        
+        .iconMinicard {
+            width : 20px;
+            height: 20px;
+            
+        }
+
+        .ensemble {
+            position: relative;
+            
+            .imageDeFond {
+                position: absolute;
+                z-index: 1;
+                
+                
+                
+                .imgParTrois {
+   
+                    height: 130px;
+                    width: 100px;
+                    
+                }
+
+            }
+
+            .elementsSurImage {
+                position: absolute;
+                z-index: 2; 
+                display: grid;
+                //justify-content: flex-start;
+                //flex-direction: column;
+                  
+                .iconeAvatar {
+                    width: 35px;
+                    margin-top: 0px;
+                    //margin: 90px 0 0 5px
+                }
+                .iconeElementsPrincipaux {
+                    width: 30px;
+                    margin-left: 70px;
+                    //margin-bottom: 90px;
+                }
+            }
+        }
+        
+    }
+}

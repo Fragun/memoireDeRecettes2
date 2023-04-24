@@ -1,0 +1,50 @@
+@use "../../assets/styles/mixins.scss" as mixin; 
+
+.rectangle {
+    background-color: var(--background-color3);
+    box-shadow: var(--box-shadow2);
+    width: 60%;
+    border-radius: 20px;
+    @include mixin.xs {
+      width: 90%;
+  }
+
+
+
+    input {
+
+        font-size: 16px;
+        padding: 0.25em 0.5em;
+        border: 3px dashed #A4C395;
+        width: 500px;
+        transition: 180ms box-shadow ease-in-out;
+        @include mixin.md-lt {
+          width: 300px;
+      }
+        @include mixin.xs {
+          width: 150px;
+      }
+    }
+    
+    input:focus {
+        border-color: var(--divider);
+        box-shadow: 0 0 0 3px
+          var(--divider2);
+        outline: 3px solid transparent;
+      }
+
+    label {
+      font-size: 20px;
+      @include mixin.xs {
+        font-size: 15px;
+      }
+    }
+
+    h2 {
+      margin-bottom: 5px;
+      margin-top: 10px;
+    }
+    .size {
+      width: 10px;
+    }
+}

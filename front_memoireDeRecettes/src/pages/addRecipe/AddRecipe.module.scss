@@ -1,0 +1,102 @@
+@use "../../assets/styles/mixins.scss" as mixin;
+
+.rectangle {
+  background-color: var(--background-color3);
+  box-shadow: var(--box-shadow2);
+  width: 60%;
+  border-radius: 20px;
+
+  @include mixin.xs {
+    width: 90%;
+  }
+
+  .input, select {
+    background-color: #D9D9D9;
+    font-size: 16px;
+    padding: 0.25em 0.5em;
+    border: 3px dashed #A4C395;
+    width: 500px;
+    transition: 180ms box-shadow ease-in-out;
+
+    @include mixin.md-lt {
+      width: 300px;
+    }
+
+    @include mixin.xs {
+      width: 150px;
+    }
+  }
+
+  .inputLight {
+    background-color: #D9D9D9;
+    font-size: 16px;
+    padding: 0.25em 0.5em;
+    border: 3px dashed #A4C395;
+    width: 100px;
+    transition: 180ms box-shadow ease-in-out;
+
+    @include mixin.md-lt {
+      width: 75px;
+    }
+
+    @include mixin.xs {
+      width: 75px;
+    }
+
+  }
+
+  input:focus {
+    border-color: var(--divider);
+    box-shadow: 0 0 0 3px var(--divider2);
+    outline: 3px solid transparent;
+  }
+
+  input:hover {
+    background-color: var(--background-color3);
+  }
+
+
+  label {
+    font-size: 20px;
+
+    @include mixin.xs {
+      font-size: 15px;
+    }
+  }
+
+  .size {
+    width: 20px;
+    height: 25px;
+
+    @include mixin.xs {
+      width: 11px;
+      height: 16px;
+    }
+  }
+
+  .iconUstensil {
+    width: 40px;
+    height: 40px;
+
+    @include mixin.xs {
+      width: 20px;
+      height: 20px;
+  }}
+
+  .inputDeco {
+    width: 100%;
+    background-color: var(--background-color);
+    border-radius: 0 20px 20px 0;
+  }
+
+  .inputStart {
+    width: 25px;
+    background-color: var(--primary);
+  }
+
+  //select {
+
+  //color: white;
+
+  //}
+}
