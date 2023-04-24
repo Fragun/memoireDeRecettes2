@@ -1,19 +1,14 @@
 const bcrypt = require("bcrypt");
 const router = require("express").Router();
-const mysql = require("mysql");
 
-const connection = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "",
-  database: "recipesmemory",
-});
+const connection = require("../../database/index");
 
 
 router.post("/", async (req, res) => {
     //console.log(req.body);
     const { email, pseudo, firstname, name, condition, createdOn } = req.body;
     console.log(req.body);
+    
     const pass = req.body.password ;
     const user = {email:email, pseudo:pseudo, firstname:firstname, name:name,condition:condition, createdOn:createdOn, 
       pass:await bcrypt.hash(pass, 10)}

@@ -1,22 +1,8 @@
 const express = require("express");
 const router = require("express").Router();
-const app = express();
-const mysql = require("mysql");
 
-// Middleware pour éviter les problèmes de CORS
-app.use((req, res, next) => {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE");
-    res.header("Access-Control-Allow-Headers", "Content-Type");
-    next();
-  });
-  
-  const connection = mysql.createConnection({
-    host: "localhost",
-    user: "root",
-    password: "",
-    database: "recipesmemory",
-  });
+const connection = require("../../database/index");
+
 
   // app.post("/deleteUser", (req, res) => {
   //     console.log(req.body);
@@ -30,7 +16,6 @@ app.use((req, res, next) => {
   //         res.send(JSON.stringify(true));
   //     });
   // });
-  
   
    
   router.post("/addRecipe", (req, res) => {

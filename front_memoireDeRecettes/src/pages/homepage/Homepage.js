@@ -8,13 +8,15 @@ import BanniereCreationCompte from "../components/banniereInscription/BanniereCr
 import BanniereRecetteDuJour from "../components/banniereUneRecette/BanniereRecetteDuJour";
 import Recipes from "../components/Recipes";
 import Loading from "../../components/Loading/Loading";
-const URL_API = "/api/requete";
+import { AuthContext } from "../../context";
+const URL_API = "/api/recette";
 
 //import { searchRecipes, MarmitonQueryBuilder, RECIPE_PRICE, RECIPE_DIFFICULTY, Recipe } from 'marmiton-api';
 
 export default function Homepage() {
-    const profile = useContext(UserContext);
-    console.log(profile);
+
+  const { user } = useContext(AuthContext);
+  console.log(user);
 
     const [search, setSearch] = useState("");
     const [articles, setArticles] = useState([]);

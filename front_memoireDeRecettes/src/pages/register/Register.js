@@ -53,8 +53,8 @@ export default function Register() {
         }
 
         // génère les 10 chiffres aléatoires
-        for (let i = 0; i < 5; i++) {
-            username += Math.floor(Math.random() * 5);
+        for (let i = 0; i < 3; i++) {
+            username += Math.floor(Math.random() * 3);
         }
         return username;
     }

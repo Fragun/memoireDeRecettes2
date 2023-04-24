@@ -1,14 +1,15 @@
 const express = require("express");
-const mysql = require("mysql");
+
 const cookie = require("cookie-parser");
 const app = express();
 const routes = require("./routes");
 
-const connection = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "",
-  database: "recipesmemory",
+// Middleware pour éviter les problèmes de CORS
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE");
+  res.header("Access-Control-Allow-Headers", "Content-Type");
+  next();
 });
 
 // middleware qui permet d'extraire les cookies
@@ -16,10 +17,6 @@ app.use(cookie());
 // cela permet d'extraire le body qui est stringify au format object JS
 app.use(express.json());
 
-connection.connect((err) => {
-  if (err) throw err;
-  console.log("Connecté à la base de données MySQL");
-});
 
 // Middleware pour gérer les requêtes JSON
 

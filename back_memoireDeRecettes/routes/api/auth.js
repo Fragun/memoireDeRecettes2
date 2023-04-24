@@ -3,14 +3,19 @@ const bcrypt = require("bcrypt");
 const router = require("express").Router();
 const { key, keyPub } = require("../../keys");
 
+const connection = require("../../database/index");
+
 
 router.post("/", async (req, res) => {
   const { email, password } = req.body;
 
-  const sqlVerify = `SELECT * FROM user WHERE USER_EMAIL="${email}" AND USER_PASSWORD="${password}"`;
+  const sqlVerify = `SELECT * FROM user WHERE USER_EMAIL="${email}"`;
+console.log(sqlVerify);
 
   connection.query(sqlVerify, (err, result) => {
-    console.log(result);
+    console.log(result[0].USER_PASSWORD);
+    
+
     if (err) throw err;
     if (result.length === 0) {
       console.log("utilisateur non existant");
@@ -27,54 +32,34 @@ router.post("/", async (req, res) => {
   });
 });
 
-router.post("/", async (req, res) => {
-  const { email, password } = req.body;
-  try {
-    //const user = await UserModel.findOne({ email }).exec();
-    if (user) {
-      if (bcrypt.compareSync(password, user.password)) {
-        const token = jsonwebtoken.sign({}, key, {
-          subject: user._id.toString(),
-          expiresIn: 3600 * 24 * 30 * 6,
-          algorithm: "RS256",
-          //sameSite: 'none',
-          //sameSite: 'Lax',
-        });
-        res.cookie("token", token);
-        res.json(user);
-      } else {
-        res.status(400).json("Email et/ou mot de passe incorrect");
-      }
-    } else {
-      res.status(400).json("Email et/ou mot de passe incorrect");
-    }
-  } catch (error) {
-    res.status(400).json("Email et/ou mot de passe incorrect");
-  }
-});
 
 
 router.get("/current", async (req, res) => {
   const { token } = req.cookies;
+  console.log(token);
   if (token) {
     try {
-      const decodedToken = jsonwebtoken.verify(token, keyPub, {
-        algorithms: "RS256",
-    });
-      //const currentUser = await UserModel.findById(decodedToken.sub)
-       // .select("-password -__v")
-      //  .exec();
+      const decodedToken = jsonwebtoken.verify(token, key);
+    console.log({decodedToken});
+      const currentUser = await UserModel.findById(decodedToken.sub)
+        .select("-password -__v")
+        .exec();
       if (currentUser) {
         return res.json(currentUser);
       } else {
-        return res.json(1);
+        return res.json(null);
       }
     } catch (error) {
-      return res.json(2);
+      return res.json(null);
     }
   } else {
-    return res.json(3);
+    return res.json(null);
   }
 });
+
+router.delete("/", (req, res) => {
+  res.clearCookie("token");
+  res.end();
+})
 
 module.exports = router;
