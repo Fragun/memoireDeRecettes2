@@ -13,9 +13,9 @@
         border : 2px solid var(--primary)
     }
     &-primary-reverse{
-        background-color: whitesmoke;
-        color: var(--primary);
-        border : 2px solid var(--primary)
+        background-color: var(--red);
+        color: white;
+        //border : 2px solid var(--primary)
     }
 
 }

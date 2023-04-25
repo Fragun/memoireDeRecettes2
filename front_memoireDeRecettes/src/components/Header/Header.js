@@ -15,22 +15,29 @@ export default function Header() {
         <header className={`${styles.header}`}>
             <div className="d-flex justify-content-end">
                 <ul className={`${styles.desktopHeader} `}>
-                    <button className={`mr10 btn btn-primary`}>
+                    {/* <button className={`mr10 btn btn-primary`}>
                         <i className="fas fa-star m5"></i>
                         <span>Recherche</span>
-                    </button>
+                    </button> */}
 
-                    {user ? (<ul className={`${styles.desktopHeader}`}>
-                        <NavLink className="mr10" to="profile">
-                            profile
-                        </NavLink>
+                    {user ? (<ul>
+                        <Link to="profile">
+                            <button className="mr10 btn btn-primary">
+                                <span>Mon profil</span>
+                            </button>
+
+                        </Link>
                         <Link to='/addRecipe'>
                             <button className={`mr10 btn btn-primary`}>
-                                <i className="fas fa-right-to-bracket m5 m5"></i>
                                 <span>Ajouter une recette</span>
                             </button>
                         </Link>
-                        <NavLink onClick={() => signout()}>Deconnexion</NavLink>
+                        <Link 
+                            onClick={() => signout()} >
+                                <button className="btn btn-primary-reverse" > 
+                                <span>Deconnexion</span>
+                                </button>    
+                        </Link>
                     </ul>
                     ) : (
                         <ul>

@@ -14,15 +14,16 @@ router.post("/", async (req, res) => {
   connection.query(sqlVerify, (err, result) => {
     //console.log(result[0].USER_PASSWORD);
     let userPasswordDatabase = result[0].USER_PASSWORD;
-    if (result[0]) {
-      try {
+
+    try {
+      if (result[0].lenght != 0) {
         const userId = result[0].USER_ID;
         console.log(userId);
         console.log(passwordEnter);
         console.log(userPasswordDatabase);
         if (bcrypt.compareSync(passwordEnter, userPasswordDatabase)) {
           console.log(result);
-          
+
           const token = jsonwebtoken.sign({}, key, {
             subject: userId.toString(),
             expiresIn: 3600 * 24 * 30 * 6,
@@ -32,19 +33,17 @@ router.post("/", async (req, res) => {
           res.cookie("token", token);
           res.json(result);
         } else {
-          res.status(400).json("mot de passe incorrecttttttttt");
+          res.status(400).json("mot de passe incorrect");
         }
+      } else {
+        res.status(400).json("Email incorrect");
       }
-      catch (error) {
-        res.status(400).json("erreur try");
-      }
-    } else {
+    }
+    catch (error) {
       res.status(400).json("Email et/ou mot de passe incorrect");
     }
-
   });
 });
-
 
 
 router.get("/current", async (req, res) => {

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -7,10 +7,21 @@ import euro from "../../assets/images/euro.png";
 import difficulty from "../../assets/images/gantDifficulte.png";
 import FileUpload from "../components/fileUpload/fileUpload";
 import timePng from "../../assets/images/icons8-horloge-40.png";
+import { AuthContext } from "../../context";
+//import { RecipeContext } from "../../context/RecipeContext"
+import RecipeProvider from "../../components/Provider/RecipeProvider";
+import { RecipeContext } from "../../context/RecipeContext";
 const API_INDEX = "/api/recette";
 
 
 export default function AddRecipe() {
+    // const { recipeMealType } = useContext(RecipeContext);
+    // console.log(recipeMealType);
+
+    //const { recipe } = useContext(RecipeContext);
+    const { user } = useContext(AuthContext);
+    const idUser = user[0].USER_ID;
+    console.log(idUser);
 
     const [mealTypeList, setMealTypeList] = useState([]);
     const [seasonList, setSeasonList] = useState([]);
@@ -23,7 +34,7 @@ export default function AddRecipe() {
     const [search3, setSearch3] = useState("");
     const [ustensilChoose, setUstensilChoose] = useState([]);
     console.log(ustensilChoose);
-    //function avec fetch pour passer ustensilChoose dans le back
+    
 
     const [ustensilAdded, setUstensilAdded] = useState(false);
     const [ustensilAdded2, setUstensilAdded2] = useState(false);
@@ -187,6 +198,9 @@ export default function AddRecipe() {
         ustensil3: yup
              .string()
              .required("Veuillez selectionner un ou plusieurs ustensiles"),
+        idUserConnected: yup
+             .number()
+             .default(yup.ref('idUser'))
         });
 
 
@@ -214,8 +228,9 @@ export default function AddRecipe() {
     const {
         register,
         handleSubmit,
-        control,
         reset,
+        setError,
+        clearErrors,
         formState: { errors, isSubmitting },
     } = useForm({
         defaultValues,
@@ -223,10 +238,10 @@ export default function AddRecipe() {
     });
 
     {/****************************************handleClick**********************************************/ }
-    async function handleClick(values) {
+    const submit = handleSubmit(async (values) => {
         //console.log(values);
         try {
-            const response = await fetch("http://localhost:8000/addRecipe", {
+            const response = await fetch(`${API_INDEX}/addRecipe`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -242,7 +257,7 @@ export default function AddRecipe() {
         } catch (error) {
             console.error(error);
         }
-    }
+    });
 
     function handleInput(e) {
         console.log(e.target.value);
@@ -308,16 +323,18 @@ export default function AddRecipe() {
     }
 
     return (
+        <RecipeProvider>
         <div className="d-flex justify-content-center">
             <div className={`${styles.rectangle} m30`}>
                 <h1 className="text-align-center">Ajouter une recette</h1>
-                <form onSubmit={handleSubmit(handleClick)} className="d-flex flex-column justify-content-center p20">
+                <form onSubmit={submit} className="d-flex flex-column justify-content-center p20">
                     <div className="d-flex flex-column">
                         {/****************************************title**********************************************/}{/****************************************title**********************************************/}
                         <h2>Titre</h2>
                         <div className="d-flex">
                             <div className={`${styles.inputStart}`}></div>
                             <div className={`${styles.inputDeco} p10 d-flex justify-content-center`}>
+                           
                                 <input type="text"
                                     placeholder="Le titre de votre recette..."
                                     className={`${styles.input} `}
@@ -756,102 +773,6 @@ export default function AddRecipe() {
                 </form>
             </div>
         </div>
+        </RecipeProvider>
     );
 }
-
-
-
-
-
-
-
-
-
-
-
-// import { useEffect, useState } from "react";
-// export default function AddRecipe() {
-
-
-// const [ustensilList, setUstensilList] = useState([]);
-// const [search, setSearch] = useState("");
-// const [ustensilChoose, setUstensilChoose] = useState([]);
-// console.log(ustensilChoose);
-// useEffect(() => {
-//     async function getUstensils() {
-//         try {
-//             const response = await fetch('http://localhost:8000/getUstensils');
-//             if (response.ok) {
-//                 const ustensils = await response.json();
-//                 //console.log(ustensils);
-//                 setUstensilList(ustensils);
-//             }
-//         } catch (error) {
-//             console.error(error);
-//         }
-//     }
-//     getUstensils()
-// }, []);
-
-
-// function handleInput(e) {
-//     console.log(e.target.value);
-//     const keyBoardInput = e.target.value;
-//     setSearch(keyBoardInput.trim().toLowerCase());
-// }
-
-// function handleAddUstensil(event) {
-//     event.preventDefault();
-//     const selectedUstensilId = document.getElementById("ustensils").value;
-//     console.log(selectedUstensilId);
-//     if (!ustensilChoose.includes(selectedUstensilId)) {
-//       setUstensilChoose([...ustensilChoose, selectedUstensilId]);
-//     }
-//   };
-
-
-
-// return (
-
-// <div className="d-flex flex-column mb20">
-// <h2>De quels ustensiles de cuisine a t-on besoin ?</h2>
-// <div className="d-flex">
-//     <div className={`${styles.inputStart}`}></div>
-//                 <div className={`${styles.inputDeco} p10 d-flex justify-content-center`}>
-//                     <input
-//                         type="text"
-//                         onInput={handleInput}
-//                         className="flex-fill"
-//                         placeholder="Search ...">
-//                     </input>
-//                     <select {...register(`ustensil`)} id="ustensils">
-//                         <option value="" disabled>
-//                             Quel ustensile ?
-//                         </option>
-//                         {ustensilList
-//                             .filter(u => u.USTENSIL_NAME.toLowerCase().startsWith(search))
-//                             .map((ustensil) => (
-//                                 <option key={ustensil.USTENSIL_ID} value={ustensil.USTENSIL_ICON}>
-//                                     {ustensil.USTENSIL_NAME}
-//                                     {/*<img src={`../../../public/assets/images/LOGO_Ustensiles_png/${ustensil.USTENSIL_ICON}`}></img>  */}
-//                                 </option>
-//                             ))}
-//                     </select>
-//                     <button
-//                     onClick={handleAddUstensil}
-//                     >
-//                         +
-//                     </button>
-//                 </div>
-//                 {errors?.mealType && <p>{errors.mealType.message}</p>}
-// </div>
-// <span>Listes des ustensiles : 
-//     <br/>{ustensilChoose 
-//      .map((u) => (<img className={`${styles.iconUstensil}`} key={u} src={`../../assets/images/LogoUstensiles/${u}`} alt="ustensile"></img>))}</span>
-//<button disabled={isSubmitting} className="btn btn-primary">
-//Ajouter à vos recettes
-//</button>
-//
-// </div>
-//     );
-// }

@@ -73,7 +73,7 @@ export default function Homepage() {
 
 
     return (
-        <div className="flex-fill container p20 m0">
+        <div className="flex-fill container p20">
             <div className={`card p20 ${styles.recetteCard}`}>
                 <div className={`mb10 d-flex justify-content-end align-items-center ${styles.searchBar}`}>
                     <i className="fas fa-magnifying-glass mr10"></i>

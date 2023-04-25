@@ -3,7 +3,7 @@ import Footer from "./components/Footer/Footer";
 import styles from "./App.module.scss";
 import { Outlet, useLoaderData } from "react-router-dom";
 import { Suspense } from "react";
-import AuthProvider from "./components/AuthProvider/AuthProvider";
+import AuthProvider from "./components/Provider/AuthProvider";
 
 
 function App() {

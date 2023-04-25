@@ -3,7 +3,7 @@
 .rectangle {
   background-color: var(--background-color3);
   box-shadow: var(--box-shadow2);
-  width: 60%;
+  width: 90%;
   border-radius: 20px;
 
   @include mixin.xs {
@@ -15,7 +15,7 @@
     font-size: 16px;
     padding: 0.25em 0.5em;
     border: 3px dashed #A4C395;
-    width: 500px;
+    width: 430px;
     transition: 180ms box-shadow ease-in-out;
 
     @include mixin.md-lt {
