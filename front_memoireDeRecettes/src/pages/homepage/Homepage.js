@@ -83,9 +83,9 @@ export default function Homepage() {
                         className="flex-fill"
                         placeholder="Search ..."></input>
                 </div>
-                <BanniereCreationCompte />
+                {user ? (""):(<BanniereCreationCompte />)}
                 <h2 className="mb20">Résultats de votre recherche</h2>
-{ 
+                { 
                 <div className={`${styles.grid}`}>
 
                     {articles

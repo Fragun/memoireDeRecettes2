@@ -7,6 +7,7 @@ import Login from "./pages/login/Login";
 import AddRecipe from "./pages/addRecipe/AddRecipe";
 import { userLoader } from './loaders/userLoader';
 import Profile from './pages/Profile/Profile';
+import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
 
 export const router = createBrowserRouter([
    {
@@ -29,11 +30,17 @@ export const router = createBrowserRouter([
         },
         {
             path: "/addRecipe",
-            element: <AddRecipe />,
+            element: 
+            <ProtectedRoute>
+            <AddRecipe />,
+            </ProtectedRoute>
         },
         {
             path: "/profile",
-            element: <Profile />
+            element: 
+            <ProtectedRoute>
+            <Profile />
+            </ProtectedRoute>
         }
     ]
    } 

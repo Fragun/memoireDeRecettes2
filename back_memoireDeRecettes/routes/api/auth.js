@@ -7,33 +7,41 @@ const connection = require("../../database/index");
 
 
 router.post("/", async (req, res) => {
-  const email = req.body;
+  const email = req.body.email;
   const passwordEnter = req.body.password;
+
   const sqlVerify = `SELECT * FROM user WHERE USER_EMAIL="${email}"`;
-console.log(sqlVerify);
-
   connection.query(sqlVerify, (err, result) => {
-    console.log(result[0].USER_PASSWORD);
+    //console.log(result[0].USER_PASSWORD);
     let userPasswordDatabase = result[0].USER_PASSWORD;
-
-    if (err) throw err;
-    if (result.length === 0) {
-      console.log("utilisateur non existant");
-      // result[0] = {};
-      // result[0].condition = false;
-      // res.send(JSON.stringify(result[0]));
+    if (result[0]) {
+      try {
+        const userId = result[0].USER_ID;
+        console.log(userId);
+        console.log(passwordEnter);
+        console.log(userPasswordDatabase);
+        if (bcrypt.compareSync(passwordEnter, userPasswordDatabase)) {
+          console.log(result);
+          
+          const token = jsonwebtoken.sign({}, key, {
+            subject: userId.toString(),
+            expiresIn: 3600 * 24 * 30 * 6,
+            algorithm: "RS256",
+          });
+          console.log(token);
+          res.cookie("token", token);
+          res.json(result);
+        } else {
+          res.status(400).json("mot de passe incorrecttttttttt");
+        }
+      }
+      catch (error) {
+        res.status(400).json("erreur try");
+      }
+    } else {
       res.status(400).json("Email et/ou mot de passe incorrect");
-    } else if (bcrypt.compareSync(passwordEnter, userPasswordDatabase)) {
-      const token = jsonwebtoken.sign({}, key, {
-        subject: user._id.toString(),
-        expiresIn: 3600 * 24 * 30 * 6,
-        algorithm: "RS256",
-        //sameSite: 'none',
-        //sameSite: 'Lax',
-      });
-      res.cookie("token", token);
-      //res.json(user);
     }
+
   });
 });
 
@@ -45,7 +53,7 @@ router.get("/current", async (req, res) => {
   if (token) {
     try {
       const decodedToken = jsonwebtoken.verify(token, key);
-    console.log({decodedToken});
+      console.log({ decodedToken });
       const currentUser = await UserModel.findById(decodedToken.sub)
         .select("-password -__v")
         .exec();

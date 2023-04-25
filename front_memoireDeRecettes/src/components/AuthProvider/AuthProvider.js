@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useLoaderData } from "react-router-dom";
-import { signin as login } from "../../apis/auth";
+import { signin as loginn } from "../../apis/auth";
 import { signout as logout } from "../../apis/auth";
 import { AuthContext } from "../../context";
 
@@ -10,7 +10,7 @@ export default function AuthProvider({ children }) {
     const [user, setUser] = useState(initialUser);
 
     async function signin(credentials) {
-        const newUser = await login(credentials);
+        const newUser = await loginn(credentials);
         setUser(newUser)
     }
 

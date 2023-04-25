@@ -8,7 +8,9 @@ export async function signin(credentials) {
   });
 
   const backResponse = await response.json();
+  console.log(backResponse);
   if (response.ok) {
+    
     return backResponse;
   } else {
     if (backResponse) {

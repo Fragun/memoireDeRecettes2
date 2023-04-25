@@ -11,7 +11,7 @@ router.post("/", async (req, res) => {
     
     const pass = req.body.password ;
     const user = {email:email, pseudo:pseudo, firstname:firstname, name:name,condition:condition, createdOn:createdOn, 
-      pass:await bcrypt.hash(pass, 10)}
+      pass:await bcrypt.hash(pass, 8)}
     console.log(user);
     
     const sqlVerify = `SELECT * FROM user WHERE USER_EMAIL="${email}"`;

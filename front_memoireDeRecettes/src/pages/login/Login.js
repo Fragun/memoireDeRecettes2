@@ -2,13 +2,14 @@ import React, { useContext } from 'react';
 import { useForm } from 'react-hook-form';
 import * as Yup from 'yup';
 import styles from '../register/Register.module.scss';
-import { AuthContext } from "../../context";
+import { AuthContext } from "../../context/AuthContext";
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 
 export default function Login() {
 
   const { signin, user } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   const validationSchema = Yup.object().shape({
     email: Yup
@@ -41,10 +42,12 @@ export default function Login() {
 
 
   const submit = handleSubmit(async (values) => {
-    console.log(values);
+    
     try {
       clearErrors();
+      console.log(values);
       await signin(values);
+      navigate('/');
     } catch (message) {
       setError("generic", { type: "generic", message })
     }
@@ -59,7 +62,7 @@ export default function Login() {
           <div className=" d-flex justify-content-center">
             <div className={`${styles.rectangle} m30`}>
               <h1 className="text-align-center">Connexion</h1>
-              <form onSubmit={handleSubmit(submit)} className="d-flex flex-column justify-content-center align-items-center p20">
+              <form onSubmit={submit} className="d-flex flex-column justify-content-center align-items-center p20">
 
                 <div className="d-flex flex-column">
                   <label htmlFor="email" className='mb10 pl20'>Email:</label>
@@ -78,7 +81,7 @@ export default function Login() {
                   <p className="form-error">{errors.generic.message}</p>
                 )}
                 <div className="">
-                  <button type="Se connecter" disabled={isSubmitting} className="btn btn-primary">
+                  <button disabled={isSubmitting} className="btn btn-primary">
                     Se connecter
                   </button>
                 </div>
