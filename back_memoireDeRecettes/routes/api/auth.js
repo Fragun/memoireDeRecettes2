@@ -53,14 +53,15 @@ router.get("/current", async (req, res) => {
     try {
       const decodedToken = jsonwebtoken.verify(token, key);
       console.log({ decodedToken });
-      const currentUser = await UserModel.findById(decodedToken.sub)
-        .select("-password -__v")
-        .exec();
-      if (currentUser) {
-        return res.json(currentUser);
+      const sqlVerify = `SELECT * FROM user WHERE USER_id=${decodedToken.sub}`;
+      connection.query(sqlVerify, (err, result) => {
+      
+      if (result) {
+        return res.json(result);
       } else {
         return res.json(null);
       }
+      ;})
     } catch (error) {
       return res.json(null);
     }
