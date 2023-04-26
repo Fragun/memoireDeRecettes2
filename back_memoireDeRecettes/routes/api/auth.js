@@ -13,10 +13,12 @@ router.post("/", async (req, res) => {
   const sqlVerify = `SELECT * FROM user WHERE USER_EMAIL="${email}"`;
   connection.query(sqlVerify, (err, result) => {
     //console.log(result[0].USER_PASSWORD);
-    let userPasswordDatabase = result[0].USER_PASSWORD;
-
+    
+    console.log("le log est juste en dessous");
+    console.log(result);
     try {
-      if (result[0].lenght != 0) {
+      if (result[0].length != 0) {
+        let userPasswordDatabase = result[0].USER_PASSWORD;
         const userId = result[0].USER_ID;
         console.log(userId);
         console.log(passwordEnter);
@@ -33,10 +35,10 @@ router.post("/", async (req, res) => {
           res.cookie("token", token);
           res.json(result);
         } else {
-          res.status(400).json("mot de passe incorrect");
+          res.status(400).json("Email et/ou mot de passe incorrect");
         }
       } else {
-        res.status(400).json("Email incorrect");
+        res.status(400).json("Email et/ou mot de passe incorrect");
       }
     }
     catch (error) {
