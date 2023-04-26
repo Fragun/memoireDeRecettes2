@@ -64,6 +64,8 @@ export default function Profile() {
         //         "Les mots de passe ne correspondent pas"
         //    ),
       });
+
+      console.log(yupSchema);
       const defaultValues = {
         pseudo: "",
 
@@ -121,7 +123,8 @@ export default function Profile() {
                                         placeholder={`${user[0].USER_NAME}`}
                                         className={`${styles.inputDouble}`}
                                         disabled={!editMode}
-                                    />
+                                        {...register("name")} />
+                                        {errors?.name && <p>{errors.name.message}</p>}
                                 </div>
                             </div>
                         </div>
@@ -134,7 +137,8 @@ export default function Profile() {
                                         placeholder={user[0].USER_FIRSTNAME === undefined ? 'Votre prénom ici' : user[0].USER_FIRSTNAME}
                                         className={`${styles.inputDouble} `}
                                         disabled={!editMode}
-                                    />
+                                        {...register("firstname")} />
+                                        {errors?.firstname && <p>{errors.firstname.message}</p>}
                                 </div>
                             </div>
                         </div>
@@ -149,7 +153,8 @@ export default function Profile() {
                                         placeholder={`${user[0].USER_PSEUDO}`}
                                         className={`${styles.inputDouble} `}
                                         disabled={!editMode}
-                                    />
+                                        {...register("pseudo")} />
+                                        {errors?.pseudo && <p>{errors.pseudo.message}</p>}
                                 </div>
                             </div>
                         </div>
@@ -177,7 +182,8 @@ export default function Profile() {
                                 <input type="date"
                                     placeholder={user[0].USER_BIRTHDAY === undefined ? 'Votre prénom ici' : user[0].USER_BIRTHDAY}
                                     className={`${styles.inputDouble} `}
-                                />
+                                    {...register("birthday")} />
+                                    {errors?.birthday && <p>{errors.birthday.message}</p>}
                             </div>
                         </div>
                     </div>

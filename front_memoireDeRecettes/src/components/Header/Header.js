@@ -59,12 +59,12 @@ export default function Header() {
                 </ul>
                 <i
                     onClick={() => setShowMenu(true)}
-                    className={`fas fa-bars mr10`}
+                    className={`las la-bars mr10`}
                 ></i>
                 {showMenu && (
                     <>
                         <div className="calc" onClick={() => setShowMenu(false)}></div>
-                        <MobileMenu />
+                        <MobileMenu  onClose={() => setShowMenu(false)} />
                     </>
                 )}
             </div>
