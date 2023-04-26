@@ -44,10 +44,13 @@ export default function Profile() {
             .required("Vous pouvez renseigner ce champs avec un pseudo"),
         firstname: yup
             .string()
-            .required(),
+            .required(false),
         birthday: yup
             .string()
-            .required(),
+            .required(false),
+        avatarUser: yup
+            .string()
+            .required(false),
         // password: yup
         //     .string()
         //     .required()
@@ -96,7 +99,8 @@ export default function Profile() {
                         className={`${styles.inputDouble}`}
                         disabled={!editMode}
                         ref={inputFileRef}
-                    />
+                        {...register("avatarUser")} />
+                        {errors?.avatarUser && <p>{errors.avatarUser.message}</p>}
                     {avatar &&
                         <div>
                             <img className="imageAvatar" src={avatar} />
@@ -186,7 +190,7 @@ export default function Profile() {
                     )}
                     {editMode && (
                         <button
-                            onClick={submit}
+                        onSubmit={submit}
                             className="btn btn-secundary">
                             Enregistrer
                         </button>
