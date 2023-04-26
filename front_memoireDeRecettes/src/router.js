@@ -6,7 +6,7 @@ import ErrorPage from "./ErrorPage/ErrorPage";
 import Login from "./pages/login/Login";
 import AddRecipe from "./pages/addRecipe/AddRecipe";
 import { userLoader } from './loaders/userLoader';
-import Profile from './pages/Profile/Profile';
+import Profile from './pages/Account/Profile';
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
 
 export const router = createBrowserRouter([

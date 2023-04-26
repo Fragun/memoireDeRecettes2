@@ -3,7 +3,7 @@ import React, { useContext } from "react";
 import styles from "./Header.module.scss";
 import { useState } from 'react';
 import MobileMenu from "./components/MobileMenu";
-import { Link, NavLink } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { AuthContext } from "../../context";
 
 export default function Header() {
@@ -25,7 +25,6 @@ export default function Header() {
                             <button className="mr10 btn btn-primary">
                                 <span>Mon profil</span>
                             </button>
-
                         </Link>
                         <Link to='/addRecipe'>
                             <button className={`mr10 btn btn-primary`}>

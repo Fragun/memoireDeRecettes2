@@ -12,6 +12,11 @@
         color: white;
         border : 2px solid var(--primary)
     }
+    &-secundary{
+        background-color: var(--secundary);
+        color: white;
+        border : 2px solid var(--primary)
+    }
     &-primary-reverse{
         background-color: var(--red);
         color: white;
