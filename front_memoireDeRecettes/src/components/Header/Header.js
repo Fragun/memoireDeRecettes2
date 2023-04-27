@@ -10,32 +10,65 @@ export default function Header() {
     const { user, signout } = useContext(AuthContext);
     console.log(user);
     const [showMenu, setShowMenu] = useState(false);
+    const [count, setCount] = useState(0);
+
+    function addCount() {
+        setCount(count + 1) ;
+      }
+    function handleClick() {
+        if (count===0) {
+            setShowMenu(true);
+            addCount();
+        } 
+        else
+        {
+            setShowMenu(false);
+            setCount(0);
+        }
+
+    }
 
     return (
         <header className={`${styles.header}`}>
-            <div className="d-flex justify-content-end">
-            
-                <ul className={`${styles.desktopHeader} `}>
-                    <button className={`mr10 btn btn-primary las la-search`}>
-                        <span>Recherche</span>
-                    </button>  
+            <div className="d-flex justify-content-center"> 
 
-                    {user ? (<ul>
+                <ul className={`${styles.desktopHeader}`}>
+                    {user ? (<ul className="d-flex justify-content-evenly">
+                        <Link to="/">
+                            <button className="btn-primary las la-home">
+                                <span>Accueil</span>
+                            </button>
+                        </Link>
                         <Link to="profile">
-                            <button className="mr10 btn btn-primary">
+                            <button className="btn-primary ml10 las la-user">
                                 <span>Mon profil</span>
                             </button>
                         </Link>
                         <Link to='/addRecipe'>
-                            <button className={`mr10 btn btn-primary`}>
-                                <span>Ajouter une recette</span>
+                            <button className={`btn-primary ml10 las la-plus-circle`}>
+                                <span>Ajouter recette</span>
                             </button>
                         </Link>
-                        <Link 
-                            onClick={() => signout()} >
-                                <button className="btn btn-primary-reverse" > 
-                                <span>Deconnexion</span>
-                                </button>    
+                        <Link to='/'>
+                            <button className={`btn btn-primary las la-book-open ml10`}>
+                                <span>Mes recettes</span>
+                            </button>  
+                        </Link>
+                        <Link to='/'>
+                            <button className={`btn btn-primary las la-heart ml10`}>
+                                <span>Mes favoris</span>
+                            </button>  
+                        </Link>
+                        <Link to='/'>
+                            <button className={`btn btn-primary las la-calendar ml10`}>
+                                <span>Agenda des repas</span>
+                            </button>  
+                        </Link>
+
+                        <Link  onClick={() => signout()} >
+                            <button className="btn-primary-reverse ml10 las la-sign-out-alt" > 
+                                <span className={`${styles.te}`}>Deconnexion</span>
+                            </button>    
                         </Link>
                     </ul>
                     ) : (
@@ -56,13 +89,12 @@ export default function Header() {
                     )}
                 </ul>
                 <i
-                    onClick={() => setShowMenu(true)}
-                    className={`las la-bars mr10`}
+                    onClick={handleClick}
+                    className={`las la-bars mr10 positionFixed`}
                 ></i>
                 {showMenu && (
                     <>
-                        
-                        <MobileMenu  onClose={() => setShowMenu(false)} />
+                        <MobileMenu />
                     </>
                 )}
             </div>
