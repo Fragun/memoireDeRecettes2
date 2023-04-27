@@ -13,36 +13,48 @@ export default function MobileMenu(props) {
                     <div className='d-flex justify-content-between'>
                     <div>
                         <Link to="/">
-                            <button className="las la-home btn btn-primary">
+                            <button className="d-flex justify-content-center align-items-center las la-home la-1x btn-primary">
                             </button>
                         </Link>
                     </div>
                     <div>
-                        <Link to="profile">
-                            <button className="las la-user btn btn-primary">
-                            </button>
-                        </Link>
-                    </div>
-                    <div>
-                        <Link to="/">
-                            <button className="las la-user btn btn-primary">
+                        <Link to="/profile">
+                            <button className="las la-user la-1x d-flex justify-content-center align-items-center btn-primary">
                             </button>
                         </Link>
                     </div>
                     <div>
                         <Link to='/addRecipe'>
-                            <button className={`las la-plus-circle btn btn-primary`}>
+                            <button className={`las la-plus-circle la-1x d-flex justify-content-center align-items-center btn-primary`}>
+                            </button>
+                        </Link>
+                    </div>
+                    <div>
+                        <Link to="/">
+                            <button className="las la-book-open la-1x d-flex justify-content-center align-items-center btn-primary">
+                            </button>
+                        </Link>
+                    </div>
+                    <div>
+                        <Link to="/">
+                            <button className="las la-heart la-1x d-flex justify-content-center align-items-center btn-primary">
+                            </button>
+                        </Link>
+                    </div>
+                    <div>
+                        <Link to="/">
+                            <button className="las la-calendar la-1x d-flex justify-content-center align-items-center btn-primary">
                             </button>
                         </Link>
                     </div>
                     <div>
                         <Link onClick={() => signout()} >
-                        <button className={`las la-sign-out-alt btn btn-primary-reverse`}>
+                        <button className={`las la-sign-out-alt la-1x d-flex justify-content-center align-items-center btn-primary-reverse`}>
                             </button>
                         </Link>
                     </div>
                     <div>
-                        <i className='text-center las la-sort-up' onClick={props.onClose}></i>
+                        <i className='las la-sort-up' onClick={props.onClose}></i>
                     </div>
                     </div>
             ) : (
