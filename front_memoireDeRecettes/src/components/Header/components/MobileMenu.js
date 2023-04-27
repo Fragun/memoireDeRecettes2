@@ -10,54 +10,63 @@ export default function MobileMenu(props) {
     return (
         <div className={`card ${styles.menuContainer} `}>
             {user ? (
-                <ul>
-                    <li>
+                    <div className='d-flex justify-content-between'>
+                    <div>
+                        <Link to="/">
+                            <button className="las la-home btn btn-primary">
+                            </button>
+                        </Link>
+                    </div>
+                    <div>
                         <Link to="profile">
-                            <button className="btn btn-primary">
-                                <span>Mon profil</span>
+                            <button className="las la-user btn btn-primary">
                             </button>
                         </Link>
-                    </li>
-                    <li>
+                    </div>
+                    <div>
+                        <Link to="/">
+                            <button className="las la-user btn btn-primary">
+                            </button>
+                        </Link>
+                    </div>
+                    <div>
                         <Link to='/addRecipe'>
-                            <button className={`mr10 btn btn-primary`}>
-                                <span>Ajouter une recette</span>
+                            <button className={`las la-plus-circle btn btn-primary`}>
                             </button>
                         </Link>
-                    </li>
-                    <li>
+                    </div>
+                    <div>
                         <Link onClick={() => signout()} >
-                            <button className="btn btn-primary-reverse" >
-                                <span>Deconnexion</span>
+                        <button className={`las la-sign-out-alt btn btn-primary-reverse`}>
                             </button>
                         </Link>
-                    </li>
-                    <li>
+                    </div>
+                    <div>
                         <i className='text-center las la-sort-up' onClick={props.onClose}></i>
-                    </li>
-                </ul>
+                    </div>
+                    </div>
             ) : (
-                <ul>
-                    <li>
+                <>
+                    <div className='d-flex'>
                         <Link to="/register">
                             <button type="button" className={`mr10 btn btn-primary`}>
                                 <i className="fas fa-star m5"></i>
                                 <span>Inscription</span>
                             </button>
                         </Link>
-                    </li>
-                    <li>
+                    </div>
+                    <div>
                         <Link to="/Login">
                             <button className={`mr10 btn btn-primary-reverse`}>
                                 <i className="fas fa-right-to-bracket m5 m5"></i>
                                 <span>Connexion</span>
                             </button>
                         </Link>
-                    </li>
-                    <li>
+                    </div>
+                    <div>
                         <i className='text-center las la-sort-up' onClick={props.onClose}></i>
-                    </li>
-                </ul>
+                    </div>
+                    </>
             )}
         </div>
     )

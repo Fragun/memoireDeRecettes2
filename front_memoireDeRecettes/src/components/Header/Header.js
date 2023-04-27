@@ -14,11 +14,11 @@ export default function Header() {
     return (
         <header className={`${styles.header}`}>
             <div className="d-flex justify-content-end">
+            
                 <ul className={`${styles.desktopHeader} `}>
-                    {/* <button className={`mr10 btn btn-primary`}>
-                        <i className="fas fa-star m5"></i>
+                    <button className={`mr10 btn btn-primary las la-search`}>
                         <span>Recherche</span>
-                    </button> */}
+                    </button>  
 
                     {user ? (<ul>
                         <Link to="profile">
@@ -54,8 +54,6 @@ export default function Header() {
                             </Link>
                         </ul>
                     )}
-
-
                 </ul>
                 <i
                     onClick={() => setShowMenu(true)}
@@ -63,7 +61,7 @@ export default function Header() {
                 ></i>
                 {showMenu && (
                     <>
-                        <div className="calc" onClick={() => setShowMenu(false)}></div>
+                        
                         <MobileMenu  onClose={() => setShowMenu(false)} />
                     </>
                 )}

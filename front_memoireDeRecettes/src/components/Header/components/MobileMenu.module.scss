@@ -1,9 +1,9 @@
 .menuContainer{
-    position: absolute;
-    top: 68px;
-    right: 20px;
-    width: 200px;
-    background-color: aliceblue;
+    position: fixed;
+    bottom: 0px;
+    right: 0px;
+    width: 100%;
+    background-color: var(--light-grey );
     z-index: 50;
     li{
         padding: 10px 15px;
@@ -17,5 +17,9 @@
             background-color: var(--primary);
             color: aliceblue;
         }
+    }
+    .butt {
+        width: 180px;
+        height: 50px;
     }
 }
