@@ -8,6 +8,7 @@ import AddRecipe from "./pages/addRecipe/AddRecipe";
 import { userLoader } from './loaders/userLoader';
 import Profile from './pages/Account/Profile';
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
+import RecipePage from "./pages/recipePage/RecipePage";
 
 export const router = createBrowserRouter([
    {
@@ -27,6 +28,10 @@ export const router = createBrowserRouter([
         {
             path: "/login",
             element: <Login />,
+        },
+        {
+            path: "/recipePage/:id",
+            element: <RecipePage/>
         },
         {
             path: "/addRecipe",

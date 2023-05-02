@@ -23,21 +23,64 @@
         .avatar{
             position: absolute;
             z-index: 2;
+            width: 50px;
+            height: 50px;
+            bottom: 5px;
+        }
+        .regime{
+            position: absolute;
+            z-index: 2;
+            width: 60px;
+            height: 60px;
+            bottom : 5px;
+            right: 5px;
+            border-radius: 30px;
+        }
+
+        .price {
+            position : absolute;
+            z-index: 2;
+            top: 5px;
+            left: 5px;
+            border: solid 1px;
+            background-color: var(--background-color);
         }
     }
 
     .title {
-        height: 100px;
+        height: 250px;
         border: 1px solid var(--gray-2);
         border-bottom-left-radius: 20px;
         border-bottom-right-radius: 20px;
         transition: 0.6s color;
         text-align: center;
 
+        i {
+            color : var(--primary);
+        }
+
+        .ensemble p {
+            visibility: hidden;
+        }
+         
+        .ensemble img:hover + p {
+            visibility: visible;
+            margin: 0%;
+        }
+
+        .time{
+            border: black solid 2px;
+        }
+
         h3 {
             &:hover {
                 color: var(--error);
             }
+        }
+
+        img {
+            width: 50px;
+            height: auto;
         }
     }
 }

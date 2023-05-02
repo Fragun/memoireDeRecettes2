@@ -5,12 +5,13 @@ import MenuMyAccount from "../../components/MenuMyAccount/MenuMyAccount";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
+import { modifyUser } from "../../apis/auth";
 
 
 export default function Profile() {
 
     const { user } = useContext(AuthContext);
-    console.log(user);
+    //console.log(user);
 
     const [editMode, setEditMode] = useState(false);
     const [avatar, setAvatar] = useState(null);
@@ -65,10 +66,9 @@ export default function Profile() {
         //    ),
       });
 
-      console.log(yupSchema);
+      //console.log(yupSchema);
       const defaultValues = {
-        pseudo: "",
-
+        pseudo: user[0].USER_PSEUDO,
         firstname: "",
         //password: "",
         name: "",
@@ -85,14 +85,24 @@ export default function Profile() {
         defaultValues,
         resolver: yupResolver(yupSchema),
     });
+
     const submit = handleSubmit(async (values) => {
-        setEditMode(false);
-    });
+        console.log(values);
+        try {
+            setEditMode(false);
+          clearErrors();
+          await modifyUser(values);
+        //   navigate('/profile')
+        } catch (message) {
+          setError("generic", { type: "generic", message })
+        }
+      });
 
     return (
         <div className="d-flex justify-content-center ">
             <MenuMyAccount />
             <section className={`${styles.rectangle} m30`}>
+            <form onSubmit={submit} className="d-flex flex-column justify-content-center p20">
                 <h2 className="text-align-center">Mon compte</h2>
                 <div>
                     <input
@@ -112,7 +122,7 @@ export default function Profile() {
                             </button>
                         </div>}
                 </div>
-                <form className="d-flex flex-column justify-content-center p20">
+                
                     <div className="d-flex justify-content-center">
                         <div className="flex-column">
                             <h3 className="ml20">Nom</h3>
@@ -187,21 +197,24 @@ export default function Profile() {
                             </div>
                         </div>
                     </div>
-                    {!editMode && (
+                    
+
+                    {editMode && (
+                        <button
+                        disabled={isSubmitting}
+                            className="btn btn-secundary">
+                            Enregistrer
+                        </button>
+                    )}               
+                     {!editMode && (
                         <button
                             onClick={handleEdit}
                             className="btn btn-primary">
                             Activer la modification
                         </button>
                     )}
-                    {editMode && (
-                        <button
-                        onSubmit={submit}
-                            className="btn btn-secundary">
-                            Enregistrer
-                        </button>
-                    )}
                 </form>
+
             </section>
         </div>
     )

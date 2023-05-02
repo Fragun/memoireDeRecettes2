@@ -4,11 +4,11 @@
     background-color: var(--background-color3);
     box-shadow: var(--box-shadow2);
     border-radius: 20px;
-    min-height: 200px;
+    height: 400px;
     width: auto;
 
     img {
-        max-height: 300px;
+        height: 100%;
         width: 40%;
         border-radius: 20px;
         padding: 10px;
@@ -18,5 +18,10 @@
         height: 70px;
         width: auto;
 
+    }
+
+    .logoTime {
+        height: 70px;
+        width: 70px;
     }
 }
