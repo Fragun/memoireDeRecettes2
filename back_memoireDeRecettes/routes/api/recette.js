@@ -323,6 +323,7 @@ router.get("/getRecipeClicked/:id", (req, res) => {
                  JOIN type_de_repas ON r.ID_TYPE_DE_REPAS = type_de_repas.ID_TYPE_DE_REPAS
                  JOIN meal_type ON r.MEAL_TYPE_ID = meal_type.MEAL_TYPE_ID 
                  JOIN diet_type ON r.DIET_TYPE_ID = diet_type.DIET_TYPE_ID
+                 JOIN cooking_type ON r.COOKING_TYPE_ID = cooking_type.COOKING_TYPE_ID
                  WHERE r.RECIPE_ID = ${idRecipe}`;
   connection.query(sql, (err, result) => {
     if (err) {
@@ -331,6 +332,19 @@ router.get("/getRecipeClicked/:id", (req, res) => {
       return;
     }
     console.log("Récupération de la recette pour la page recette");
+    res.send(JSON.stringify(result));
+  });
+});
+
+router.get("/getUstensilsByIdRecipe/:id", (req, res) => {
+  const idRecipe = req.params.id;
+  console.log(idRecipe);
+  const sqlUstensil = `SELECT * FROM used as u 
+                        LEFT JOIN ustensil ON u.USTENSIL_ID = ustensil.USTENSIL_ID
+                        WHERE u.RECIPE_ID = ${idRecipe}`;
+  connection.query(sqlUstensil, (err, result) => {
+    if (err) throw err;
+    console.log("Récupération ustensil");
     res.send(JSON.stringify(result));
   });
 });

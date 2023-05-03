@@ -21,9 +21,9 @@ export default function MultiCard({ image, title, imageDifficulte, imageAvatar, 
                         </div>
                         <div className={`${styles.elementsSurImage} `}>
                             
-                            <img className={` ${styles.iconeElementsPrincipaux} `} src={imageVegetarien} alt="icone végan"></img>
+                            <img className={` ${styles.iconeElementsPrincipaux} `} src={imageVegetarien} alt="icone végé"></img>
                             <img className={` ${styles.iconeElementsPrincipaux} `} src={imageVegan} alt="icone végan"></img>
-                            <img className={` ${styles.iconeElementsPrincipaux} `} src={imageSansGluten} alt="icone végan"></img>
+                            <img className={` ${styles.iconeElementsPrincipaux} `} src={imageSansGluten} alt="icone sans gluten"></img>
                             <img className={` ${styles.iconeAvatar} `} src={imageAvatar} alt="avatar"></img>
                         </div>
                     </div>
