@@ -319,6 +319,7 @@ router.get("/getRecipeClicked/:id", (req, res) => {
   let sql = `SELECT * FROM recipe as r 
                  INNER JOIN photo ON r.RECIPE_ID = photo.RECIPE_ID
                  JOIN user ON r.USER_Id = user.USER_ID
+                 JOIN season ON r.SEASON_ID = season.SEASON_ID
                  JOIN type_de_repas ON r.ID_TYPE_DE_REPAS = type_de_repas.ID_TYPE_DE_REPAS
                  JOIN meal_type ON r.MEAL_TYPE_ID = meal_type.MEAL_TYPE_ID 
                  JOIN diet_type ON r.DIET_TYPE_ID = diet_type.DIET_TYPE_ID

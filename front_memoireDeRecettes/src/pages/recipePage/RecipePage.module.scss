@@ -1,4 +1,21 @@
-.container {
+.container2 {
     border-radius: 20px;
+    background-color: var(--background-color3);
+    max-width: 1200px;
+    margin: 10px;
+
     
+}
+
+.bigImage {
+    width: 20rem;
+    max-height: 300px;
+    border-radius: 10px;
+}
+
+.container3 {
+    background-color: var(--background-color);
+    border-radius: 20px;
+    box-shadow: var(--box-shadow);
+    width: auto;
 }
