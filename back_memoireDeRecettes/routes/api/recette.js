@@ -3,18 +3,19 @@ const router = require("express").Router();
 
 const connection = require("../../database/index");
 
-// app.post("/deleteUser", (req, res) => {
-//     console.log(req.body);
-//     const id = req.body.id;
+router.post("/addNotice/:id/:idUser", (req, res) => {
 
-//     const sqlDelete = `DELETE FROM articles WHERE idArticles= ?`;
-//     const values = id;
-//     connection.query(sqlDelete, values, (err, result) => {
-//         if (err) throw err;
-//         console.log("Article supprimé de la base de données");
-//         res.send(JSON.stringify(true));
-//     });
-// });
+  const astuce = req.body.astuce;
+  const idRecipe = req.params.id;
+  const idUser = req.params.idUser;
+  const sqlInsert = `INSERT INTO notice
+    ( NOTICE_TRICK_RECIPE, RECIPE_ID, USER_ID ) VALUES ( ?, ?, ? )`;
+  const values = [ astuce, idRecipe, idUser ];
+
+  connection.query(sqlInsert, values, (err, result) => {
+    if (err) throw err;
+  });
+});
 
 router.post("/addRecipe", (req, res) => {
   //console.log(req.body);
@@ -241,31 +242,6 @@ router.get("/getUstensils", (req, res) => {
   });
 });
 
-// app.post("/verifyUstensilById", (req, res) => {
-//   console.log(req.body);
-//   const id = req.body.email;
-
-//   const sqlVerify = `SELECT * FROM user WHERE USER_EMAIL="${email}" AND USER_PASSWORD="${password}"`;
-
-//   connection.query(sqlVerify, (err, result) => {
-//     console.log(result);
-//     if (err) throw err;
-//     if (result.length === 0) {
-//       console.log("utilisateur non existant");
-//       result[0] = {};
-//       result[0].condition = false;
-//       res.send(JSON.stringify(result[0]));
-//     } else {
-//       console.log("utilisateur existant");
-//       const message = "utilisateur existant";
-//       result[0].message = message;
-//       result[0].condition = true;
-//       res.send(JSON.stringify(result[0]));
-//     }
-//   });
-// });
-
-//REQUETES exemple
 
 router.get("/getRecipes", (req, res) => {
   const limit = req.query.limit;

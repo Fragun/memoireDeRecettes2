@@ -1,7 +1,6 @@
 import { useParams } from "react-router-dom";
 import styles from "./RecipePage.module.scss";
-import stylesInput from "../addRecipe/AddRecipe.module.scss";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import logoPreparation from "../../assets/images/logoPreparation.png";
 import logoCuisson from "../../assets/images/logoCuisson.png";
 import moment from "moment";
@@ -9,18 +8,29 @@ import "moment/locale/fr";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import StarRating from "../components/starRating/starRating";
-
+import { AuthContext } from "../../context/AuthContext";
 const URL_API = "/api/recette";
 
+
 export default function RecipePage() {
+
+const { user } = useContext(AuthContext);
   const [recipeClick, setRecipeClick] = useState([]);
-  console.log(recipeClick);
   const [ustensilsRecipe, setUstensilsRecipe] = useState([]);
-  console.log(ustensilsRecipe);
   const [isLoading, setIsLoading] = useState(true);
   let { id } = useParams();
+  let difficulty, price;
+  let dateStr, date, formattedDate;
+    let { idUser } = useParams();
+    idUser = user[0].USER_ID;
+    console.log(idUser);
 
+  const [rating, setRating] = useState(0);
+
+  const handleStarClick = (index) => {
+    setRating(index);
+  };
+  console.log(rating);
   useEffect(() => {
     async function getRecipeClicked() {
       try {
@@ -52,9 +62,6 @@ export default function RecipePage() {
     }
     getUstensil();
   }, [id]);
-
-  let difficulty, price;
-  let dateStr, date, formattedDate;
 
   if (!isLoading && recipeClick.length > 0) {
     difficulty = recipeClick[0].RECIPE_DIFFICULTY;
@@ -155,6 +162,28 @@ export default function RecipePage() {
     defaultValues,
     resolver: yupResolver(yupSchema),
   });
+
+  const submit = handleSubmit(async (values) => {
+    console.log(values);
+    try {
+        clearErrors();
+        const response = await fetch(`${URL_API}/addNotice/${id}/${idUser}`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(values),
+           
+        });
+        if (response.ok) {
+            const notice = await response.json();
+            reset(defaultValues);
+            console.log(notice);
+        }
+    } catch (message) {
+        setError("generic", { type: "generic", message })
+    }
+});
 
   return (
     <div className="d-flex flex-column justify-content-center">
@@ -317,7 +346,7 @@ export default function RecipePage() {
               voluptate.
             </p>
           </div>
-          <div
+          <form onSubmit={submit}
             className={`${styles.container5} m10 d-flex flex-column justify-content-evenly`}
           >
             <h3 className="m20 pl20">Le coin des astuces</h3>
@@ -325,21 +354,44 @@ export default function RecipePage() {
               <div classname={`${styles.container6}`}>
                 <p>dezdzedezdezdzedzedzedzedzedzed</p>
               </div>
-              <div className="d-flex flex-column">
-                <StarRating />
-                <div className={`d-flex flex-row`}>
-                  <div className={`${styles.littleGreen}`}></div>
-                  <input
-                    type="text"
-                    placeholder="Noter ici une astuce pour cette recette..."
-                    className={``}
-                    {...register("astuce")}
-                  />
-                </div>
-                <div>{errors?.astuce && <p>{errors.astuce.message}</p>}</div>
-              </div>
+              {user ? (
+        <div className="d-flex flex-column">
+        <div>
+          {[...Array(5)].map((star, index) => {
+            index += 1;
+            return (
+              <i
+                key={index}
+                className={
+                  index <= rating
+                    ? "la la-star la-2x"
+                    : "lar la-star la-2x"
+                }
+                onClick={() => handleStarClick(index)}
+              />
+            );
+          })}
+          {rating ? <p>Votre note : {rating} étoiles</p> : ""}
+        </div>
+
+        <div className={`d-flex flex-row`}>
+          <div className={`${styles.littleGreen}`}></div>
+          <input
+            type="text"
+            placeholder="Noter ici une astuce pour cette recette..."
+            className={``}
+            {...register("astuce")}
+          />
+        </div>
+        <div>{errors?.astuce && <p>{errors.astuce.message}</p>}</div>
+        <button disabled={isSubmitting} className=" mt10 btn btn-primary">Valider</button>
+      </div>
+      ) :
+        ("")}
+              
             </div>
-          </div>
+            
+          </form>
         </>
       ) : (
         <p>not found</p>
