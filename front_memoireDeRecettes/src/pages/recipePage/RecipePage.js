@@ -376,12 +376,15 @@ const { user } = useContext(AuthContext);
 
         <div className={`d-flex flex-row`}>
           <div className={`${styles.littleGreen}`}></div>
-          <input
-            type="text"
+          <textarea 
+            id="w3review" 
+            name="w3review" 
+            rows="4" 
+            cols="50" 
             placeholder="Noter ici une astuce pour cette recette..."
             className={``}
-            {...register("astuce")}
-          />
+            {...register("astuce")}>
+            </textarea>
         </div>
         <div>{errors?.astuce && <p>{errors.astuce.message}</p>}</div>
         <button disabled={isSubmitting} className=" mt10 btn btn-primary">Valider</button>
