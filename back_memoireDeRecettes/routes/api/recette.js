@@ -8,9 +8,12 @@ router.post("/addNotice/:id/:idUser", (req, res) => {
   const astuce = req.body.astuce;
   const idRecipe = req.params.id;
   const idUser = req.params.idUser;
+  const score = req.body.score;
+  const notice = req.body.notice;
+
   const sqlInsert = `INSERT INTO notice
-    ( NOTICE_TRICK_RECIPE, RECIPE_ID, USER_ID ) VALUES ( ?, ?, ? )`;
-  const values = [ astuce, idRecipe, idUser ];
+    ( NOTICE_TRICK_RECIPE, RECIPE_ID, USER_ID, NOTICE_STAR_NUMBER, NOTICE_RECIPE ) VALUES ( ?, ?, ?, ?, ?)`;
+  const values = [ astuce, idRecipe, idUser, score, notice ];
 
   connection.query(sqlInsert, values, (err, result) => {
     if (err) throw err;

@@ -11,26 +11,26 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { AuthContext } from "../../context/AuthContext";
 const URL_API = "/api/recette";
 
-
 export default function RecipePage() {
-
-const { user } = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
   const [recipeClick, setRecipeClick] = useState([]);
   const [ustensilsRecipe, setUstensilsRecipe] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   let { id } = useParams();
   let difficulty, price;
   let dateStr, date, formattedDate;
-    let { idUser } = useParams();
-    idUser = user[0].USER_ID;
-    console.log(idUser);
+  let { idUser } = useParams();
+  idUser = user[0].USER_ID;
+  console.log(idUser);
 
   const [rating, setRating] = useState(0);
 
   const handleStarClick = (index) => {
     setRating(index);
   };
+
   console.log(rating);
+
   useEffect(() => {
     async function getRecipeClicked() {
       try {
@@ -147,9 +147,14 @@ const { user } = useContext(AuthContext);
 
   const yupSchema = yup.object({
     astuce: yup.string().required(false),
+    score: yup.number().required(false),
+    notice: yup.string().notRequired(),
   });
+
   const defaultValues = {
     astuce: "",
+    score: rating,
+    notice: "",
   };
   const {
     register,
@@ -166,32 +171,34 @@ const { user } = useContext(AuthContext);
   const submit = handleSubmit(async (values) => {
     console.log(values);
     try {
-        clearErrors();
-        const response = await fetch(`${URL_API}/addNotice/${id}/${idUser}`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(values),
-           
-        });
-        if (response.ok) {
-            const notice = await response.json();
-            reset(defaultValues);
-            console.log(notice);
-        }
+      clearErrors();
+      const response = await fetch(`${URL_API}/addNotice/${id}/${idUser}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          ...values,
+          score: rating,
+        }),
+      });
+      if (response.ok) {
+        const notice = await response.json();
+        reset(defaultValues);
+        console.log(notice);
+      }
     } catch (message) {
-        setError("generic", { type: "generic", message })
+      setError("generic", { type: "generic", message });
     }
-});
+  });
 
   return (
     <div className="d-flex flex-column justify-content-center">
       {isLoading ? (
         <p>Loading...</p>
       ) : recipeClick.length > 0 ? (
-        <>
-          <div className={`${styles.container2}  m10`}>
+        <div className={`m0`}>
+          <div className={`${styles.container2}  m10 d-flex flex-column`}>
             <div
               className={`${styles.mobileColumn} flex-fill d-flex justify-content-around m10`}
             >
@@ -346,56 +353,86 @@ const { user } = useContext(AuthContext);
               voluptate.
             </p>
           </div>
-          <form onSubmit={submit}
-            className={`${styles.container5} m10 d-flex flex-column justify-content-evenly`}
-          >
-            <h3 className="m20 pl20">Le coin des astuces</h3>
-            <div className="d-flex flex-row justify-content-evenly">
-              <div classname={`${styles.container6}`}>
-                <p>dezdzedezdezdzedzedzedzedzedzed</p>
+          <form onSubmit={submit} className={`m10`}>
+            <div
+              className={`${styles.container5}  d-flex flex-column justify-content-evenly`}
+            >
+              <h3 className="m20 pl20">Le coin des astuces</h3>
+              <div className="d-flex flex-row justify-content-evenly">
+                <div className={`${styles.container6}`}>
+                  <p>dezdzedezdezdzedzedzedzedzedzed</p>
+                </div>
+                {user ? (
+                  <div className="d-flex flex-column">
+                    <div className={`d-flex flex-row`}>
+                      <div className={`${styles.littleGreen}`}></div>
+                      <textarea
+                        rows="4"
+                        cols="50"
+                        placeholder="Noter ici une astuce pour cette recette..."
+                        className={``}
+                        {...register("astuce")}
+                      ></textarea>
+                    </div>
+                    <div>
+                      {errors?.astuce && <p>{errors.astuce.message}</p>}
+                    </div>
+                  </div>
+                ) : (
+                  ""
+                )}
               </div>
-              {user ? (
-        <div className="d-flex flex-column">
-        <div>
-          {[...Array(5)].map((star, index) => {
-            index += 1;
-            return (
-              <i
-                key={index}
-                className={
-                  index <= rating
-                    ? "la la-star la-2x"
-                    : "lar la-star la-2x"
-                }
-                onClick={() => handleStarClick(index)}
-              />
-            );
-          })}
-          {rating ? <p>Votre note : {rating} étoiles</p> : ""}
-        </div>
-
-        <div className={`d-flex flex-row`}>
-          <div className={`${styles.littleGreen}`}></div>
-          <textarea 
-            id="w3review" 
-            name="w3review" 
-            rows="4" 
-            cols="50" 
-            placeholder="Noter ici une astuce pour cette recette..."
-            className={``}
-            {...register("astuce")}>
-            </textarea>
-        </div>
-        <div>{errors?.astuce && <p>{errors.astuce.message}</p>}</div>
-        <button disabled={isSubmitting} className=" mt10 btn btn-primary">Valider</button>
-      </div>
-      ) :
-        ("")}
-              
             </div>
-            
+
+            <div
+              className={`${styles.container5}  d-flex flex-column justify-content-evenly`}
+            >
+              <div className="d-flex flex-row justify-content-evenly">
+              <div className={`${styles.container6}`}>
+                  <p>dezdzedezdezdzedzedzedzedzedzed</p>
+                </div>
+              <div className="d-flex flex-column">
+              <div>
+                Votre note ici : 
+                {[...Array(5)].map((star, index) => {
+                  index += 1;
+                  return (
+                    <div
+                      key={index}
+                      className={
+                        index <= rating
+                          ? "la la-star la-2x"
+                          : "lar la-star la-2x"
+                      }
+                      onClick={() => handleStarClick(index)}
+                    ></div>
+                  );
+                })}
+
+                {rating ? <p>Votre note : {rating} étoiles</p> : ""}
+              </div>
+
+              <div className={`d-flex flex-row`}>
+                <div className={`${styles.littleGreen}`}></div>
+                <textarea
+                  rows="4"
+                  cols="50"
+                  placeholder="Ou simplement une remarque ou un avis sur la recette..."
+                  className={``}
+                  {...register("notice")}
+                ></textarea>
+              </div>
+              <button disabled={isSubmitting} className=" mt10 btn btn-primary">
+                Valider
+              </button>
+              </div>
+              
+              </div>
+              <div>{errors?.notice && <p>{errors.notice.message}</p>}</div>
+
+            </div>
           </form>
-        </>
+        </div>
       ) : (
         <p>not found</p>
       )}

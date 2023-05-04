@@ -2,13 +2,16 @@ import { useState, useEffect } from "react";
 import logoPreparation from "../../../assets/images/logoPreparation.png";
 import logoCuisson from "../../../assets/images/logoCuisson.png";
 import styles from "./BanniereRecetteDuJour.module.scss";
+import { Link } from "react-router-dom";
 
 const URL_API = "/api/recette";
 
 export default function BanniereRecetteDuJour() {
+    
     const [recipeOfDay, setRecipeOfDay] = useState([]);
     const [recipe, setRecipe] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
+
 
     const seasons = [
         { name: "printemps", startMonth: 2, startDay: 20 },
@@ -145,11 +148,13 @@ export default function BanniereRecetteDuJour() {
     }
 
     return (
-        <div className={`${styles.containerBanniere} d-flex justify-content-center align-items-center`}>
+        
+        <div className={`${styles.containerBanniere}`}>
             {isLoading ? (
                 <p>Loading...</p>
             ) : recipe ? (
-                <>
+                <Link to={`/recipePage/${recipe.RECIPE_ID}`} className="decoNone d-flex justify-content-center align-items-center">
+                    
                     <img
                         src={`./assets/images/${recipe.PHOTO_NAME}`}
                         alt="recette de saison"
@@ -198,8 +203,9 @@ export default function BanniereRecetteDuJour() {
                             {difficultyRecipe()}
                         </div>
                     </div>
-                </>
+                    </Link>
             ) : null}
         </div>
+        
     );
 }
