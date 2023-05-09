@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1
--- Généré le : lun. 24 avr. 2023 à 13:56
+-- Généré le : mar. 09 mai 2023 à 09:19
 -- Version du serveur : 10.4.24-MariaDB
 -- Version de PHP : 8.0.22
 
@@ -104,32 +104,33 @@ INSERT INTO `cooking_type` (`COOKING_TYPE_ID`, `COOKING_TYPE_NAME`) VALUES
 
 CREATE TABLE `diet_type` (
   `DIET_TYPE_ID` int(11) NOT NULL,
-  `DIET_TYPE_NAME` varchar(500) NOT NULL
+  `DIET_TYPE_NAME` varchar(500) NOT NULL,
+  `DIET_IMAGE` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Déchargement des données de la table `diet_type`
 --
 
-INSERT INTO `diet_type` (`DIET_TYPE_ID`, `DIET_TYPE_NAME`) VALUES
-(1, 'Cétogène\r\n'),
-(2, 'Dash'),
-(3, 'Détox'),
-(4, 'Hypocalorique\r\n'),
-(5, 'Hyperprotéiné\r\n'),
-(6, 'Low carb\r\n'),
-(7, 'Mayo Clinic\r\n'),
-(8, 'Méditerranéen\r\n'),
-(9, 'Okinawa\r\n'),
-(10, 'Ornish\r\n'),
-(11, 'Paléo\r\n'),
-(12, 'Pescétarien\r\n'),
-(13, 'Sans gluten\r\n'),
-(14, 'Sans lactose\r\n'),
-(15, 'Végan\r\n'),
-(16, 'Végétalien\r\n'),
-(17, 'Végétarien'),
-(35, 'Aucun');
+INSERT INTO `diet_type` (`DIET_TYPE_ID`, `DIET_TYPE_NAME`, `DIET_IMAGE`) VALUES
+(1, 'Cétogène\r\n', 'keto.png'),
+(2, 'Dash', ''),
+(3, 'Détox', 'detox.jpg'),
+(4, 'Hypocalorique\r\n', ''),
+(5, 'Hyperprotéiné\r\n', ''),
+(6, 'Low carb\r\n', 'Lowcarb.jpg'),
+(7, 'Mayo Clinic\r\n', 'mayoclinic.png'),
+(8, 'Méditerranéen\r\n', ''),
+(9, 'Okinawa\r\n', 'okinawa.jpg'),
+(10, 'Ornish\r\n', 'ornish.jpg'),
+(11, 'Paléo\r\n', 'paleo.png'),
+(12, 'Pescétarien\r\n', 'pescerian.png'),
+(13, 'Sans gluten\r\n', 'sans_gluten.jpg'),
+(14, 'Sans lactose\r\n', 'sans_lactose.jpg'),
+(15, 'Végan\r\n', 'veganRond.png'),
+(16, 'Végétalien\r\n', 'veganRond.png'),
+(17, 'Végétarien', 'Vegetarian.jpg'),
+(35, 'Aucun', '');
 
 -- --------------------------------------------------------
 
@@ -1306,6 +1307,22 @@ CREATE TABLE `notice` (
   `USER_ID` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Déchargement des données de la table `notice`
+--
+
+INSERT INTO `notice` (`NOTICE_ID`, `NOTICE_STAR_NUMBER`, `NOTICE_RECIPE`, `NOTICE_TRICK_RECIPE`, `RECIPE_ID`, `USER_ID`) VALUES
+(22, 4, 'Très bonne recette familiale facile à faire', 'Une note de moutarde pour sublimer ce plat', 67, 25),
+(23, 2, '', 'je vous conseille d\'ajouter de la muscade dans la purée', 67, 25),
+(24, 3, '', 'J\'ai ajouté des noix, excellent', 64, 25),
+(25, 1, 'BOF...', '', 64, 25),
+(26, 2, 'nul nul nul', '', 64, 25),
+(27, 2, 'nul', '', 64, 25),
+(28, 4, '', 'une note d\'ail ', 66, 25),
+(29, 3, '', '', 66, 25),
+(30, 4, 'avis', '', 66, 25),
+(31, 3, 'avis 2', '', 66, 25);
+
 -- --------------------------------------------------------
 
 --
@@ -1354,14 +1371,14 @@ CREATE TABLE `preparation` (
 
 CREATE TABLE `recipe` (
   `RECIPE_ID` int(11) NOT NULL,
-  `RECIPE_TITLE` varchar(100) NOT NULL,
+  `RECIPE_TITLE` varchar(100) DEFAULT NULL,
   `RECIPE_DESCRIPTION` varchar(100) DEFAULT NULL,
   `RECIPE_PUBLICATION_DATE` datetime DEFAULT NULL,
   `RECIPE_NUMBER_PLATE` int(11) DEFAULT NULL,
   `RECIPE_DIFFICULTY` int(11) DEFAULT NULL,
   `RECIPE_PRICE` int(11) DEFAULT NULL,
-  `PREP_TIME` varchar(20) NOT NULL,
-  `COOKING_TIME` varchar(20) NOT NULL,
+  `PREP_TIME` varchar(20) DEFAULT NULL,
+  `COOKING_TIME` varchar(20) DEFAULT NULL,
   `USER_ID` int(11) DEFAULT NULL,
   `ID_TYPE_DE_REPAS` int(11) DEFAULT NULL,
   `MEAL_TYPE_ID` int(11) DEFAULT NULL,
@@ -1378,16 +1395,17 @@ CREATE TABLE `recipe` (
 --
 
 INSERT INTO `recipe` (`RECIPE_ID`, `RECIPE_TITLE`, `RECIPE_DESCRIPTION`, `RECIPE_PUBLICATION_DATE`, `RECIPE_NUMBER_PLATE`, `RECIPE_DIFFICULTY`, `RECIPE_PRICE`, `PREP_TIME`, `COOKING_TIME`, `USER_ID`, `ID_TYPE_DE_REPAS`, `MEAL_TYPE_ID`, `DIET_TYPE_ID`, `CATEGORY_ID`, `SEASON_ID`, `COOKING_TYPE_ID`, `PREP_ID`, `COOKING_ID`) VALUES
-(61, 'Préparation végan en bocaux', 'Préparer vos bocaux végan rapidemment en suivant ma recette', '2023-04-20 22:19:00', 2, 2, 2, '0h20min', '0 h10 min', NULL, 1, 3, 16, NULL, 2, 1, NULL, NULL),
-(62, 'couscous', 'recette vegan du coucous', '2023-04-21 11:14:34', 2, 2, 2, '0h10min', '0 h20 min', NULL, 3, 16, 5, NULL, 2, 14, NULL, NULL),
-(63, 'velouté de potiron', 'simple et efficace', '2023-04-21 11:19:33', 2, 2, 2, '0h10min', '0 h20 min', NULL, 3, 16, 5, NULL, 2, 14, NULL, NULL),
-(64, 'salade de légume', 'accompagnement ou comme plat principal', '2023-04-21 11:21:21', 2, 2, 2, '0h10min', '0h10min', NULL, 3, 10, 11, NULL, 2, 8, NULL, NULL),
-(65, 'superbe hachis parmentier', 'Boeuf et petit légume', '2023-04-21 11:30:11', 2, 2, 2, '00h10min', '0 h10 min', NULL, 4, 4, 16, NULL, 2, 3, NULL, NULL),
-(66, 'superbe hachis parmentier ', 'Boeuf et petits légumes', '2023-04-21 11:47:04', 3, 3, 3, '0h20min', '0 h20 min', NULL, 3, 27, 15, NULL, 4, 3, NULL, NULL),
-(67, 'Hachis parmentier Simple', 'Plat familiale, une recette de Dédé', '2023-04-21 11:52:47', 2, 3, 3, '0h10min', '0 h10 min', NULL, 4, 14, 5, NULL, 1, 14, NULL, NULL),
-(68, 'salade de tomate', 'Vive l\'été, vive les tomates', '2023-04-21 12:00:13', 2, 2, 2, '0h10min', '0 h10 min', NULL, 2, 4, 15, NULL, 3, 3, NULL, NULL),
-(69, 'Buffet froid', 'Légumes à volonté', '2023-04-21 12:00:56', 2, 3, 3, '0h10min', '0 h10 min', NULL, 2, 3, 16, NULL, 1, 3, NULL, NULL),
-(70, 'hachis parmentier', 'revisité par Maïté', '2023-04-21 12:01:54', 2, 2, 2, '0h10min', '0 h10 min', NULL, 4, 16, 15, NULL, 2, 3, NULL, NULL);
+(61, 'Préparation végan en bocaux', 'Préparer vos bocaux végan rapidemment en suivant ma recette', '2023-04-20 22:19:00', 2, 2, 2, '0h20min', '0 h10 min', 25, 1, 3, 16, NULL, 1, 1, NULL, NULL),
+(62, 'couscous', 'recette vegan du coucous', '2023-04-21 11:14:34', 2, 2, 2, '0h10min', '0 h20 min', 24, 3, 16, 7, NULL, 1, 14, NULL, NULL),
+(63, 'velouté de potiron', 'simple et efficace', '2023-04-21 11:19:33', 2, 2, 2, '0h10min', '0 h20 min', 25, 3, 16, 11, NULL, 1, 14, NULL, NULL),
+(64, 'salade de légume', 'accompagnement ou comme plat principal', '2023-04-21 11:21:21', 2, 2, 2, '0h10min', '0h10min', 24, 3, 10, 12, NULL, 2, 8, NULL, NULL),
+(65, 'superbe hachis parmentier', 'Boeuf et petit légume', '2023-04-21 11:30:11', 2, 2, 2, '00h10min', '0 h10 min', 25, 4, 4, 15, NULL, 2, 3, NULL, NULL),
+(66, 'superbe hachis parmentier ', 'Boeuf et petits légumes', '2023-04-21 11:47:04', 3, 3, 3, '0h20min', '0 h20 min', 24, 3, 27, 6, NULL, 4, 3, NULL, NULL),
+(67, 'Hachis parmentier Simple', 'Plat familiale, une recette de Dédé', '2023-04-21 11:52:47', 2, 3, 3, '0h10min', '0 h10 min', 24, 4, 14, 5, NULL, 1, 14, NULL, NULL),
+(68, 'salade de tomate', 'Vive l\'été, vive les tomates', '2023-04-21 12:00:13', 2, 2, 2, '0h10min', '0 h10 min', 25, 2, 4, 15, NULL, 3, 3, NULL, NULL),
+(69, 'Buffet froid', 'Légumes à volonté', '2023-04-21 12:00:56', 2, 3, 3, '0h10min', '0 h10 min', 25, 2, 3, 16, NULL, 1, 3, NULL, NULL),
+(70, 'hachis parmentier', 'revisité par Maïté', '2023-04-21 12:01:54', 2, 2, 2, '0h10min', '0 h10 min', 24, 4, 16, 15, NULL, 2, 3, NULL, NULL),
+(71, 'dzefze', 'efzefze', '2023-04-25 10:15:34', 2, 1, 2, '0h10min', '0 h10 min', 25, 2, 3, 16, NULL, 3, 2, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -1471,6 +1489,7 @@ INSERT INTO `used` (`USTENSIL_ID`, `RECIPE_ID`, `SECTION_TITLE`) VALUES
 (2, 68, ''),
 (2, 69, ''),
 (5, 66, ''),
+(7, 71, ''),
 (8, 61, ''),
 (10, 70, ''),
 (11, 64, ''),
@@ -1480,6 +1499,7 @@ INSERT INTO `used` (`USTENSIL_ID`, `RECIPE_ID`, `SECTION_TITLE`) VALUES
 (12, 65, ''),
 (12, 66, ''),
 (12, 67, ''),
+(12, 71, ''),
 (13, 61, ''),
 (13, 64, ''),
 (13, 65, ''),
@@ -1487,6 +1507,7 @@ INSERT INTO `used` (`USTENSIL_ID`, `RECIPE_ID`, `SECTION_TITLE`) VALUES
 (13, 67, ''),
 (13, 68, ''),
 (13, 69, ''),
+(13, 71, ''),
 (14, 68, ''),
 (80, 70, '');
 
@@ -1503,7 +1524,7 @@ CREATE TABLE `user` (
   `USER_PSEUDO` varchar(50) NOT NULL,
   `USER_BIRTHDAY` datetime DEFAULT NULL,
   `USER_PHOTO` varchar(100) DEFAULT NULL,
-  `USER_PASSWORD` varchar(50) NOT NULL,
+  `USER_PASSWORD` varchar(255) NOT NULL,
   `USER_EMAIL` varchar(50) NOT NULL,
   `USER_ROLE` varchar(15) DEFAULT NULL,
   `USER_NEWSLETTER` tinyint(4) DEFAULT NULL,
@@ -1517,14 +1538,10 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`USER_ID`, `USER_NAME`, `USER_FIRSTNAME`, `USER_PSEUDO`, `USER_BIRTHDAY`, `USER_PHOTO`, `USER_PASSWORD`, `USER_EMAIL`, `USER_ROLE`, `USER_NEWSLETTER`, `USER_UTILISATION_CONDITION`, `USER_DATETIME_CREATION`, `USER_GENDER_ID`) VALUES
-(1, 'det', 'david', 'wqlpc20104', NULL, NULL, 'kokoo', 'det@yahoo.fr', NULL, NULL, 0, '2023-04-06 13:56:44', NULL),
-(2, 'Dethoor', 'David', 'burza40042', NULL, NULL, '123456', 'dethhh@yahoo.fr', NULL, NULL, 0, '2023-04-23 12:34:31', NULL),
-(3, 'ffdbfdb', 'hnbf', 'dgjwf11400', NULL, NULL, '123456', 'dede@de.mp', NULL, NULL, 0, '2023-04-23 20:03:14', NULL),
-(4, 'dbdfbfdb', 'hbgrd', 'llyhr11030', NULL, NULL, '123456', 'dede@aol.fr', NULL, NULL, 0, '2023-04-23 20:06:11', NULL),
-(5, 'zadzadza', 'cazeczae', 'eohja04322', NULL, NULL, '123456', 'dethheeeh@yahoo.fr', NULL, NULL, 0, '2023-04-24 07:46:19', NULL),
-(6, 'zedzedez', 'zefz', 'cgzft00434', NULL, NULL, '123456', 'gre@ge.ge', NULL, NULL, 0, '2023-04-24 07:49:04', NULL),
-(7, 'fzefzf', 'zefzefze', 'nxeji23141', NULL, NULL, 'dede59', 'gee@ge.ge', NULL, NULL, 0, '2023-04-24 07:50:35', NULL),
-(8, 'deeded', 'd\"edzed', 'gjxou14130', NULL, NULL, '$2b$10$hF2L7obYbDl.7uA2P9.tX.vBB/J8Bapg0RpatUQT/85', 'geyy@ge.ge', NULL, NULL, 0, '2023-04-24 07:52:46', NULL);
+(22, 'dede', 'fdede', 'zcmkw001', NULL, NULL, '$2b$08$AxYPBM90JZ.EnprjejxBGe9E6nZ.uxINqhuivTrouFdIPhahZXDnO', 'dede@de.mp', NULL, NULL, 0, '2023-04-25 07:46:33', NULL),
+(23, 'dede', 'dede', 'rkcqk002', NULL, NULL, '$2b$08$WHz4Ssyx3nOa7AvTdoVPJu2LbzTzWnMCi/nK/NskPQmY4AJantlj6', 'frfr@frfr.fr', NULL, NULL, 0, '2023-04-25 07:49:40', NULL),
+(24, 'ded', 'dede', 'gxyes222', NULL, 'test2.png', '$2b$08$OG1U.HwV.kjFX40YpVyse.jUOe5jQjbR9y6TuybPmzktJyCiSQ3xm', 'dethhhh@yahoo.fr', NULL, NULL, 0, '2023-04-25 08:28:35', NULL),
+(25, 'ddd', 'ddde', 'cqkfa022', NULL, 'reelphotohover.png', '$2b$08$mBZbTfN/89z41VVJpFPk5OWj5.zRxVhoPwPTHi2.eWIwYN0ToH3uy', 'dede@de.mpd', NULL, NULL, 0, '2023-04-25 08:48:58', NULL);
 
 -- --------------------------------------------------------
 
@@ -1979,7 +1996,7 @@ ALTER TABLE `meal_type`
 -- AUTO_INCREMENT pour la table `notice`
 --
 ALTER TABLE `notice`
-  MODIFY `NOTICE_ID` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `NOTICE_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 
 --
 -- AUTO_INCREMENT pour la table `photo`
@@ -1997,7 +2014,7 @@ ALTER TABLE `preparation`
 -- AUTO_INCREMENT pour la table `recipe`
 --
 ALTER TABLE `recipe`
-  MODIFY `RECIPE_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=71;
+  MODIFY `RECIPE_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=72;
 
 --
 -- AUTO_INCREMENT pour la table `season`
@@ -2021,7 +2038,7 @@ ALTER TABLE `type_de_repas`
 -- AUTO_INCREMENT pour la table `user`
 --
 ALTER TABLE `user`
-  MODIFY `USER_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `USER_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- AUTO_INCREMENT pour la table `user_gender`
