@@ -15,13 +15,15 @@ export default function RecipePage() {
   const { user } = useContext(AuthContext);
   const [recipeClick, setRecipeClick] = useState([]);
   const [ustensilsRecipe, setUstensilsRecipe] = useState([]);
+  const [noticeRecipe, setNoticeRecipe] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+
   let { id } = useParams();
   let difficulty, price;
   let dateStr, date, formattedDate;
   let { idUser } = useParams();
   idUser = user[0].USER_ID;
-  console.log(idUser);
+  console.log(noticeRecipe);
 
   const [rating, setRating] = useState(0);
 
@@ -29,7 +31,22 @@ export default function RecipePage() {
     setRating(index);
   };
 
-  console.log(rating);
+  const renderStarRating = (starCount) => {
+    const maxStars = 5;
+    const fullStar = <i className="la la-star"></i>;
+    const emptyStar = <i className="lar la-star"></i>;
+  
+    const stars = [];
+    for (let i = 1; i <= maxStars; i++) {
+      if (i <= starCount) {
+        stars.push(fullStar);
+      } else {
+        stars.push(emptyStar);
+      }
+    }
+  
+    return <div>{stars}</div>;
+  };
 
   useEffect(() => {
     async function getRecipeClicked() {
@@ -61,6 +78,22 @@ export default function RecipePage() {
       }
     }
     getUstensil();
+  }, [id]);
+
+  useEffect(() => {
+    async function getNotice() {
+      try {
+        const response = await fetch(`${URL_API}/getNotice/${id}`);
+        if (response.ok) {
+          const notice = await response.json();
+          setNoticeRecipe(notice);
+          setIsLoading(false);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    getNotice();
   }, [id]);
 
   if (!isLoading && recipeClick.length > 0) {
@@ -146,7 +179,7 @@ export default function RecipePage() {
   }
 
   const yupSchema = yup.object({
-    astuce: yup.string().required(false),
+    astuce: yup.string().notRequired(false),
     score: yup.number().required(false),
     notice: yup.string().notRequired(),
   });
@@ -355,20 +388,43 @@ export default function RecipePage() {
           </div>
           <form onSubmit={submit} className={`m10`}>
             <div
-              className={`${styles.container5}  d-flex flex-column justify-content-evenly`}
+              className={`${styles.container5}  d-flex flex-column justify-content-evenly pb20`}
             >
               <h3 className="m20 pl20">Le coin des astuces</h3>
-              <div className="d-flex flex-row justify-content-evenly">
+              <div className={`${styles.mobileFlex}`}>
                 <div className={`${styles.container6}`}>
-                  <p>dezdzedezdezdzedzedzedzedzedzed</p>
+
+
+                  {noticeRecipe.map((n, i) => (
+                    <div className={` d-flex flex-column`}>
+                        {n.NOTICE_TRICK_RECIPE.length > 0 ? (                      
+                      <>
+                      <div className={`d-flex flex-row`}>
+                        <img src={`../../assets/images/${n.USER_PHOTO}`}
+                          alt="logo du propriétaire de la recette"
+                          className={`${styles.imgUserSize}`} />
+                        {n.NOTICE_STAR_NUMBER ? renderStarRating(n.NOTICE_STAR_NUMBER) : ''}
+                        <p>Chef {n.USER_PSEUDO}</p>
+                      </div>
+                      <div className={`d-flex flex-row`}>
+                        <div className={`${styles.littleGreen2}`}> </div>
+                        <p className={`${styles.container7}`}>{n.NOTICE_TRICK_RECIPE}</p>
+                      </div>
+                      </>
+                      ) : ("")}
+                    </div>
+
+                  ))}
+
+
                 </div>
                 {user ? (
-                  <div className="d-flex flex-column">
+                  <div className="d-flex flex-column justify-content-end m1">
+                    <h3>Partager une astuce :</h3>
                     <div className={`d-flex flex-row`}>
                       <div className={`${styles.littleGreen}`}></div>
                       <textarea
-                        rows="4"
-                        cols="50"
+                        
                         placeholder="Noter ici une astuce pour cette recette..."
                         className={``}
                         {...register("astuce")}
@@ -385,48 +441,86 @@ export default function RecipePage() {
             </div>
 
             <div
-              className={`${styles.container5}  d-flex flex-column justify-content-evenly`}
+              className={`${styles.container5}  d-flex flex-column justify-content-evenly mt10 pb20`}
             >
-              <div className="d-flex flex-row justify-content-evenly">
-              <div className={`${styles.container6}`}>
-                  <p>dezdzedezdezdzedzedzedzedzedzed</p>
+              <h3 className="m20 pl20">Le coin des avis</h3>
+              <div className={`${styles.mobileFlex}`}>
+                
+                <div className={`${styles.container6} `}>
+                  
+
+                {noticeRecipe.map((n, i) => (
+                  
+                    <div className={` d-flex flex-column `}>
+                      {n.NOTICE_RECIPE.length > 0 ? (                      
+                      <>
+                      <div className={`d-flex flex-row `}>
+                        <img src={`../../assets/images/${n.USER_PHOTO}`}
+                          alt="logo du propriétaire de la recette"
+                          className={`${styles.imgUserSize}`} />
+                        {n.NOTICE_STAR_NUMBER === 1 ?
+                          (<div><i class="la la-star"></i><i class="lar la-star"></i><i class="lar la-star"></i><i class="lar la-star"></i><i class="lar la-star"></i></div>)
+                          : n.NOTICE_STAR_NUMBER === 2 ?
+                            (<div><i class="la la-star"></i><i class="la la-star"></i><i class="lar la-star"></i><i class="lar la-star"></i><i class="lar la-star"></i></div>)
+                            : n.NOTICE_STAR_NUMBER === 3 ?
+                              (<div><i class="la la-star"></i><i class="la la-star"></i><i class="la la-star"></i><i class="lar la-star"></i><i class="lar la-star"></i></div>)
+                              : n.NOTICE_STAR_NUMBER === 4 ?
+                                (<div><i class="la la-star"></i><i class="la la-star"></i><i class="la la-star"></i><i class="la la-star"></i><i class="lar la-star"></i></div>)
+                                : n.NOTICE_STAR_NUMBER === 5 ?
+                                  (<div><i class="la la-star"></i><i class="la la-star"></i><i class="la la-star"></i><i class="la la-star"></i><i class="la la-star"></i></div>)
+                                  : ("")
+                        }
+                        <p>Chef {n.USER_PSEUDO}</p>
+                      </div>
+                      <div className={`d-flex flex-row`}>
+                        <div className={`${styles.littleGreen2} `}> </div>
+                        <p className={`${styles.container7} `}>{n.NOTICE_RECIPE}</p>
+                      </div>
+                      </>
+                      ) : ("")}
+
+                    </div>
+
+                  ))}
+
+
                 </div>
-              <div className="d-flex flex-column">
-              <div>
-                Votre note ici : 
-                {[...Array(5)].map((star, index) => {
-                  index += 1;
-                  return (
-                    <div
-                      key={index}
-                      className={
-                        index <= rating
-                          ? "la la-star la-2x"
-                          : "lar la-star la-2x"
-                      }
-                      onClick={() => handleStarClick(index)}
-                    ></div>
-                  );
-                })}
+                <div className="d-flex flex-column justify-content-start m1 align-items-center">
+                  <div>
+                    <h3>Donner votre avis ici :</h3>
+                    {[...Array(5)].map((star, index) => {
+                      index += 1;
+                      return (
+                        <div
+                          key={index}
+                          className={
+                            index <= rating
+                              ? "la la-star la-2x"
+                              : "lar la-star la-2x"
+                          }
+                          onClick={() => handleStarClick(index)}
+                        ></div>
+                      );
+                    })}
 
-                {rating ? <p>Votre note : {rating} étoiles</p> : ""}
-              </div>
+                    {rating ? <p>Votre note : {rating} étoiles</p> : ""}
+                  </div>
 
-              <div className={`d-flex flex-row`}>
-                <div className={`${styles.littleGreen}`}></div>
-                <textarea
-                  rows="4"
-                  cols="50"
-                  placeholder="Ou simplement une remarque ou un avis sur la recette..."
-                  className={``}
-                  {...register("notice")}
-                ></textarea>
-              </div>
-              <button disabled={isSubmitting} className=" mt10 btn btn-primary">
-                Valider
-              </button>
-              </div>
-              
+                  <div className={`d-flex flex-row`}>
+                    <div className={`${styles.littleGreen}`}></div>
+                    <textarea
+                      rows="4"
+                      cols="50"
+                      placeholder="Ou simplement une remarque ou un avis sur la recette..."
+                      className={``}
+                      {...register("notice")}
+                    ></textarea>
+                  </div>
+                  <button disabled={isSubmitting} className=" mt10 btn btn-primary">
+                    Valider
+                  </button>
+                </div>
+
               </div>
               <div>{errors?.notice && <p>{errors.notice.message}</p>}</div>
 

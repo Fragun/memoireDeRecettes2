@@ -7,6 +7,8 @@
     margin-top: 20px;
     box-shadow: var(--box-shadow);
 
+
+
     .regime {
         width: 50px;
         border-radius: 25px;
@@ -80,13 +82,57 @@
     background-color: var(--background-color3);
     border-radius: 20px;
     box-shadow: var(--box-shadow);
+    
+}
+
+.mobileFlex {
+    
+    display: flex ;
+    flex-direction: row;
+    justify-content: space-evenly;
+    @include mixin.md-lt {
+        flex-direction: column;
+    }
+
+
 }
 
 .container6 {
     background-color: var(--background-color);
     border-radius: 20px;
-    border: solid 1px;
     box-shadow: var(--box-shadow);
+    width: 50%;
+    margin-left: auto;
+    margin-right: auto;
+    
+    
+
+    @include mixin.md-lt {
+        width: 80%;
+        
+
+    }
+
+    .imgUserSize {
+        width: 70px;
+        height: 70px;
+    }
+}
+
+.container7 {
+    border: dashed;
+    background-color: var(--gray-1);
+    padding: 10px;
+    width: 70%;
+    margin-left: auto;
+    margin-right: auto;
+    
+   
+}
+
+.littleGreen2 {
+    width: 25px;
+    background-color: var(--primary);
 }
 
 .littleGreen {
@@ -94,3 +140,9 @@
     background-color: var(--primary);
 }
 
+textarea {   
+    width:300px;
+    @include mixin.sm-lt {
+        width: 200px;}
+    
+}

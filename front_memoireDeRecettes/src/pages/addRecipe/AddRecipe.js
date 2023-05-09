@@ -10,6 +10,7 @@ import timePng from "../../assets/images/icons8-horloge-40.png";
 import { AuthContext } from "../../context";
 //import { RecipeContext } from "../../context/RecipeContext"
 import RecipeProvider from "../../components/Provider/RecipeProvider";
+import { RecipeContext } from "../../context/RecipeContext";
 const API_INDEX = "/api/recette";
 
 
@@ -146,6 +147,7 @@ export default function AddRecipe() {
         titleRecipe: yup
             .string()
             .required('Titre de la recette requise'),
+    
         commentRecipe: yup
             .string()
             .max(50, 'Doit contenir au maximum 50 caractères'),
@@ -189,18 +191,13 @@ export default function AddRecipe() {
             .string()
             .required("Veuillez selectionner un type de repas"),
         ustensil: yup
-            .string()
-            .required("Veuillez selectionner un ou plusieurs ustensiles"),
-        ustensil2: yup
-            .string()
-            .required("Veuillez selectionner un ou plusieurs ustensiles"),
-        ustensil3: yup
-             .string()
-             .required("Veuillez selectionner un ou plusieurs ustensiles"),
+            .array()
+            .notRequired(),
         idUserConnected: yup
              .number()
              .default(yup.ref('idUser'))
         });
+console.log(yupSchema);
 
 
 
@@ -219,10 +216,9 @@ export default function AddRecipe() {
         cookType: "",
         dietType: "",
         mealType: "",
-
-
+        ustensil: [ustensilChoose],
     };
-
+console.log(defaultValues);
     {/**********************************************useForm************************************************/ }
     const {
         register,
@@ -238,7 +234,7 @@ export default function AddRecipe() {
 
     {/****************************************handleClick**********************************************/ }
     const submit = handleSubmit(async (values) => {
-        //console.log(values);
+        console.log(values);
         try {
             const response = await fetch(`${API_INDEX}/addRecipe`, {
                 method: "POST",
@@ -670,7 +666,7 @@ export default function AddRecipe() {
                                         disabled={ustensilAdded}>
                                         
                                     </input>
-                                    <select {...register(`ustensil`)} id="ustensils" disabled={ustensilAdded}>
+                                    <select  id="ustensils" disabled={ustensilAdded}>
                                         <option value="" disabled>
                                             Quel ustensile ?
                                         </option>
@@ -679,9 +675,11 @@ export default function AddRecipe() {
                                             .map((ustensil) => (
                                                 <option key={ustensil.USTENSIL_ID} value={ustensil.USTENSIL_ICON}>
                                                     {ustensil.USTENSIL_NAME}
+                                                    
                                                     {/*<img src={`../../../public/assets/images/LOGO_Ustensiles_png/${ustensil.USTENSIL_ICON}`}></img>  */}
                                                 </option>
                                             ))}
+                                            
                                     </select>
                                     <button
                                         onClick={handleAddUstensil}
@@ -701,7 +699,7 @@ export default function AddRecipe() {
                                         placeholder="Search ..."
                                         disabled={ustensilAdded2}>
                                     </input>
-                                    <select {...register(`ustensil2`)} id="ustensils2" disabled={ustensilAdded2}>
+                                    <select id="ustensils2" disabled={ustensilAdded2}>
                                         <option value="" disabled>
                                             Quel ustensile ?
                                         </option>
@@ -733,7 +731,7 @@ export default function AddRecipe() {
                                         placeholder="Search ..."
                                         disabled={ustensilAdded3}>
                                     </input>
-                                    <select {...register(`ustensil3`)} id="ustensils3" disabled={ustensilAdded3}>
+                                    <select id="ustensils3" disabled={ustensilAdded3}>
                                         <option value="" disabled>
                                             Quel ustensile ?
                                         </option>
