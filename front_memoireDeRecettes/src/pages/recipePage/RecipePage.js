@@ -21,9 +21,13 @@ export default function RecipePage() {
   let { id } = useParams();
   let difficulty, price;
   let dateStr, date, formattedDate;
+
   let { idUser } = useParams();
-  idUser = user[0].USER_ID;
-  console.log(noticeRecipe);
+console.log({idUser});
+  if (user != null) {
+    idUser = user[0].USER_ID;
+  }
+ 
 
   const [rating, setRating] = useState(0);
 
@@ -478,13 +482,10 @@ export default function RecipePage() {
                       </div>
                       </>
                       ) : ("")}
-
                     </div>
-
                   ))}
-
-
                 </div>
+                {user ? (
                 <div className="d-flex flex-column justify-content-start m1 align-items-center">
                   <div>
                     <h3>Donner votre avis ici :</h3>
@@ -520,6 +521,7 @@ export default function RecipePage() {
                     Valider
                   </button>
                 </div>
+                ) : ("") }
 
               </div>
               <div>{errors?.notice && <p>{errors.notice.message}</p>}</div>

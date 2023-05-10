@@ -11,31 +11,15 @@ import { AuthContext } from "../../context";
 const API_INDEX = "/api/recette";
 
 
-export default function AddRecipe() {
+export default function AddRecipeTest() {
 
- 
     const { user } = useContext(AuthContext);
     const idUser = user[0].USER_ID;
-    console.log(idUser);
-
     const [mealTypeList, setMealTypeList] = useState([]);
     const [seasonList, setSeasonList] = useState([]);
     const [cookingList, setCookingList] = useState([]);
     const [dietList, setDietList] = useState([]);
     const [mealList, setMealList] = useState([]);
-    const [ustensilList, setUstensilList] = useState([]);
-    const [search, setSearch] = useState("");
-    const [search2, setSearch2] = useState("");
-    const [search3, setSearch3] = useState("");
-    const [ustensilChoose, setUstensilChoose] = useState([]);
-    console.log(ustensilChoose);
-    
-
-    const [ustensilAdded, setUstensilAdded] = useState(false);
-    const [ustensilAdded2, setUstensilAdded2] = useState(false);
-    const [ustensilAdded3, setUstensilAdded3] = useState(false);
-    const [inputUstensilAdded, setInputUstensiladded] = useState('dnone');
-    const [inputUstensilAdded2, setInputUstensiladded2] = useState('dnone');
     const [count, setCount] = useState(0);
     
     useEffect(() => {
@@ -113,20 +97,7 @@ export default function AddRecipe() {
         getMealMoment()
     }, []);
 
-    useEffect(() => {
-        async function getUstensils() {
-            try {
-                const response = await fetch(`${API_INDEX}/getUstensils`);
-                if (response.ok) {
-                    const ustensils = await response.json();
-                    setUstensilList(ustensils);
-                }
-            } catch (error) {
-                console.error(error);
-            }
-        }
-        getUstensils()
-    }, []);
+   
 
  
     const yupSchema = yup.object({
@@ -178,10 +149,8 @@ export default function AddRecipe() {
             .required("Veuillez selectionner un type de repas"),
         ustensil: yup
             .array()
-            .default(() => ustensilChoose),
-        // idUserConnected: yup
-        //      .number()
-        //      .default(yup.ref('idUser'))
+            .notRequired(),
+        
         });
 
    
@@ -199,8 +168,9 @@ export default function AddRecipe() {
         cookType: "",
         dietType: "",
         mealType: "",
+
     };
- console.log(defaultValues);
+ 
     const {
         register,
         handleSubmit,
@@ -235,64 +205,6 @@ export default function AddRecipe() {
         }
     });
 
-    function handleInput(e) {
-        console.log(e.target.value);
-        const keyBoardInput = e.target.value;
-        setSearch(keyBoardInput.trim().toLowerCase());
-        
-    }
-    function handleInput2(e) {
-        console.log(e.target.value);
-        const keyBoardInput = e.target.value;
-        setSearch2(keyBoardInput.trim().toLowerCase());
-        
-    }
-    function handleInput3(e) {
-        console.log(e.target.value);
-        const keyBoardInput = e.target.value;
-        setSearch3(keyBoardInput.trim().toLowerCase());
-    }
-    function handleAddUstensil(event) {
-        event.preventDefault();
-        const selectedUstensilId = document.getElementById("ustensils").value;
-        console.log(selectedUstensilId);
-        if (!ustensilChoose.includes(selectedUstensilId)) {
-            setUstensilChoose([...ustensilChoose, selectedUstensilId]);
-            setUstensilAdded(true); 
-        }
-    };
-
-
-    function handleAddUstensil2(event) {
-        event.preventDefault();
-        const selectedUstensilId = document.getElementById("ustensils2").value;
-        console.log(selectedUstensilId);
-        if (!ustensilChoose.includes(selectedUstensilId)) {
-            setUstensilChoose([...ustensilChoose, selectedUstensilId]);
-            setUstensilAdded2(true);  
-        }
-    };
-
-    function handleAddUstensil3(event) {
-        event.preventDefault();
-        const selectedUstensilId = document.getElementById("ustensils3").value;
-        console.log(selectedUstensilId);
-        if (!ustensilChoose.includes(selectedUstensilId)) {
-            setUstensilChoose([...ustensilChoose, selectedUstensilId]);
-            setUstensilAdded3(true);  
-        }
-    };
-
-    function addInputUstensil(e) {
-        e.preventDefault();
-        if (count===0) {
-            setInputUstensiladded('dBlock');
-        } 
-        if(count===1) {
-            setInputUstensiladded2('dBlock')
-         }
-        setCount(count + 1)
-    }
 
     return (
         
@@ -623,115 +535,7 @@ export default function AddRecipe() {
                         </div>
                     
                         <div className="d-flex flex-column mb20">
-                            <h2>De quels ustensiles de cuisine a t-on besoin ?</h2>
-                            <div className="d-flex">
-                                <div className={`${styles.inputStart}`}></div>
-                                <div className={`${styles.inputDeco} p10 d-flex justify-content-center`}>
-                                    <input
-                                        
-                                        type="text"
-                                        onInput={handleInput}
-                                        className="flex-fill"
-                                        placeholder="Search ..."
-                                        disabled={ustensilAdded}>
-                                        
-                                    </input>
-                                    <select  id="ustensils" disabled={ustensilAdded}>
-                                        <option value="" disabled>
-                                            Quel ustensile ?
-                                        </option>
-                                        {ustensilList
-                                            .filter(u => u.USTENSIL_NAME.toLowerCase().startsWith(search))
-                                            .map((ustensil) => (
-                                                <option key={ustensil.USTENSIL_ID} value={ustensil.USTENSIL_ICON}>
-                                                    {ustensil.USTENSIL_NAME}
-                                                </option>
-                                            ))}
-                                            
-                                    </select>
-                                    <i
-                                    className="btn btn-primary"
-                                        onClick={handleAddUstensil}
-                                    >
-                                        +
-                                    </i>
-                                </div>
-                                {errors?.ustensil && <p>{errors.ustensil.message}</p>}
-                            </div>
-                            <div className={`${inputUstensilAdded}`}>
-                                <div className={`${styles.inputStart}`}></div>
-                                <div className={`${styles.inputDeco} p10 d-flex justify-content-center`}>
-                                    <input
-                                        type="text"
-                                        onInput={handleInput2}
-                                        className="flex-fill"
-                                        placeholder="Search ..."
-                                        disabled={ustensilAdded2}>
-                                    </input>
-                                    <select id="ustensils2" disabled={ustensilAdded2}>
-                                        <option value="" disabled>
-                                            Quel ustensile ?
-                                        </option>
-                                        {ustensilList
-                                            .filter(u => u.USTENSIL_NAME.toLowerCase().startsWith(search2))
-                                            .map((ustensil) => (
-                                                <option key={ustensil.USTENSIL_ID} value={ustensil.USTENSIL_ICON}>
-                                                    {ustensil.USTENSIL_NAME}
-                                                
-                                                </option>
-                                            ))}
-                                    </select>
-                                    <i
-                                    className="btn btn-primary"
-                                        onClick={handleAddUstensil2}
-                                    >
-                                        +
-                                    </i>
-                                </div>
-                                {errors?.ustensil2 && <p>{errors.ustensil2.message}</p>}
-                            </div>
 
-                            <div className={`${inputUstensilAdded2}`}>
-                                <div className={`${styles.inputStart}`}></div>
-                                <div className={`${styles.inputDeco} p10 d-flex justify-content-center`}>
-                                    <input
-                                        type="text"
-                                        onInput={handleInput3}
-                                        className="flex-fill"
-                                        placeholder="Search ..."
-                                        disabled={ustensilAdded3}>
-                                    </input>
-                                    <select id="ustensils3" disabled={ustensilAdded3}>
-                                        <option value="" disabled>
-                                            Quel ustensile ?
-                                        </option>
-                                        {ustensilList
-                                            .filter(u => u.USTENSIL_NAME.toLowerCase().startsWith(search3))
-                                            .map((ustensil) => (
-                                                <option key={ustensil.USTENSIL_ID} value={ustensil.USTENSIL_ICON}>
-                                                    {ustensil.USTENSIL_NAME}
-                                                </option>
-                                            ))}
-                                    </select>
-                                    <i
-                                    className="btn btn-primary"
-                                        onClick={handleAddUstensil3}
-                                    >
-                                        +
-                                    </i>
-                                </div>
-                                {errors?.ustensil3 && <p>{errors.ustensil3.message}</p>}
-                            </div>
-
-                            <i className="btn btn-primary" onClick={addInputUstensil}>Ajouter un autre ustensile ?</i>
-                            <div>Listes des ustensiles :
-                                <br />
-                                <span>
-                                    {ustensilChoose
-                                        .map((u) => 
-                                        (<img className={`${styles.iconUstensil}`} key={u} src={`../../assets/images/LogoUstensiles/${u}`} alt="ustensile"></img>))}
-                                </span>
-                            </div>
                             <button disabled={isSubmitting} className="btn btn-primary">
                                 Ajouter à vos recettes
                             </button>

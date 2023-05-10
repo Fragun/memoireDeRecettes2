@@ -40,17 +40,8 @@ router.post("/addRecipe", (req, res) => {
   const cookType = req.body.cookType;
   const dietType = req.body.dietType;
   const mealType = req.body.mealType;
-  const ustensil = req.body.ustensil;
-  const ustensil2 = req.body.ustensil2;
-  const ustensil3 = req.body.ustensil3;
-  // const ustensil4 = req.body.ustensil4;
-  // const ustensil5 = req.body.ustensil5;
-  // const ustensil6 = req.body.ustensil6;
-  // const ustensil7 = req.body.ustensil7;
-  // const ustensil8 = req.body.ustensil8;
-  //const ustensilChoose = req.body.ustensilChoose;
-  //console.log(ustensilChoose);
-
+  const ustensils = req.body.ustensil;
+console.log(ustensils);
 
   const sqlInsert = `INSERT INTO recipe
   (RECIPE_TITLE, RECIPE_DESCRIPTION, RECIPE_PRICE, RECIPE_DIFFICULTY, RECIPE_PUBLICATION_DATE, RECIPE_NUMBER_PLATE, MEAL_TYPE_ID, PREP_TIME, COOKING_TIME, SEASON_ID,	COOKING_TYPE_ID, DIET_TYPE_ID, ID_TYPE_DE_REPAS) 
@@ -64,53 +55,38 @@ router.post("/addRecipe", (req, res) => {
     let resultBack = req.body;
     resultBack.id = result.insertId;
 
-    const sqlVerifyId = `SELECT USTENSIL_ID FROM ustensil WHERE USTENSIL_ICON = '${ustensil}'`;
-    const sqlVerifyId2 = `SELECT USTENSIL_ID FROM ustensil WHERE USTENSIL_ICON = '${ustensil2}'`;
-    console.log(sqlVerifyId2);
-    const sqlVerifyId3 = `SELECT USTENSIL_ID FROM ustensil WHERE USTENSIL_ICON = '${ustensil3}'`;
-    console.log(sqlVerifyId3);
-    // const sqlVerifyId4 = `SELECT USTENSIL_ID FROM ustensil WHERE USTENSIL_ICON = '${ustensil4}'`;
-    // const sqlVerifyId5 = `SELECT USTENSIL_ID FROM ustensil WHERE USTENSIL_ICON = '${ustensil5}'`;
-    // const sqlVerifyId6 = `SELECT USTENSIL_ID FROM ustensil WHERE USTENSIL_ICON = '${ustensil6}'`;
-    // const sqlVerifyId7 = `SELECT USTENSIL_ID FROM ustensil WHERE USTENSIL_ICON = '${ustensil7}'`;
-    // const sqlVerifyId8 = `SELECT USTENSIL_ID FROM ustensil WHERE USTENSIL_ICON = '${ustensil8}'`;
-
-    // Exécuter la requête SELECT pour récupérer l'ID de l'ustensile
-    connection.query(sqlVerifyId, (err, rows, fields) => {
-      if (err) throw err;
-      // Récupérer l'ID de l'ustensile à partir des résultats de la requête SELECT
-      const ustensilId = rows[0].USTENSIL_ID;
-      // Exécuter la requête INSERT INTO used pour ajouter l'ustensile
-      const sqlInsertUstensil = `INSERT INTO used (RECIPE_ID, USTENSIL_ID) VALUES (?, ?)`;
-      const value = [result.insertId, ustensilId];
-      connection.query(sqlInsertUstensil, value, (err, result) => {
-        if (err) throw err;
-        console.log("Ustensile1 ajouté à la recette");
-        //res.send(JSON.stringify(resultBack));
-      });
-    });
-    connection.query(sqlVerifyId2, (err, rows, fields) => {
-      if (err) throw err;
-      const ustensilId2 = rows[0].USTENSIL_ID;
-      const sqlInsertUstensil2 = `INSERT INTO used (RECIPE_ID, USTENSIL_ID) VALUES (?, ?)`;
-      const value = [result.insertId, ustensilId2];
-      connection.query(sqlInsertUstensil2, value, (err, result) => {
-        if (err) throw err;
-        console.log("Ustensile ajouté à la recette");
-        //res.send(JSON.stringify(resultBack));
-      });
-    });
-      connection.query(sqlVerifyId3, (err, rows, fields) => {
-        if (err) throw err;
-        const ustensilId3 = rows[0].USTENSIL_ID;
-        const sqlInsertUstensil3 = `INSERT INTO used (RECIPE_ID, USTENSIL_ID) VALUES (?, ?)`;
-        const value = [result.insertId, ustensilId3];
-        connection.query(sqlInsertUstensil3, value, (err, result) => {
-          if (err) throw err;
-          console.log("Ustensile ajouté à la recette");
-          res.send(JSON.stringify(true));
+    Promise.all(
+      ustensils.map((ustensil) => {
+        const sqlVerifyId = `SELECT USTENSIL_ID FROM ustensil WHERE USTENSIL_ICON = '${ustensil}'`;
+        return new Promise((resolve, reject) => {
+          connection.query(sqlVerifyId, (err, rows, fields) => {
+            if (err) {
+              reject(err);
+            } else {
+              const ustensilId = rows[0].USTENSIL_ID;
+              const sqlInsertUstensil = `INSERT INTO used (RECIPE_ID, USTENSIL_ID) VALUES (?, ?)`;
+              const value = [result.insertId, ustensilId];
+              connection.query(sqlInsertUstensil, value, (err, result) => {
+                if (err) {
+                  reject(err);
+                } else {
+                  console.log("Ustensile ajouté à la recette");
+                  resolve(result);
+                }
+              });
+            }
+          });
         });
+      })
+    )
+      .then(() => {
+        res.send(JSON.stringify(true));
+      })
+      .catch((err) => {
+        throw err;
       });
+      });
+    });
     // connection.query(sqlVerifyId4, (err, rows, fields) => {
     //   if (err) throw err;
     //   const ustensilId4 = rows[0].USTENSIL_ID;
@@ -167,8 +143,7 @@ router.post("/addRecipe", (req, res) => {
     //   });
     // });
 
-  });
-});
+
 
 {
   /*****************************************récup type repas, origin*******************************************************/
