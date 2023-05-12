@@ -43,13 +43,16 @@ router.post("/addRecipe", (req, res) => {
   const ustensils = req.body.ustensil;
   const ingredients = req.body.ingredient;
   const recipeExplication = req.body.descriptions;
+  const idUserConnected = req.body.idUserConnected;
+  console.log(idUserConnected);
+  
   //const stageNum = req.body.numStage;
   //console.log(stageNum);
   console.log(recipeExplication);
 
   const sqlInsert = `INSERT INTO recipe
-  (RECIPE_TITLE, RECIPE_DESCRIPTION, RECIPE_PRICE, RECIPE_DIFFICULTY, RECIPE_PUBLICATION_DATE, RECIPE_NUMBER_PLATE, MEAL_TYPE_ID, PREP_TIME, COOKING_TIME, SEASON_ID,	COOKING_TYPE_ID, DIET_TYPE_ID, ID_TYPE_DE_REPAS) 
-  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+  (RECIPE_TITLE, RECIPE_DESCRIPTION, RECIPE_PRICE, RECIPE_DIFFICULTY, RECIPE_PUBLICATION_DATE, RECIPE_NUMBER_PLATE, MEAL_TYPE_ID, PREP_TIME, COOKING_TIME, SEASON_ID,	COOKING_TYPE_ID, DIET_TYPE_ID, ID_TYPE_DE_REPAS, USER_ID) 
+  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
   const values = [
     title,
     comment,
@@ -64,6 +67,7 @@ router.post("/addRecipe", (req, res) => {
     cookType,
     dietType,
     mealType,
+    idUserConnected,
   ];
 
   connection.query(sqlInsert, values, (err, result) => {

@@ -1,4 +1,4 @@
-import { useCallback, useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -8,6 +8,8 @@ import difficulty from "../../assets/images/gantDifficulte.png";
 import FileUpload from "../components/fileUpload/fileUpload";
 import timePng from "../../assets/images/icons8-horloge-40.png";
 import { AuthContext } from "../../context";
+import Description from "../components/inputAddDescriptionRecipe/DescriptionRecipe";
+
 const API_INDEX = "/api/recette";
 
 
@@ -16,13 +18,22 @@ export default function AddRecipe() {
   const idUser = user[0].USER_ID;
   console.log(idUser);
 
+//permet de récurer la description de la recette
+  const [stepDescriptions, setStepDescriptions] = useState([]);
+
+  const handleStepDescriptionsChange = (newDescriptions) => {
+    setStepDescriptions(newDescriptions);
+  };
+console.log(stepDescriptions);
+
+
   const [mealTypeList, setMealTypeList] = useState([]);
   const [seasonList, setSeasonList] = useState([]);
   const [cookingList, setCookingList] = useState([]);
   const [dietList, setDietList] = useState([]);
   const [mealList, setMealList] = useState([]);
   const [ingredientList, setIngredientList] = useState([]);
-  console.log(ingredientList);
+  //console.log(ingredientList);
   const [ustensilList, setUstensilList] = useState([]);
 
   const [searchIngredient1, setSearchIngredient1] = useState([]);
@@ -62,9 +73,9 @@ export default function AddRecipe() {
 
   const [ustensilChoose, setUstensilChoose] = useState([]);
   const [ingredientChoose, setIngredientChoose] = useState([]);
-console.log(ingredientChoose);
+//console.log(ingredientChoose);
 const [automaticNumStage, setAutomaticNumStage] = useState('1');
-console.log(automaticNumStage);
+//console.log(automaticNumStage);
 
   const [ustensilAdded1, setUstensilAdded1] = useState(false);
   const [ustensilAdded2, setUstensilAdded2] = useState(false);
@@ -134,9 +145,7 @@ console.log(automaticNumStage);
   const [inputIngredientAdded23, setInputIngredientadded23] = useState("dnone");
   const [inputIngredientAdded24, setInputIngredientadded24] = useState("dnone");
 
-  const [numSteps, setNumSteps] = useState(1); // nombre d'étapes par défaut
-  const [stepDescriptions, setStepDescriptions] = useState(new Array(numSteps).fill(''));
-console.log(stepDescriptions);
+
   const [count, setCount] = useState(0);
   const [count2, setCount2] = useState(0);
 
@@ -293,9 +302,8 @@ console.log(stepDescriptions);
     ingredient: yup.array().default(() => ingredientChoose),
     descriptions : yup.array().default(() => stepDescriptions),
     //numStage : yup.array().default(() => automaticNumStage),
-    // idUserConnected: yup
-    //      .number()
-    //      .default(yup.ref('idUser'))
+    idUserConnected: yup
+        .number().default(idUser)
   });
 
 
@@ -319,7 +327,7 @@ console.log(stepDescriptions);
     descriptionRecipe4:"",
   };
 
-  console.log(defaultValues);
+ // console.log(defaultValues);
   const {
     register,
     handleSubmit,
@@ -333,7 +341,7 @@ console.log(stepDescriptions);
   });
 
   const submit = async (values) => {
-    console.log(values);
+   // console.log(values);
     try {
       const response = await fetch(`${API_INDEX}/addRecipe`, {
         method: "POST",
@@ -345,6 +353,7 @@ console.log(stepDescriptions);
       if (response.ok) {
         const recipe = await response.json();
         reset(defaultValues);
+        window.location.reload(false);
         console.log(recipe);
       }
     } catch (error) {
@@ -353,13 +362,13 @@ console.log(stepDescriptions);
   };
 
   function handleInput(e, setSearchFunction) {
-    console.log(e.target.value);
+   // console.log(e.target.value);
     const keyBoardInput = e.target.value;
     setSearchFunction(keyBoardInput.trim().toLowerCase());
   }
 
   function handleInputIngredient(e, index) {
-    console.log(e.target.value);
+   // console.log(e.target.value);
     const keyBoardInput = e.target.value;
     switch (index) {
       case 2:
@@ -439,7 +448,7 @@ console.log(stepDescriptions);
   function handleAddUstensil(event, id) {
     event.preventDefault();
     const selectedUstensilId = document.getElementById(id).value;
-    console.log(selectedUstensilId);
+    //console.log(selectedUstensilId);
     if (!ustensilChoose.includes(selectedUstensilId)) {
       setUstensilChoose([...ustensilChoose, selectedUstensilId]);
       switch (id) {
@@ -487,7 +496,7 @@ console.log(stepDescriptions);
   function handleAddIngredient(inputId, addedStateSetter, inputQuantity, inputMeasure) {
     return function(event) {
       event.preventDefault();
-      console.log(inputId);
+      //console.log(inputId);
       const selectedIngredientId = document.getElementById(inputId).value;
       const selectedIngredientQuantities = document.getElementById(`${inputQuantity}`).value;
       const selectedIngredientMeasure = document.getElementById(`${inputMeasure}`).value;
@@ -599,44 +608,7 @@ console.log(stepDescriptions);
     setCount2(count2 + 1);
   }
 
-  
 
-  const handleNumStepsChange = (e) => {
-    const value = parseInt(e.target.value);
-    setNumSteps(value);
-  };
-  
-  const handleStepDescriptionChange = useCallback((index, value) => {
-    setStepDescriptions(prev => {
-      const newDescriptions = [...prev];
-      newDescriptions[index] = value;
-      return newDescriptions;
-    });
-  }, [setStepDescriptions]);
-
-  const handleStepDescriptionSubmit = (index) => {
-    const inputId = `descriptionRecipe${index + 1}`;
-    const inputValue = document.getElementById(inputId).value;
-    handleStepDescriptionChange(index, inputValue);
-  };
-
-  // tableau d'étapes généré dynamiquement en fonction de numSteps
-  const steps = [...Array(numSteps)].map((_, i) => (
-    <div className="d-flex" key={`step-${i}`}>
-      <div className={`${styles.inputStart}`}></div>
-      <div className={`${styles.inputDeco} p10 d-flex justify-content-center`}>
-        <p> Etape {i + 1} : </p>
-        <input
-          type="text"
-          placeholder="Titre de l'étape"
-          className={`${styles.input} `}
-          id={`descriptionRecipe${i + 1}`}
-          value={stepDescriptions[i + 1]}
-        />
-        <button type="button" className="btn btn-secundary" onClick={() => handleStepDescriptionSubmit(i)}>valider</button>
-      </div>
-    </div>
-  ));
    
   return (
     <div className="d-flex justify-content-center">
@@ -3309,25 +3281,11 @@ console.log(stepDescriptions);
               </div>
             </div>
 
+            <Description
+        stepDescriptions={stepDescriptions}
+        onStepDescriptionsChange={handleStepDescriptionsChange}
+      />
 
-            <div>
-      <h2>Description de la Recette</h2>
-                    <p>Ecrivez ici le détail de votre recette étape par étape, vous pouvez à tout moment ajouter ou retirer des étapes.</p>
-      <div>
-        <label htmlFor="numSteps">Nombre d'étapes :</label>
-        <input
-          type="number"
-          id="numSteps"
-          name="numSteps"
-          value={numSteps}
-          min="1"
-          max="15"
-          onChange={handleNumStepsChange}
-        />
-      </div>
-      {steps}
-    </div>
-  
             <button disabled={isSubmitting} className="btn btn-primary">
               Ajouter à vos recettes
             </button>
