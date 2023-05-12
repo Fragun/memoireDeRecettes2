@@ -22,7 +22,7 @@ router.post("/addNotice/:id/:idUser", (req, res) => {
 
 router.post("/addRecipe", (req, res) => {
   console.log(req.body);
-  
+
   const title = req.body.titleRecipe;
   const comment = req.body.commentRecipe;
   const price = req.body.priceEstimation;
@@ -32,21 +32,39 @@ router.post("/addRecipe", (req, res) => {
   const origin = req.body.origin;
   const prepaTime = req.body.prepaTime;
   const prepaTime2 = req.body.prepaTime2;
-  const prepa = prepaTime + 'h' + prepaTime2 + "min";
+  const prepa = prepaTime + "h" + prepaTime2 + "min";
   const cookTime = req.body.cookTime;
   const cookTime2 = req.body.cookTime2;
-  const cook = cookTime + ' h' + cookTime2 + " min";
+  const cook = cookTime + " h" + cookTime2 + " min";
   const season = req.body.season;
   const cookType = req.body.cookType;
   const dietType = req.body.dietType;
   const mealType = req.body.mealType;
   const ustensils = req.body.ustensil;
-console.log(ustensils);
+  const ingredients = req.body.ingredient;
+  const recipeExplication = req.body.descriptions;
+  //const stageNum = req.body.numStage;
+  //console.log(stageNum);
+  console.log(recipeExplication);
 
   const sqlInsert = `INSERT INTO recipe
   (RECIPE_TITLE, RECIPE_DESCRIPTION, RECIPE_PRICE, RECIPE_DIFFICULTY, RECIPE_PUBLICATION_DATE, RECIPE_NUMBER_PLATE, MEAL_TYPE_ID, PREP_TIME, COOKING_TIME, SEASON_ID,	COOKING_TYPE_ID, DIET_TYPE_ID, ID_TYPE_DE_REPAS) 
   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
-  const values = [title, comment, price, difficulty, recipeDate, recipeNumberplate, origin, prepa, cook, season, cookType, dietType, mealType];
+  const values = [
+    title,
+    comment,
+    price,
+    difficulty,
+    recipeDate,
+    recipeNumberplate,
+    origin,
+    prepa,
+    cook,
+    season,
+    cookType,
+    dietType,
+    mealType,
+  ];
 
   connection.query(sqlInsert, values, (err, result) => {
     if (err) throw err;
@@ -79,14 +97,57 @@ console.log(ustensils);
         });
       })
     )
+
+    Promise.all(
+      ingredients.map((ingredient) => {
+        const sqlVerifyId = `SELECT INGREDIENT_ID FROM ingredient WHERE INGREDIENT_ICON = '${ingredient.id}'`;
+        const quantitie = ingredient.quantities;
+        const measure = ingredient.measure;
+        return new Promise((resolve, reject) => {
+          connection.query(sqlVerifyId, (err, rows, fields) => {
+            if (err) {
+              reject(err);
+            } else {
+              console.log(measure);
+              console.log(quantitie);
+              const ingredientId = rows[0].INGREDIENT_ID;
+              const sqlInsertIngredient = `INSERT INTO contain (RECIPE_ID, INGREDIENT_ID, INGREDIENT_QUANTITY, MEASURE_UNITY) VALUES (?, ?, ?, ?)`;
+              const value = [result.insertId, ingredientId, quantitie, measure];
+              connection.query(sqlInsertIngredient, value, (err, result) => {
+                if (err) {
+                  reject(err);
+                } else {
+                  console.log("Ingredient ajouté dans contain");
+                  resolve(result);
+                }
+              });
+            }
+          });
+        });
+      })
+    )
       .then(() => {
         res.send(JSON.stringify(true));
       })
       .catch((err) => {
         throw err;
       });
-      });
-    });
+
+    
+//Boucle pour parcourir les valeurs de recipeExplication
+for(let i = 0; i < recipeExplication.length; i++) {
+  const sqlInsertExplication = `INSERT INTO stage (STAGE_RECIPE_EXPLICATION, RECIPE_ID) VALUES (?, ?)`;
+  const values = [
+    recipeExplication[i],
+    result.insertId //récupération de l'ID de la recette précédemment insérée
+  ];
+  connection.query(sqlInsertExplication, values, (err, result) => {
+    if (err) throw err;
+    console.log("Explication ajoutée à la base de donnees");
+  });
+}
+  });
+});
     // connection.query(sqlVerifyId4, (err, rows, fields) => {
     //   if (err) throw err;
     //   const ustensilId4 = rows[0].USTENSIL_ID;
@@ -205,6 +266,15 @@ router.get("/getUstensils", (req, res) => {
   connection.query(sqlUstensil, (err, result) => {
     if (err) throw err;
     //console.log("Récupération ustensil");
+    res.send(JSON.stringify(result));
+  });
+});
+
+router.get("/getIngredient", (req, res) => {
+  const sqlIngredient = `SELECT * FROM ingredient`;
+  connection.query(sqlIngredient, (err, result) => {
+    if (err) throw err;
+    //console.log("Récupération ingredient");
     res.send(JSON.stringify(result));
   });
 });

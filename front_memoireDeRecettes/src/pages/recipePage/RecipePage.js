@@ -9,6 +9,7 @@ import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { AuthContext } from "../../context/AuthContext";
+import  SweetAlert  from "../components/alert/AlertSweet";
 const URL_API = "/api/recette";
 
 export default function RecipePage() {
@@ -28,6 +29,7 @@ console.log({idUser});
     idUser = user[0].USER_ID;
   }
  
+
 
   const [rating, setRating] = useState(0);
 
@@ -205,6 +207,13 @@ console.log({idUser});
     resolver: yupResolver(yupSchema),
   });
 
+  function handleClickAstuce() {
+
+    {SweetAlert('Bravo', 'Votre message a bien été envoyé')}
+  }
+    
+
+
   const submit = handleSubmit(async (values) => {
     console.log(values);
     try {
@@ -228,6 +237,8 @@ console.log({idUser});
       setError("generic", { type: "generic", message });
     }
   });
+
+  
 
   return (
     <div className="d-flex flex-column justify-content-center">
@@ -517,7 +528,7 @@ console.log({idUser});
                       {...register("notice")}
                     ></textarea>
                   </div>
-                  <button disabled={isSubmitting} className=" mt10 btn btn-primary">
+                  <button disabled={isSubmitting} onClick={() => handleClickAstuce()} className=" mt10 btn btn-primary">
                     Valider
                   </button>
                 </div>
