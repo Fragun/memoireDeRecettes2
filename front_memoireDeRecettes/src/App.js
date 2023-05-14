@@ -9,7 +9,7 @@ import AuthProvider from "./components/Provider/AuthProvider";
 function App() {
 
   const user = useLoaderData();
-  console.log(user);
+  //console.log(user);
 
   return (
     <div className={`d-flex flex-column ${styles.appContainer}`}>

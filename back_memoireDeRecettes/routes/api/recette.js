@@ -1,7 +1,44 @@
 const express = require("express");
 const router = require("express").Router();
+const multer = require('multer');
 
 const connection = require("../../database/index");
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'assets/images');
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + '-' + file.originalname);
+  }
+});
+const upload = multer({ 
+  storage: storage,
+  limits: {
+    fileSize: 2 * 1024 * 1024, // 2 Mo
+    files: 3 // maximum 3 fichiers
+  } });
+  console.log(upload);
+
+// Route pour gérer le téléchargement de fichiers
+router.post('/uploadImage', (req, res) => {
+  console.log(req.body);
+  if (!req.files) {
+    return res.status(400).send('Aucun fichier n\'a été envoyé.');
+  }
+
+  // Traiter chaque fichier envoyé
+  req.files.forEach(file => {
+    if (!file.mimetype.startsWith('image/')) {
+      return res.status(400).send('Seuls les fichiers image sont autorisés.');
+    }
+
+    // Répondre au client avec un message de confirmation
+    res.send('Fichier téléchargé avec succès.');
+    console.log("Fichier téléchargé avec succès");
+  });
+});
+
 
 router.post("/addNotice/:id/:idUser", (req, res) => {
 

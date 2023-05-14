@@ -1,13 +1,21 @@
 import { useCallback, useState } from "react";
 import styles from "../../addRecipe/AddRecipe.module.scss";
 
+/**
+ * permet de saisir la description de la recette
+ * stepDecriptions est un tableau avec la desccription de la recette étape par étape 
+ * onStepDescriptionsChange permet de mettre à jour la valeur de stepDescriptions dans l'élèment parent, ici addRecipe
+ * @export
+ * @param {*} { stepDescriptions, onStepDescriptionsChange } 
+ * @return 
+ */
 export default function Description({ stepDescriptions, onStepDescriptionsChange }) {
   const [numSteps, setNumSteps] = useState(1); // nombre d'étapes par défaut
   const [descriptions, setDescriptions] = useState(
     new Array(numSteps).fill("")
   );
 
-  console.log(descriptions);
+  //console.log(descriptions);
 
   const handleNumStepsChange = (e) => {
     const value = parseInt(e.target.value);
@@ -43,7 +51,7 @@ export default function Description({ stepDescriptions, onStepDescriptionsChange
           placeholder="Titre de l'étape"
           className={`${styles.input} `}
           id={`descriptionRecipe${i + 1}`}
-          value={descriptions[i + 1]}
+          
         />
         <button
           type="button"
@@ -74,8 +82,16 @@ export default function Description({ stepDescriptions, onStepDescriptionsChange
           max="15"
           onChange={handleNumStepsChange}
         />
+        
       </div>
       {steps}
+      <div className="d-flex flex-column align-items-center">
+  {stepDescriptions.map((description, index) => (
+    <div key={index}>
+      étape {index + 1}: {description}
+    </div>
+  ))}
+</div>
     </div>
   );
 }

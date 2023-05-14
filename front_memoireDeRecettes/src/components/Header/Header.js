@@ -8,7 +8,7 @@ import { AuthContext } from "../../context";
 
 export default function Header() {
   const { user, signout } = useContext(AuthContext);
-  console.log(user);
+  //console.log(user);
   const [showMenu, setShowMenu] = useState(false);
   const [count, setCount] = useState(0);
 
