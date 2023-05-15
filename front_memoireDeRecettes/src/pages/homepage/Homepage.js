@@ -2,7 +2,6 @@ import styles from "./Homepage.module.scss";
 import SimpleCard from "../components/card/SimpleCard";
 import CardMulti from "../components/card/MultiCard";
 import { useContext, useEffect, useState } from "react";
-import UserContext from '../../context/context';
 import BanniereCreationCompte from "../components/banniereInscription/BanniereCreationCompte";
 import BanniereRecetteDuJour from "../components/banniereUneRecette/BanniereRecetteDuJour";
 import Loading from "../../components/Loading/Loading";
@@ -14,7 +13,6 @@ const URL_API = "/api/recette";
 export default function Homepage() {
   const { user } = useContext(AuthContext);
   console.log(user);
-  //const URL_API = useContext(ApiContext);
 
   const [search, setSearch] = useState("");
   const [articles, setArticles] = useState([]);
@@ -23,6 +21,12 @@ export default function Homepage() {
   const [page, setPage] = useState(1);
   const [numberRecipes, setNumberRecipes] = useState(0);
 
+  /**
+   * met en minuscule et sans espace la valeur saisi par l'utilisateur dans la barre de recherche*
+   * et place la valeur dans search
+   *
+   * @param {*} e 
+   */
   function handleInput(e) {
     const keyBoardInput = e.target.value;
     setSearch(keyBoardInput.trim().toLowerCase());
@@ -76,6 +80,7 @@ export default function Homepage() {
           <div
             className={`card flex-fill d-flex flex-column mb20 p20 ${styles.contentCard}`}
           >
+            
             <div
               className={`d-flex my30 justify-content-center align-items-center ${styles.searchBar}`}
             >
@@ -130,17 +135,27 @@ export default function Homepage() {
 
         <h1 className="mt20 mb20">La Recette du Jour</h1>
         <BanniereRecetteDuJour />
-        <h1 className="mt20 mb20">Idées Repas</h1>
-        {/* <div className={`${styles.grid}`}>
+        {/* <h1 className="mt20 mb20">Idées Repas</h1>
+         <div className={`${styles.grid}`}>
                 
                     {articles
-                    .filter(a => a.title.toLowerCase().startsWith(search))
                     .map((a, i) => (
-                        < CardMulti key={i} title={a.title} image={a.image} imageAvatar={a.imageAvatar} imagePreparation={a.imagePreparation} 
-                        imageCuisson={a.imageCuisson} imageDifficulte={a.imageDifficulte} imageVegetarien={a.imageVegetarien} 
-                        imageVegan={a.imageVegan} imageSansGluten={a.imageSansGluten}/>
+                        < CardMulti                       key={i}
+                        title={a.RECIPE_TITLE}
+                        image={a.PHOTO_NAME}
+                        description={a.RECIPE_DESCRIPTION}
+                        publicationDate={a.RECIPE_PUBLICATION_DATE}
+                        couvert={a.RECIPE_NUMBER_PLATE}
+                        difficulty={a.RECIPE_DIFFICULTY}
+                        price={a.RECIPE_PRICE}
+                        prepTime={a.PREP_TIME}
+                        timeCooking={a.COOKING_TIME}
+                        imageAvatar={a.USER_PHOTO}
+                        regime={a.DIET_TYPE_NAME}
+                        regimeImage={a.DIET_IMAGE }
+                        idRecipe={a.RECIPE_ID}/>
                     ))}
-                </div> */}
+                </div>  */}
       </div>
     </div>
   );

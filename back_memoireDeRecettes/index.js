@@ -17,7 +17,7 @@ app.use((req, res, next) => {
 // middleware qui permet d'extraire les cookies
 app.use(cookie());
 // cela permet d'extraire le body qui est stringify au format object JS
-app.use(bodyParser.json());
+app.use(bodyParser.json({ limit: "50mb" }));
 // Middleware pour gérer les requêtes JSON
 app.use(routes);
 // si la route n'a pas été trouvé cela renvoie un status 404

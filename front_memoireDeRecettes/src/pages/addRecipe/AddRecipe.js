@@ -69,6 +69,13 @@ const [automaticNumStage, setAutomaticNumStage] = useState('1');
 
   const [count, setCount] = useState(0);
 
+  const [recipeObj, setRecipeObj] = useState();
+  console.log(recipeObj);
+
+  const handleFileUpload = (obj) => {
+    console.log(obj.value);
+    setRecipeObj(obj);
+  };
 
   useEffect(() => {
     async function getMealType() {
@@ -193,6 +200,7 @@ const [automaticNumStage, setAutomaticNumStage] = useState('1');
     ustensil: yup.array().default(() => ustensilChoose),
     ingredient: yup.array().default(() => ingredientChoose),
     descriptions : yup.array().default(() => stepDescriptions),
+    nameImage : yup.object().default(() => recipeObj),
     //numStage : yup.array().default(() => automaticNumStage),
     idUserConnected: yup
         .number().default(idUser)
@@ -213,7 +221,6 @@ const [automaticNumStage, setAutomaticNumStage] = useState('1');
     cookType: "",
     dietType: "",
     mealType: "",
-    descriptionRecipe:"",
   };
 
  // console.log(defaultValues);
@@ -376,7 +383,7 @@ const [automaticNumStage, setAutomaticNumStage] = useState('1');
               </div>
             </div>
             <h2 className="mt10">Ajouter des images pour votre recette :</h2>
-            <FileUpload />
+            <FileUpload onFileUpload={handleFileUpload} />
             <h2 className="mt10">
               Quelle est votre estimation du prix de la recette ?
             </h2>

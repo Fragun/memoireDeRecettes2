@@ -1,102 +1,108 @@
 import { useState } from "react";
 import AlertBad from "../alert/AlertBad";
+import SweetAlert from "../alert/AlertSweet";
+const URL_API = "/api/recette";
 
-const API_INDEX = "/api/recette";
 
-const MAX_NUM_IMAGES = 3;
+export default function FileUpload({ onFileUpload }) {
 
-const ImageUpload = () => {
-  const [images, setImages] = useState([]);
-  //console.log(images);
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [previewImage, setPreviewImage] = useState(null);
+  console.log(previewImage);
+console.log(selectedFile);
 
-  const handleImageLoad = (file) => {
-    return new Promise((resolve) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => {
-        resolve(reader.result);
+  const handleSubmit3 = async (event) => {
+    event.preventDefault();
+    console.log(event);
+    if (!selectedFile) {
+      AlertBad('Oupss', 'Veuillez selectionner un fichier image.');
+      return;
+    }
+
+    // Création d'une instance de l'objet FileReader qui permet de lire les fichiers de type File ou Blob
+    const fileReader = new FileReader();
+    console.log(fileReader);
+    // Lecture du contenu du fichier choisi avec l'input
+    fileReader.readAsArrayBuffer(selectedFile);
+    // Accès au contenu du fichier une fois la lecture terminée grace à l'événement onload
+    fileReader.onload = async () => {
+      // récupération du contenu du fichier lu
+      const buffer = fileReader.result;
+      // création d'un objet blob à partir du contenu du fichier lu et du type du fichier (ex: image/png)
+      const blob = new Blob([buffer], { type: selectedFile.type });
+      console.log(selectedFile.type);
+
+      // invocation de la fonction en passant en paramètre l'objet blob
+      const base64 = await convertBlobToBase64(blob);
+      console.log({ base64 });
+
+      // création d'un objet avec la clé value et comme valeur le fichier codé
+      const obj = { value: base64 };
+      console.log(obj);
+      onFileUpload(obj);
+
+    };
+  };
+
+  // déclaration de la fonction lors d'un changement de fichier dans l'input avant validation
+  const handleFileChange = (event) => {
+    // récupération du fichier
+    const file = event.target.files[0];
+    //on l'attribue au useState
+    setSelectedFile(file);
+    // s'il y a un fichier on le lit et l'attribue à previewImage qui est le src de la balise img
+    if (file) {
+      const fileReader = new FileReader();
+      fileReader.readAsDataURL(file);
+      fileReader.onload = () => {
+        setPreviewImage(fileReader.result);
       };
-      //console.log(reader);
+    } else {
+      setPreviewImage(null);
+    }
+  };
+
+  // déclaration de la fonction qui récupére un objet blob, le lit et le convertit en
+  // une chaine de caractères base64 qui permet de coder tout type de données
+  // une fois la promesse résolue, si aucune erreur n'a été rencontré, le fichier codé et renvoyé en retour
+  // de fonction
+  const convertBlobToBase64 = (blob) => {
+    return new Promise((resolve, reject) => {
+      const fileReader = new FileReader();
+      console.log(fileReader);
+      fileReader.readAsDataURL(blob);
+      fileReader.onload = () => {
+        resolve(fileReader.result);
+      };
+      fileReader.onerror = (error) => {
+        reject(error);
+      };
     });
   };
 
-  const handleImageChange = ({ target: { files } }) => {
-    const numNewImages = files.length;
-    const currentNumImages = images.length;
-    if (currentNumImages + numNewImages <= MAX_NUM_IMAGES) {
-      const updatedImages = [...images];
-      for (let i = 0; i < numNewImages; i++) {
-        const file = files[i];
-        handleImageLoad(file).then((image) => {
-          updatedImages.push(image);
-          if (updatedImages.length === currentNumImages + numNewImages) {
-            setImages(updatedImages);
-          }
-        });
-      }
-    } else {
-      AlertBad(
-        "Oups...",
-        `Vous pouvez ajouter ${MAX_NUM_IMAGES} images maximum.`
-      );
-    }
-  };
-
-  const handleSubmit2 = async (event) => {
-    console.log(event);
-    event.preventDefault();
-    const formData = new FormData();
-    console.log(formData);
-    for (let i = 0; i < images.length; i++) {
-      formData.append("images", images[i]);
-      console.log(formData);
-    }
-    try {
-      const response = await fetch(`${API_INDEX}/uploadImage`, {
-        method: "POST",
-        body: formData,
-      });
-      console.log(response);
-      if (!response.ok) {
-        throw new Error("Upload failed");
-      }
-      setImages([]);
-      alert("Images uploaded successfully");
-    } catch (error) {
-      console.error(error);
-      AlertBad("Oups...", `Erreur lors du téléchargement des images.`);
-    }
-  };
-
-  const renderImages = () => {
-    return (
-      <div>
-        {images.map((image, index) => (
-          <img
-            key={index}
-            src={image}
-            alt={`uploaded image ${index}`}
-            style={{ width: "200px" }}
-          />
-        ))}
-      </div>
-    );
-  };
-
   return (
-    <div>
-      <form onSubmit={handleSubmit2}>
-        <input
-          type="file"
-          accept="image/*"
-          multiple
-          onChange={handleImageChange}
-        />
-        <button type="submit">Upload Images</button>
-      </form>
-      {images.length > 0 && renderImages()}
+    <div className="text-align-cneter">
+
+        <label>
+          Sélectionnez une image :
+          <input type="file" onChange={handleFileChange} />
+        </label>
+        <button type="submit" onClick={handleSubmit3}>Valider</button>
+        <br />
+        <br />
+        <br />
+        {previewImage && (
+          <img
+            src={previewImage}
+            alt="Image preview"
+            style={{ width: "400px" }}
+          />
+        )}
+
     </div>
   );
-};
+}
 
-export default ImageUpload;
+FileUpload.defaultProps = {
+  obj: [],
+};

@@ -13,23 +13,52 @@ import  SweetAlert  from "../components/alert/AlertSweet";
 const URL_API = "/api/recette";
 
 export default function RecipePage() {
+  
   const { user } = useContext(AuthContext);
+
   const [recipeClick, setRecipeClick] = useState([]);
+  console.log(recipeClick);
   const [ustensilsRecipe, setUstensilsRecipe] = useState([]);
   const [noticeRecipe, setNoticeRecipe] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [previewImageRecipe, setPreviewImageRecipe] = useState(); 
+console.log(previewImageRecipe);
+
+  
+useEffect(() => {
+  const fetchImageAndSetPreviewImageRecipe = async () => {
+    if (recipeClick.length > 0) {
+      const imageRecipe = recipeClick[0].PHOTO_NAME;
+      console.log(imageRecipe);
+      const uint8Array = new Uint8Array(imageRecipe);
+      const blob = new Blob([uint8Array]);
+      const urlImage = URL.createObjectURL(blob);
+      console.log(urlImage);
+      fetch(urlImage)
+      .then((response) => response.text())
+      .then((text) => {
+        setPreviewImageRecipe(text);
+        console.log(text);
+        
+      })
+      .catch((error) => console.log(error));
+      
+    }
+  };
+
+  fetchImageAndSetPreviewImageRecipe();
+}, [recipeClick]);
 
   let { id } = useParams();
+  
   let difficulty, price;
   let dateStr, date, formattedDate;
 
   let { idUser } = useParams();
-console.log({idUser});
+//console.log({idUser});
   if (user != null) {
     idUser = user[0].USER_ID;
   }
- 
-
 
   const [rating, setRating] = useState(0);
 
@@ -263,7 +292,7 @@ console.log({idUser});
                 <div className="d-flex flex-column justify-content-center align-items-center">
                   <img
                     className={` ${styles.bigImage} m10 d-flex `}
-                    src={`../../assets/images/${recipeClick[0].PHOTO_NAME}`}
+                    src={previewImageRecipe}
                     alt="recette principale"
                   ></img>
                   <div className="d-flex justify-content-center">

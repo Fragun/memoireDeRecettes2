@@ -4,41 +4,6 @@ const multer = require('multer');
 
 const connection = require("../../database/index");
 
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, 'assets/images');
-  },
-  filename: function (req, file, cb) {
-    cb(null, Date.now() + '-' + file.originalname);
-  }
-});
-const upload = multer({ 
-  storage: storage,
-  limits: {
-    fileSize: 2 * 1024 * 1024, // 2 Mo
-    files: 3 // maximum 3 fichiers
-  } });
-  console.log(upload);
-
-// Route pour gérer le téléchargement de fichiers
-router.post('/uploadImage', (req, res) => {
-  console.log(req.body);
-  if (!req.files) {
-    return res.status(400).send('Aucun fichier n\'a été envoyé.');
-  }
-
-  // Traiter chaque fichier envoyé
-  req.files.forEach(file => {
-    if (!file.mimetype.startsWith('image/')) {
-      return res.status(400).send('Seuls les fichiers image sont autorisés.');
-    }
-
-    // Répondre au client avec un message de confirmation
-    res.send('Fichier téléchargé avec succès.');
-    console.log("Fichier téléchargé avec succès");
-  });
-});
-
 
 router.post("/addNotice/:id/:idUser", (req, res) => {
 
@@ -81,6 +46,8 @@ router.post("/addRecipe", (req, res) => {
   const ingredients = req.body.ingredient;
   const recipeExplication = req.body.descriptions;
   const idUserConnected = req.body.idUserConnected;
+  const nameImage = req.body.nameImage;
+  console.log(nameImage);
   console.log(idUserConnected);
   
   //const stageNum = req.body.numStage;
@@ -187,64 +154,36 @@ for(let i = 0; i < recipeExplication.length; i++) {
     console.log("Explication ajoutée à la base de donnees");
   });
 }
+try {
+  const sql = `INSERT INTO photo (PHOTO_NAME, RECIPE_ID) VALUES ('${nameImage}', ${result.insertId}) `;
+  connection.query(sql, (err, result) => {
+    if (err) throw err;
+
+    console.log("image ajouté");
+  });
+} catch (error) {
+  console.error(error);
+  res.send(false);
+}
   });
 });
-    // connection.query(sqlVerifyId4, (err, rows, fields) => {
-    //   if (err) throw err;
-    //   const ustensilId4 = rows[0].USTENSIL_ID;
-    //   const sqlInsertUstensil4 = `INSERT INTO used (RECIPE_ID, USTENSIL_ID) VALUES (?, ?)`;
-    //   const value = [result.insertId, ustensilId4];
-    //   connection.query(sqlInsertUstensil4, value, (err, result) => {
-    //     if (err) throw err;
-    //     console.log("Ustensile ajouté à la recette");
-    //     res.send(JSON.stringify(resultBack));
-    //   });
-    // });
-    // connection.query(sqlVerifyId5, (err, rows, fields) => {
-    //   if (err) throw err;
-    //   const ustensilId5 = rows[0].USTENSIL_ID;
-    //   const sqlInsertUstensil5 = `INSERT INTO used (RECIPE_ID, USTENSIL_ID) VALUES (?, ?)`;
-    //   const value = [result.insertId, ustensilId5];
-    //   connection.query(sqlInsertUstensil5, value, (err, result) => {
-    //     if (err) throw err;
-    //     console.log("Ustensile ajouté à la recette");
-    //     res.send(JSON.stringify(resultBack));
-    //   });
-    // });
-    // connection.query(sqlVerifyId6, (err, rows, fields) => {
-    //   if (err) throw err;
-    //   const ustensilId6 = rows[0].USTENSIL_ID;
-    //   const sqlInsertUstensil6 = `INSERT INTO used (RECIPE_ID, USTENSIL_ID) VALUES (?, ?)`;
-    //   const value = [result.insertId, ustensilId6];
-    //   connection.query(sqlInsertUstensil6, value, (err, result) => {
-    //     if (err) throw err;
-    //     console.log("Ustensile ajouté à la recette");
-    //     res.send(JSON.stringify(resultBack));
-    //   });
-    // });
-    // connection.query(sqlVerifyId7, (err, rows, fields) => {
-    //   if (err) throw err;
-    //   const ustensilId7 = rows[0].USTENSIL_ID;
-    //   const sqlInsertUstensil7 = `INSERT INTO used (RECIPE_ID, USTENSIL_ID) VALUES (?, ?)`;
-    //   const value = [result.insertId, ustensilId7];
-    //   connection.query(sqlInsertUstensil7, value, (err, result) => {
-    //     if (err) throw err;
-    //     console.log("Ustensile ajouté à la recette");
-    //     res.send(JSON.stringify(resultBack));
-    //   });
-    // });
-    // connection.query(sqlVerifyId8, (err, rows, fields) => {
-    //   if (err) throw err;
-    //   const ustensilId8 = rows[0].USTENSIL_ID;
-    //   const sqlInsertUstensil8 = `INSERT INTO used (RECIPE_ID, USTENSIL_ID) VALUES (?, ?)`;
-    //   const value = [result.insertId, ustensilId8];
-    //   connection.query(sqlInsertUstensil8, value, (err, result) => {
-    //     if (err) throw err;
-    //     console.log("Ustensile ajouté à la recette");
-    //     res.send(JSON.stringify(resultBack));
-    //   });
-    // });
 
+router.post('/addImage', async (req, res) => {
+  console.log(req.body); 
+  // récupération de l'image envoyé dans le body
+  const image = req.body.value;
+  // insertion en base de données
+  try {
+    const sql = `INSERT INTO photo (PHOTO_NAME) VALUE ("${image}") `;
+    connection.query(sql, (err, result) => {
+      if (err) throw err;
+      res.send(true);
+    });
+  } catch (error) {
+    console.error(error);
+    res.send(false);
+  }
+})
 
 
 {
@@ -369,7 +308,6 @@ router.get("/getDaysRecipe/:currentSeason", (req, res) => {
 
 router.get("/getRecipeClicked/:id", (req, res) => {
   const idRecipe = req.params.id;
-  //console.log(currentSeason);
   let sql = `SELECT * FROM recipe as r 
                  INNER JOIN photo ON r.RECIPE_ID = photo.RECIPE_ID
                  JOIN user ON r.USER_Id = user.USER_ID
@@ -416,7 +354,17 @@ router.get("/getNotice/:id", (req, res) => {
   });
 });
 
+router.get("/getImageRecipe/:id", (req,res) => {
+  const idRecipe =req.params.id;
+  console.log(idRecipe);
+  const sql = `SELECT PHOTO_NAME FROM photo WHERE photo.RECIPE_ID = ${idRecipe}`;
+  connection.query(sql, (err, result) => {
 
+    if (err) throw err;
+    console.log("Récupération photo recette");
+    res.send(result[0]);
+  });
+});
 
 //  app.post("/toggleLiked", (req, res) => {
 //   const liked = req.body.liked === true ? "1" : "0";
