@@ -15,7 +15,7 @@ export default function Description({ stepDescriptions, onStepDescriptionsChange
     new Array(numSteps).fill("")
   );
 
-  //console.log(descriptions);
+  console.log(descriptions);
 
   const handleNumStepsChange = (e) => {
     const value = parseInt(e.target.value);

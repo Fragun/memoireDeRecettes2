@@ -47,7 +47,7 @@ export default function AddRecipe() {
 
   const [ustensilChoose, setUstensilChoose] = useState([]);
 
-const [automaticNumStage, setAutomaticNumStage] = useState('1');
+//const [automaticNumStage, setAutomaticNumStage] = useState('1');
 //console.log(automaticNumStage);
 
   const [ustensilAdded1, setUstensilAdded1] = useState(false);

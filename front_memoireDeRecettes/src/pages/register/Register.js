@@ -9,6 +9,7 @@ import { GoogleLogin, GoogleLogout } from 'react-google-login';
 import { gapi } from 'gapi-script';
 import { createUser } from "../../apis/users";
 import { useNavigate } from "react-router-dom";
+import SweetAlert from "../components/alert/AlertSweet";
 
 export default function Register() {
 
@@ -138,7 +139,9 @@ export default function Register() {
         try {
           clearErrors();
           await createUser(values);
-          navigate('/login')
+          SweetAlert('Bravo', 'Vous êtes inscrit')
+            navigate('/login');
+          ;
         } catch (message) {
           setError("generic", { type: "generic", message })
         }
@@ -228,7 +231,7 @@ export default function Register() {
                     
                     {profile ? (
                         <div>
-                            <img src={profile.imageUrl} alt="photo utilisateur Google" />
+                            <img src={profile.imageUrl} alt="utilisateur Google" />
                             <h3>User Logged in</h3>
                             <p>Name: {profile.name}</p>
                             <p>Email Address: {profile.email}</p>

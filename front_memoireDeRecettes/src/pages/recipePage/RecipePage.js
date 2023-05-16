@@ -11,6 +11,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { AuthContext } from "../../context/AuthContext";
 import  SweetAlert  from "../components/alert/AlertSweet";
 const URL_API = "/api/recette";
+// import imageDefault from "./defaultImage";
 
 export default function RecipePage() {
   
@@ -22,24 +23,27 @@ export default function RecipePage() {
   const [noticeRecipe, setNoticeRecipe] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [previewImageRecipe, setPreviewImageRecipe] = useState(); 
+  const[stageRecipe, setStageRecipe] = useState([]);
+  console.log(stageRecipe);
 console.log(previewImageRecipe);
+const[ingredientRecipe, setIngredientRecipe] = useState([]);
+console.log(ingredientRecipe);
 
   
 useEffect(() => {
   const fetchImageAndSetPreviewImageRecipe = async () => {
     if (recipeClick.length > 0) {
       const imageRecipe = recipeClick[0].PHOTO_NAME;
-      console.log(imageRecipe);
-      const uint8Array = new Uint8Array(imageRecipe);
+      console.log("imageRecipe", imageRecipe.data);
+      const uint8Array = new Uint8Array(imageRecipe.data);
       const blob = new Blob([uint8Array]);
       const urlImage = URL.createObjectURL(blob);
-      console.log(urlImage);
+      console.log("urlIMAGE", urlImage);
       fetch(urlImage)
       .then((response) => response.text())
       .then((text) => {
         setPreviewImageRecipe(text);
-        console.log(text);
-        
+        console.log({text});
       })
       .catch((error) => console.log(error));
       
@@ -47,7 +51,7 @@ useEffect(() => {
   };
 
   fetchImageAndSetPreviewImageRecipe();
-}, [recipeClick]);
+}, [recipeClick, previewImageRecipe]);
 
   let { id } = useParams();
   
@@ -100,6 +104,23 @@ useEffect(() => {
   }, [id]);
 
   useEffect(() => {
+    async function getIngredientByIdRecipe() {
+      try {
+        const response = await fetch(`${URL_API}/getIngredientByIdRecipe/${id}`);
+        if (response.ok) {
+          const ingredient = await response.json();
+          setIngredientRecipe(ingredient);
+          setIsLoading(false);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    getIngredientByIdRecipe();
+  }, [id]);
+
+
+  useEffect(() => {
     async function getUstensil() {
       try {
         const response = await fetch(`${URL_API}/getUstensilsByIdRecipe/${id}`);
@@ -113,6 +134,22 @@ useEffect(() => {
       }
     }
     getUstensil();
+  }, [id]);
+
+  useEffect(() => {
+    async function getStage() {
+      try {
+        const response = await fetch(`${URL_API}/getStage/${id}`);
+        if (response.ok) {
+          const stage = await response.json();
+          setStageRecipe(stage);
+          setIsLoading(false);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    getStage();
   }, [id]);
 
   useEffect(() => {
@@ -397,6 +434,7 @@ useEffect(() => {
                 </div>
               ))}
             </div>
+            
             <h4 className="ml20 pl20">Etape 1</h4>
             <p>
               Id laboris dolor nostrud ex esse reprehenderit dolore laborum

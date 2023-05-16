@@ -144,10 +144,11 @@ router.post("/addRecipe", (req, res) => {
     
 //Boucle pour parcourir les valeurs de recipeExplication
 for(let i = 0; i < recipeExplication.length; i++) {
-  const sqlInsertExplication = `INSERT INTO stage (STAGE_RECIPE_EXPLICATION, RECIPE_ID) VALUES (?, ?)`;
+  const sqlInsertExplication = `INSERT INTO stage (STAGE_RECIPE_EXPLICATION, RECIPE_ID, STAGE_NUM) VALUES (?, ?, ?)`;
   const values = [
     recipeExplication[i],
-    result.insertId //récupération de l'ID de la recette précédemment insérée
+    result.insertId, //récupération de l'ID de la recette précédemment insérée
+    i+1
   ];
   connection.query(sqlInsertExplication, values, (err, result) => {
     if (err) throw err;
@@ -309,13 +310,13 @@ router.get("/getDaysRecipe/:currentSeason", (req, res) => {
 router.get("/getRecipeClicked/:id", (req, res) => {
   const idRecipe = req.params.id;
   let sql = `SELECT * FROM recipe as r 
-                 INNER JOIN photo ON r.RECIPE_ID = photo.RECIPE_ID
+                 JOIN photo ON r.RECIPE_ID = photo.RECIPE_ID
                  JOIN user ON r.USER_Id = user.USER_ID
                  JOIN season ON r.SEASON_ID = season.SEASON_ID
                  JOIN type_de_repas ON r.ID_TYPE_DE_REPAS = type_de_repas.ID_TYPE_DE_REPAS
                  JOIN meal_type ON r.MEAL_TYPE_ID = meal_type.MEAL_TYPE_ID 
                  JOIN diet_type ON r.DIET_TYPE_ID = diet_type.DIET_TYPE_ID
-                 JOIN cooking_type ON r.COOKING_TYPE_ID = cooking_type.COOKING_TYPE_ID
+                 JOIN cooking_type ON r.COOKING_TYPE_ID = cooking_type.COOKING_TYPE_ID               
                  WHERE r.RECIPE_ID = ${idRecipe}`;
   connection.query(sql, (err, result) => {
     if (err) {
@@ -341,6 +342,20 @@ router.get("/getUstensilsByIdRecipe/:id", (req, res) => {
   });
 });
 
+
+router.get("/getIngredientByIdRecipe/:id", (req, res) => {
+  const idRecipe = req.params.id;
+  console.log(idRecipe);
+  const sqlIngredient = `SELECT * FROM contain as c
+                        LEFT JOIN ingredient ON c.INGREDIENT_ID = ingredient.INGREDIENT_ID
+                        WHERE c.RECIPE_ID = ${idRecipe}`;
+  connection.query(sqlUstensil, (err, result) => {
+    if (err) throw err;
+    console.log("Récupération ingredient");
+    res.send(JSON.stringify(result));
+  });
+});
+
 router.get("/getNotice/:id", (req, res) => {
   const idRecipe = req.params.id;
   console.log(idRecipe);
@@ -350,6 +365,18 @@ router.get("/getNotice/:id", (req, res) => {
   connection.query(sqlNotice, (err, result) => {
     if (err) throw err;
     console.log("Récupération notice");
+    res.send(JSON.stringify(result));
+  });
+});
+
+router.get("/getStage/:id", (req, res) => {
+  const idRecipe = req.params.id;
+  console.log(idRecipe);
+  const sqlNotice = `SELECT * FROM stage
+                        WHERE stage.RECIPE_ID = ${idRecipe}`;
+  connection.query(sqlNotice, (err, result) => {
+    if (err) throw err;
+    console.log("Récupération stage");
     res.send(JSON.stringify(result));
   });
 });
