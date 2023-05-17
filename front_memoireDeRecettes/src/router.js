@@ -10,6 +10,7 @@ import { userLoader } from './loaders/userLoader';
 import Profile from './pages/Account/Profile';
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
 import RecipePage from "./pages/recipePage/RecipePage";
+import ForgotPassword from "./pages/ForgotPassword/ForgotPassword";
 
 export const router = createBrowserRouter([
    {
@@ -36,24 +37,31 @@ export const router = createBrowserRouter([
         },
         {
             path: "/addRecipe",
-            element: 
+            element: (
             <ProtectedRoute>
             <AddRecipe />,
             </ProtectedRoute>
+            ),
         },
         {
             path: "/addRecipeTest",
-            element: 
+            element: (
             <ProtectedRoute>
             <AddRecipeTest />,
             </ProtectedRoute>
+            ),
         },
         {
+            path: "/forgotpassword",
+            element: <ForgotPassword />
+          },
+        {
             path: "/profile",
-            element: 
+            element: (
             <ProtectedRoute>
             <Profile />
             </ProtectedRoute>
+            ),
         }
     ]
    } 
