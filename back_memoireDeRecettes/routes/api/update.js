@@ -6,7 +6,7 @@ const nodemailer = require("nodemailer");
 const saltRounds = 10;
 const { key, keyPub } = require("../../keys"); 
 
-router.post("/", (req, res) => {
+router.post("/", (req, res) => { 
   const email = req.body.user_mail;
   console.log(email);
   try {
@@ -15,19 +15,22 @@ router.post("/", (req, res) => {
       if (err) throw err;
       if (result[0]) {
         const token = jsonwebtoken.sign(
-          { email: result[0].user_mail, id: result[0].user_id },
+          { email: result[0].USER_EMAIL, id: result[0].USER_ID },
           key,
           {
             expiresIn: "5m",
             algorithm: "RS256",
           }
         );
-        const link = `http://localhost:8000/api/update/${result[0].user_id}/${token}`;
+        console.log("TOKEN : " + token);
+        console.log(result[0]);
+        console.log(result[0].USER_ID);
+        const link = `http://localhost:8000/api/update/${result[0].USER_ID}/${token}`;
         const transporter = nodemailer.createTransport({
             service: "gmail",
             auth: {
-                user: "memoirederecettes@yahoo.com",
-                pass: "jecree1site.",
+              user: "memoirederecettes@gmail.com",
+              pass: "szmvvclnrtzkbujv",
             },
         });
         console.log("email :" + email);
@@ -38,6 +41,7 @@ router.post("/", (req, res) => {
             subject: "Sending Email using Node.js",
             text: link,
         };
+        console.log("Mailoptions :" + mailOptions.subject);
         
         let info = transporter.sendMail(mailOptions, function (error, info) {
             if (error) {
@@ -46,7 +50,6 @@ router.post("/", (req, res) => {
                 console.log("Email sent: " + info.response);
             }
         });
-        console.log("Message sent: %s", info);
         res.send(JSON.stringify(true));
       } else {
         res.status(400).send(JSON.stringify("Utilisateur Inconnu"));
@@ -59,10 +62,12 @@ router.post("/", (req, res) => {
 
 router.get("/:id/:token", async (req, res) => {
   const { id, token } = req.params;
-  // console.log("id : " + id + " token : " + token);
+  //console.log("id : " + id + " token : " + token);
   try {
-    const verify = jsonwebtoken.verify(token, keyPub);
-    res.render("index", { email: verify.email, status: false, same: false });
+    const verify = jsonwebtoken.verify(token, key);
+    const status = false;
+const same = false;
+res.render("index", { email: verify.email, status, same });
   } catch (error) {
     res.send("Not Verified");
   }
@@ -72,15 +77,19 @@ router.post("/:id/:token", async (req, res) => {
   const { id, token } = req.params;
   const { password } = req.body;
   console.log(password);
-  console.log(req.body);
-  const sql = `SELECT * FROM user WHERE user_id = "${id}"`;
+  console.log(req.params);
+  const sql = `SELECT * FROM user WHERE USER_ID = "${id}"`;
   connection.query(sql, async (err, result) => {
     if (err) throw err;
     if (result[0]) {
       try {
+        console.log('result : ' + result[0]);
         const Userpassword = await bcrypt.hash(password, saltRounds);
-        const verify = jsonwebtoken.verify(token, keyPub);
-        const same = bcrypt.compareSync(password, result[0].user_password);
+        console.log("password user : " + Userpassword);
+        const verify = jsonwebtoken.verify(token, key);
+        console.log(verify);
+        const same = bcrypt.compareSync(password, result[0].USER_PASSWORD);
+        console.log(same);
         if (same) {
           res.render("index", {
             email: verify.email,
@@ -88,7 +97,7 @@ router.post("/:id/:token", async (req, res) => {
             same: true,
           });
         } else {
-          const sql = `UPDATE user SET user_password = "${Userpassword}" WHERE user_id = "${id}"`;
+          const sql = `UPDATE user SET USER_PASSWORD = "${Userpassword}" WHERE USER_ID = "${id}"`;
           connection.query(sql, (err, result) => {
             if (err) throw err;
             res.render("index", {
@@ -100,10 +109,10 @@ router.post("/:id/:token", async (req, res) => {
         }
       } catch (error) {
         console.log(error);
-        res.send(JSON.stringify(false));
+        res.send(JSON.stringify(false + 'probleme try'));
       }
     } else {
-      res.send(JSON.stringify(false));
+      res.send(JSON.stringify(false + 'probleme ici' ));
     }
   });
 });

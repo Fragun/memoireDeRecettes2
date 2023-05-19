@@ -1,6 +1,5 @@
 const express = require("express");
 const cookie = require("cookie-parser");
-
 const bodyParser = require("body-parser");
 
 // on initialise l'application
@@ -18,11 +17,17 @@ app.use((req, res, next) => {
 app.use(cookie());
 // cela permet d'extraire le body qui est stringify au format object JS
 app.use(bodyParser.json({ limit: "50mb" }));
+
+app.use(bodyParser.urlencoded({ extended: true }));
 // Middleware pour gérer les requêtes JSON
 app.use(routes);
 // si la route n'a pas été trouvé cela renvoie un status 404
+
+app.set("view engine", "ejs");
+
 app.use('*', (req, res) => {
   res.status(404).end();
 })
+
 // on écoute sur le port 8000
 app.listen(8000);
