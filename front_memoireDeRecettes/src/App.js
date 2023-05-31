@@ -5,7 +5,8 @@ import { Outlet, useLoaderData } from "react-router-dom";
 import { Suspense, useEffect } from "react";
 import AuthProvider from "./components/Provider/AuthProvider";
 import UpdateProvider from "./components/Provider/UpdateProvider";
-import ReactGA from 'react-ga';
+import RecipeProvider from "./components/Provider/RecipeProvider";
+import ReactGA from "react-ga";
 const TRACKING_ID = "UA-270085249-1"; // OUR_TRACKING_ID
 ReactGA.initialize(TRACKING_ID);
 
@@ -21,13 +22,15 @@ function App() {
     <div className={`d-flex flex-column ${styles.appContainer}`}>
       <AuthProvider>
         <UpdateProvider>
-        <Header />
-        <div className="d-flex flex-column flex-fill">
-          <Suspense>
-            <Outlet />
-          </Suspense>
-        </div>
-        <Footer />
+          <RecipeProvider>
+            <Header />
+            <div className="d-flex flex-column flex-fill">
+              <Suspense>
+                <Outlet />
+              </Suspense>
+            </div>
+            <Footer />
+          </RecipeProvider>
         </UpdateProvider>
       </AuthProvider>
     </div>

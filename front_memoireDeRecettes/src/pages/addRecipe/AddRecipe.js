@@ -11,21 +11,28 @@ import { AuthContext } from "../../context";
 import Description from "../components/inputAddDescriptionRecipe/DescriptionRecipe";
 import SweetAlert from "../components/alert/AlertSweet";
 import Ingredients from "../components/inputAddDescriptionRecipe/IngredientRecipe";
-import {
-  getCookType,
-  getDietType,
-  getMealMoment,
-  getMealType,
-  getSeason,
-  getUstensils,
-} from "../../apis/recipe";
+import { RecipeContext } from "../../context/RecipeContext";
 
 const API_INDEX = "/api/recette";
 
 export default function AddRecipe() {
   const { user } = useContext(AuthContext);
   const idUser = user[0].USER_ID;
-  // console.log(idUser);
+  const {
+    mealType,
+    season,
+    origin,
+    dietType,
+    mealMoment,
+    ustensils,
+    ingredients,
+  } = useContext(RecipeContext);
+  const mealTypeList = mealType;
+  const seasonList = season;
+  const cookingList = origin;
+  const dietList = dietType;
+  const mealList = mealMoment;
+  const ustensilList = ustensils;
 
   //permet de récupérer la description de la recette
   const [stepDescriptions, setStepDescriptions] = useState([]);
@@ -34,16 +41,6 @@ export default function AddRecipe() {
   };
 
   const [ingredientChoose, setIngredientChoose] = useState([]);
-
-  const [mealTypeList, setMealTypeList] = useState([]);
-  const [seasonList, setSeasonList] = useState([]);
-  console.log(seasonList);
-  const [cookingList, setCookingList] = useState([]);
-  const [dietList, setDietList] = useState([]);
-  const [mealList, setMealList] = useState([]);
-
-  //console.log(ingredientList);
-  const [ustensilList, setUstensilList] = useState([]);
 
   const [search, setSearch] = useState("");
   const [search2, setSearch2] = useState("");
@@ -67,6 +64,7 @@ export default function AddRecipe() {
   const [ustensilAdded6, setUstensilAdded6] = useState(false);
   const [ustensilAdded7, setUstensilAdded7] = useState(false);
   const [ustensilAdded8, setUstensilAdded8] = useState(false);
+  //const [ustensilAdded, setUstensilAdded] = useState(Array(8).fill(false));
 
   const [inputUstensilAdded1, setInputUstensiladded1] = useState("dnone");
   const [inputUstensilAdded2, setInputUstensiladded2] = useState("dnone");
@@ -85,101 +83,6 @@ export default function AddRecipe() {
     setRecipeObj(obj.value);
   };
 
-  useEffect(() => {
-    /**
-     * Récupération des origines des repas en base de donnée
-     *
-     */
-    async function fetchMealType() {
-      try {
-        const mealType = await getMealType();
-        setMealTypeList(mealType);
-      } catch (error) {
-        console.error(error);
-      }
-    }
-    fetchMealType();
-  }, []);
-
-  useEffect(() => {
-    /**
-     * Récupération des saisons en base de donnée
-     *
-     */
-    async function fetchSeason() {
-      try {
-        const season = await getSeason();
-        setSeasonList(season);
-      } catch (error) {
-        console.error(error);
-      }
-    }
-    fetchSeason();
-  }, []);
-
-  useEffect(() => {
-    /**
-     * Récupération type de cuisson en BDD
-     *
-     */
-    async function fetchCookType() {
-      try {
-        const cookType = await getCookType();
-        setCookingList(cookType);
-      } catch (error) {
-        console.error(error);
-      }
-    }
-    fetchCookType();
-  }, []);
-
-  useEffect(() => {
-    /**
-     * Récupération des différents régimes en BDD
-     *
-     */
-    async function fetchDietType() {
-      try {
-        const dietType = await getDietType();
-        setDietList(dietType);
-      } catch (error) {
-        console.error(error);
-      }
-    }
-    fetchDietType();
-  }, []);
-
-  useEffect(() => {
-    /**
-     * Récupération des Moments des repas en BDD (entrée, plat, dessert, etc)
-     *
-     */
-    async function fetchMealMoment() {
-      try {
-        const mealType = await getMealMoment();
-        setMealList(mealType);
-      } catch (error) {
-        console.error(error);
-      }
-    }
-    fetchMealMoment();
-  }, []);
-
-  useEffect(() => {
-    /**
-     * Récupération de la liste des ustensils en bdd
-     *
-     */
-    async function fetchUstensils() {
-      try {
-        const ustensils = await getUstensils();
-        setUstensilList(ustensils);
-      } catch (error) {
-        console.error(error);
-      }
-    }
-    fetchUstensils();
-  }, []);
 
   const yupSchema = yup.object({
     titleRecipe: yup.string().required("Titre de la recette requise"),
