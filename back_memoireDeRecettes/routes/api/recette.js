@@ -259,7 +259,6 @@ router.get("/getIngredient", (req, res) => {
   });
 });
 
-
 router.get("/getRecipes", (req, res) => {
   const limit = req.query.limit;
   //console.log(limit);
@@ -271,6 +270,8 @@ router.get("/getRecipes", (req, res) => {
        JOIN type_de_repas ON r.ID_TYPE_DE_REPAS = type_de_repas.ID_TYPE_DE_REPAS
        JOIN meal_type ON r.MEAL_TYPE_ID = meal_type.MEAL_TYPE_ID 
        JOIN diet_type ON r.DIET_TYPE_ID = diet_type.DIET_TYPE_ID
+       JOIN season ON r.SEASON_ID = season.SEASON_ID
+       JOIN cooking_type ON r.COOKING_TYPE_ID = cooking_type.COOKING_TYPE_ID
        LIMIT ${limit}`;
   } else {
     sql = `SELECT * FROM recipe as r 
@@ -279,6 +280,8 @@ router.get("/getRecipes", (req, res) => {
         JOIN type_de_repas ON r.ID_TYPE_DE_REPAS = type_de_repas.ID_TYPE_DE_REPAS
         JOIN meal_type ON r.MEAL_TYPE_ID = meal_type.MEAL_TYPE_ID 
         JOIN diet_type ON r.DIET_TYPE_ID = diet_type.DIET_TYPE_ID
+        JOIN season ON r.SEASON_ID = season.SEASON_ID
+        JOIN cooking_type ON r.COOKING_TYPE_ID = cooking_type.COOKING_TYPE_ID
         `;
   }
 
@@ -341,14 +344,13 @@ router.get("/getUstensilsByIdRecipe/:id", (req, res) => {
   });
 });
 
-
-router.get("/getIngredientByIdRecipe/:id", (req, res) => {
+router.get("/getIngredientsByIdRecipe/:id", (req, res) => {
   const idRecipe = req.params.id;
   console.log(idRecipe);
   const sqlIngredient = `SELECT * FROM contain as c
                         LEFT JOIN ingredient ON c.INGREDIENT_ID = ingredient.INGREDIENT_ID
                         WHERE c.RECIPE_ID = ${idRecipe}`;
-  connection.query(sqlUstensil, (err, result) => {
+  connection.query(sqlIngredient, (err, result) => {
     if (err) throw err;
     console.log("Récupération ingredient");
     res.send(JSON.stringify(result));

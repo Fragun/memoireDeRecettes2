@@ -5,8 +5,12 @@ import styles from '../register/Register.module.scss';
 import { AuthContext } from "../../context/AuthContext";
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Link, Navigate, useNavigate } from 'react-router-dom';
+import useAnalyticsEventTracker from '../../components/GoogleAnalytics/useAnalyticsEventTracker';
 
 export default function Login() {
+
+  
+  const gaEventTracker = useAnalyticsEventTracker('Login');
 
   const { signin, user } = useContext(AuthContext);
   const navigate = useNavigate();
@@ -102,7 +106,7 @@ export default function Login() {
                 </p>
               </Link>
               <div className="">
-                <button disabled={isSubmitting} className="btn btn-primary">
+                <button disabled={isSubmitting} className="btn btn-primary" onClick={gaEventTracker("button signIn")}>
                   Se connecter
                 </button>
               </div>

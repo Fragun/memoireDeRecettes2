@@ -9,57 +9,57 @@ import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { AuthContext } from "../../context/AuthContext";
-import  SweetAlert  from "../components/alert/AlertSweet";
+import SweetAlert from "../components/alert/AlertSweet";
 const URL_API = "/api/recette";
 // import imageDefault from "./defaultImage";
 
 export default function RecipePage() {
-  
+
   const { user } = useContext(AuthContext);
 
   const [recipeClick, setRecipeClick] = useState([]);
   console.log(recipeClick);
   const [ustensilsRecipe, setUstensilsRecipe] = useState([]);
+  const [ingredientsRecipe, setIngredientsRecipe] = useState([]);
+  console.log(ingredientsRecipe);
   const [noticeRecipe, setNoticeRecipe] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [previewImageRecipe, setPreviewImageRecipe] = useState(); 
-  const[stageRecipe, setStageRecipe] = useState([]);
+  const [previewImageRecipe, setPreviewImageRecipe] = useState();
+  const [stageRecipe, setStageRecipe] = useState([]);
   console.log(stageRecipe);
-console.log(previewImageRecipe);
-const[ingredientRecipe, setIngredientRecipe] = useState([]);
-console.log(ingredientRecipe);
+  console.log(previewImageRecipe);
 
-  
-useEffect(() => {
-  const fetchImageAndSetPreviewImageRecipe = async () => {
-    if (recipeClick.length > 0) {
-      const imageRecipe = recipeClick[0].PHOTO_NAME;
-      console.log("imageRecipe", imageRecipe.data);
-      const uint8Array = new Uint8Array(imageRecipe.data);
-      const blob = new Blob([uint8Array]);
-      const urlImage = URL.createObjectURL(blob);
-      console.log("urlIMAGE", urlImage);
-      fetch(urlImage)
-      .then((response) => response.text())
-      .then((text) => {
-        setPreviewImageRecipe(text);
-        console.log({text});
-      })
-      .catch((error) => console.log(error));
-      
-    }
-  };
 
-  fetchImageAndSetPreviewImageRecipe();
-}, [recipeClick, previewImageRecipe]);
+  useEffect(() => {
+    const fetchImageAndSetPreviewImageRecipe = async () => {
+      if (recipeClick.length > 0) {
+        const imageRecipe = recipeClick[0].PHOTO_NAME;
+        console.log("imageRecipe /", imageRecipe.data);
+        const uint8Array = new Uint8Array(imageRecipe.data);
+        const blob = new Blob([uint8Array]);
+        const urlImage = URL.createObjectURL(blob);
+        console.log("urlIMAGE", urlImage);
+        fetch(urlImage)
+          .then((response) => response.text())
+          .then((text) => {
+            setPreviewImageRecipe(text);
+            console.log({ text });
+          })
+          .catch((error) => console.log(error));
+
+      }
+    };
+
+    fetchImageAndSetPreviewImageRecipe();
+  }, [recipeClick, previewImageRecipe]);
 
   let { id } = useParams();
-  
+
   let difficulty, price;
   let dateStr, date, formattedDate;
 
   let { idUser } = useParams();
-//console.log({idUser});
+  //console.log({idUser});
   if (user != null) {
     idUser = user[0].USER_ID;
   }
@@ -74,7 +74,7 @@ useEffect(() => {
     const maxStars = 5;
     const fullStar = <i className="la la-star"></i>;
     const emptyStar = <i className="lar la-star"></i>;
-  
+
     const stars = [];
     for (let i = 1; i <= maxStars; i++) {
       if (i <= starCount) {
@@ -83,7 +83,7 @@ useEffect(() => {
         stars.push(emptyStar);
       }
     }
-  
+
     return <div>{stars}</div>;
   };
 
@@ -103,21 +103,7 @@ useEffect(() => {
     getRecipeClicked();
   }, [id]);
 
-  useEffect(() => {
-    async function getIngredientByIdRecipe() {
-      try {
-        const response = await fetch(`${URL_API}/getIngredientByIdRecipe/${id}`);
-        if (response.ok) {
-          const ingredient = await response.json();
-          setIngredientRecipe(ingredient);
-          setIsLoading(false);
-        }
-      } catch (error) {
-        console.error(error);
-      }
-    }
-    getIngredientByIdRecipe();
-  }, [id]);
+
 
 
   useEffect(() => {
@@ -134,6 +120,22 @@ useEffect(() => {
       }
     }
     getUstensil();
+  }, [id]);
+
+  useEffect(() => {
+    async function getIngredient() {
+      try {
+        const response = await fetch(`${URL_API}/getIngredientsByIdRecipe/${id}`);
+        if (response.ok) {
+          const ingredient = await response.json();
+          setIngredientsRecipe(ingredient);
+          setIsLoading(false);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    getIngredient();
   }, [id]);
 
   useEffect(() => {
@@ -275,9 +277,9 @@ useEffect(() => {
 
   function handleClickAstuce() {
 
-    {SweetAlert('Bravo', 'Votre message a bien été envoyé')}
+    { SweetAlert('Bravo', 'Votre message a bien été envoyé') }
   }
-    
+
 
 
   const submit = handleSubmit(async (values) => {
@@ -304,7 +306,7 @@ useEffect(() => {
     }
   });
 
-  
+
 
   return (
     <div className="d-flex flex-column justify-content-center">
@@ -423,18 +425,18 @@ useEffect(() => {
             <div
               className={`${styles.container4} m10 d-flex flex-row justify-content-evenly`}
             >
-              {ustensilsRecipe.map((a, i) => (
+              {ingredientsRecipe.map((a, i) => (
                 <div className="d-flex flex-column">
-                  <div>{a.USTENSIL_NAME}</div>
+                  <div>{a.INGREDIENT_FR_NAME}</div>
                   <img
-                    src={`../assets/images/LogoUstensiles/${a.USTENSIL_ICON}`}
-                    alt="icones ustensiles"
+                    src={`../assets/LOGO_ingrédients_png/${a.INGREDIENT_ICON}`}
+                    alt="icones ingrédients"
                     className={`${styles.logoSize}`}
                   />
                 </div>
               ))}
             </div>
-            
+
             <h4 className="ml20 pl20">Etape 1</h4>
             <p>
               Id laboris dolor nostrud ex esse reprehenderit dolore laborum
@@ -479,20 +481,20 @@ useEffect(() => {
 
                   {noticeRecipe.map((n, i) => (
                     <div className={` d-flex flex-column`}>
-                        {n.NOTICE_TRICK_RECIPE.length > 0 ? (                      
-                      <>
-                      <div className={`d-flex flex-row`}>
-                        <img src={`../../assets/images/${n.USER_PHOTO}`}
-                          alt="logo du propriétaire de la recette"
-                          className={`${styles.imgUserSize}`} />
-                        {n.NOTICE_STAR_NUMBER ? renderStarRating(n.NOTICE_STAR_NUMBER) : ''}
-                        <p>Chef {n.USER_PSEUDO}</p>
-                      </div>
-                      <div className={`d-flex flex-row`}>
-                        <div className={`${styles.littleGreen2}`}> </div>
-                        <p className={`${styles.container7}`}>{n.NOTICE_TRICK_RECIPE}</p>
-                      </div>
-                      </>
+                      {n.NOTICE_TRICK_RECIPE.length > 0 ? (
+                        <>
+                          <div className={`d-flex flex-row`}>
+                            <img src={`../../assets/images/${n.USER_PHOTO}`}
+                              alt="logo du propriétaire de la recette"
+                              className={`${styles.imgUserSize}`} />
+                            {n.NOTICE_STAR_NUMBER ? renderStarRating(n.NOTICE_STAR_NUMBER) : ''}
+                            <p>Chef {n.USER_PSEUDO}</p>
+                          </div>
+                          <div className={`d-flex flex-row`}>
+                            <div className={`${styles.littleGreen2}`}> </div>
+                            <p className={`${styles.container7}`}>{n.NOTICE_TRICK_RECIPE}</p>
+                          </div>
+                        </>
                       ) : ("")}
                     </div>
 
@@ -506,7 +508,7 @@ useEffect(() => {
                     <div className={`d-flex flex-row`}>
                       <div className={`${styles.littleGreen}`}></div>
                       <textarea
-                        
+
                         placeholder="Noter ici une astuce pour cette recette..."
                         className={``}
                         {...register("astuce")}
@@ -527,79 +529,79 @@ useEffect(() => {
             >
               <h3 className="m20 pl20">Le coin des avis</h3>
               <div className={`${styles.mobileFlex}`}>
-                
-                <div className={`${styles.container6} `}>
-                  
 
-                {noticeRecipe.map((n, i) => (
-                  
+                <div className={`${styles.container6} `}>
+
+
+                  {noticeRecipe.map((n, i) => (
+
                     <div className={` d-flex flex-column `}>
-                      {n.NOTICE_RECIPE.length > 0 ? (                      
-                      <>
-                      <div className={`d-flex flex-row `}>
-                        <img src={`../../assets/images/${n.USER_PHOTO}`}
-                          alt="logo du propriétaire de la recette"
-                          className={`${styles.imgUserSize}`} />
-                        {n.NOTICE_STAR_NUMBER === 1 ?
-                          (<div><i class="la la-star"></i><i class="lar la-star"></i><i class="lar la-star"></i><i class="lar la-star"></i><i class="lar la-star"></i></div>)
-                          : n.NOTICE_STAR_NUMBER === 2 ?
-                            (<div><i class="la la-star"></i><i class="la la-star"></i><i class="lar la-star"></i><i class="lar la-star"></i><i class="lar la-star"></i></div>)
-                            : n.NOTICE_STAR_NUMBER === 3 ?
-                              (<div><i class="la la-star"></i><i class="la la-star"></i><i class="la la-star"></i><i class="lar la-star"></i><i class="lar la-star"></i></div>)
-                              : n.NOTICE_STAR_NUMBER === 4 ?
-                                (<div><i class="la la-star"></i><i class="la la-star"></i><i class="la la-star"></i><i class="la la-star"></i><i class="lar la-star"></i></div>)
-                                : n.NOTICE_STAR_NUMBER === 5 ?
-                                  (<div><i class="la la-star"></i><i class="la la-star"></i><i class="la la-star"></i><i class="la la-star"></i><i class="la la-star"></i></div>)
-                                  : ("")
-                        }
-                        <p>Chef {n.USER_PSEUDO}</p>
-                      </div>
-                      <div className={`d-flex flex-row`}>
-                        <div className={`${styles.littleGreen2} `}> </div>
-                        <p className={`${styles.container7} `}>{n.NOTICE_RECIPE}</p>
-                      </div>
-                      </>
+                      {n.NOTICE_RECIPE.length > 0 ? (
+                        <>
+                          <div className={`d-flex flex-row `}>
+                            <img src={`../../assets/images/${n.USER_PHOTO}`}
+                              alt="logo du propriétaire de la recette"
+                              className={`${styles.imgUserSize}`} />
+                            {n.NOTICE_STAR_NUMBER === 1 ?
+                              (<div><i class="la la-star"></i><i class="lar la-star"></i><i class="lar la-star"></i><i class="lar la-star"></i><i class="lar la-star"></i></div>)
+                              : n.NOTICE_STAR_NUMBER === 2 ?
+                                (<div><i class="la la-star"></i><i class="la la-star"></i><i class="lar la-star"></i><i class="lar la-star"></i><i class="lar la-star"></i></div>)
+                                : n.NOTICE_STAR_NUMBER === 3 ?
+                                  (<div><i class="la la-star"></i><i class="la la-star"></i><i class="la la-star"></i><i class="lar la-star"></i><i class="lar la-star"></i></div>)
+                                  : n.NOTICE_STAR_NUMBER === 4 ?
+                                    (<div><i class="la la-star"></i><i class="la la-star"></i><i class="la la-star"></i><i class="la la-star"></i><i class="lar la-star"></i></div>)
+                                    : n.NOTICE_STAR_NUMBER === 5 ?
+                                      (<div><i class="la la-star"></i><i class="la la-star"></i><i class="la la-star"></i><i class="la la-star"></i><i class="la la-star"></i></div>)
+                                      : ("")
+                            }
+                            <p>Chef {n.USER_PSEUDO}</p>
+                          </div>
+                          <div className={`d-flex flex-row`}>
+                            <div className={`${styles.littleGreen2} `}> </div>
+                            <p className={`${styles.container7} `}>{n.NOTICE_RECIPE}</p>
+                          </div>
+                        </>
                       ) : ("")}
                     </div>
                   ))}
                 </div>
                 {user ? (
-                <div className="d-flex flex-column justify-content-start m1 align-items-center">
-                  <div>
-                    <h3>Donner votre avis ici :</h3>
-                    {[...Array(5)].map((star, index) => {
-                      index += 1;
-                      return (
-                        <div
-                          key={index}
-                          className={
-                            index <= rating
-                              ? "la la-star la-2x"
-                              : "lar la-star la-2x"
-                          }
-                          onClick={() => handleStarClick(index)}
-                        ></div>
-                      );
-                    })}
+                  <div className="d-flex flex-column justify-content-start m1 align-items-center">
+                    <div>
+                      <h3>Donner votre avis ici :</h3>
+                      {[...Array(5)].map((star, index) => {
+                        index += 1;
+                        return (
+                          <div
+                            key={index}
+                            className={
+                              index <= rating
+                                ? "la la-star la-2x"
+                                : "lar la-star la-2x"
+                            }
+                            onClick={() => handleStarClick(index)}
+                          ></div>
+                        );
+                      })}
 
-                    {rating ? <p>Votre note : {rating} étoiles</p> : ""}
-                  </div>
+                      {rating ? <p>Votre note : {rating} étoiles</p> : ""}
+                    </div>
 
-                  <div className={`d-flex flex-row`}>
-                    <div className={`${styles.littleGreen}`}></div>
-                    <textarea
-                      rows="4"
-                      cols="50"
-                      placeholder="Ou simplement une remarque ou un avis sur la recette..."
-                      className={``}
-                      {...register("notice")}
-                    ></textarea>
+                    <div className={`d-flex flex-row`}>
+                      <div className={`${styles.littleGreen}`}></div>
+                      <textarea
+                        rows="4"
+                        cols="50"
+                        placeholder="Ou simplement une remarque ou un avis sur la recette..."
+                        className={``}
+                        {...register("notice")}
+                      ></textarea>
+                    </div>
+                    <button disabled={isSubmitting} onClick={() => handleClickAstuce()} className=" mt10 btn btn-primary">
+                      Valider
+                    </button>
                   </div>
-                  <button disabled={isSubmitting} onClick={() => handleClickAstuce()} className=" mt10 btn btn-primary">
-                    Valider
-                  </button>
-                </div>
-                ) : ("") }
+                ) : ("")}
 
               </div>
               <div>{errors?.notice && <p>{errors.notice.message}</p>}</div>

@@ -10,16 +10,24 @@ import timePng from "../../assets/images/icons8-horloge-40.png";
 import { AuthContext } from "../../context";
 import Description from "../components/inputAddDescriptionRecipe/DescriptionRecipe";
 import SweetAlert from "../components/alert/AlertSweet";
-import Ingredients from "../components/inputAddDescriptionRecipe/IngredientRecipe"
+import Ingredients from "../components/inputAddDescriptionRecipe/IngredientRecipe";
+import {
+  getCookType,
+  getDietType,
+  getMealMoment,
+  getMealType,
+  getSeason,
+  getUstensils,
+} from "../../apis/recipe";
 
 const API_INDEX = "/api/recette";
 
 export default function AddRecipe() {
   const { user } = useContext(AuthContext);
   const idUser = user[0].USER_ID;
- // console.log(idUser);
+  // console.log(idUser);
 
-//permet de récupérer la description de la recette
+  //permet de récupérer la description de la recette
   const [stepDescriptions, setStepDescriptions] = useState([]);
   const handleStepDescriptionsChange = (newDescriptions) => {
     setStepDescriptions(newDescriptions);
@@ -29,10 +37,11 @@ export default function AddRecipe() {
 
   const [mealTypeList, setMealTypeList] = useState([]);
   const [seasonList, setSeasonList] = useState([]);
+  console.log(seasonList);
   const [cookingList, setCookingList] = useState([]);
   const [dietList, setDietList] = useState([]);
   const [mealList, setMealList] = useState([]);
- 
+
   //console.log(ingredientList);
   const [ustensilList, setUstensilList] = useState([]);
 
@@ -47,8 +56,8 @@ export default function AddRecipe() {
 
   const [ustensilChoose, setUstensilChoose] = useState([]);
 
-//const [automaticNumStage, setAutomaticNumStage] = useState('1');
-//console.log(automaticNumStage);
+  //const [automaticNumStage, setAutomaticNumStage] = useState('1');
+  //console.log(automaticNumStage);
 
   const [ustensilAdded1, setUstensilAdded1] = useState(false);
   const [ustensilAdded2, setUstensilAdded2] = useState(false);
@@ -70,104 +79,107 @@ export default function AddRecipe() {
   const [count, setCount] = useState(0);
 
   const [recipeObj, setRecipeObj] = useState();
-  console.log(recipeObj);
 
   const handleFileUpload = (obj) => {
     console.log(obj.value);
-    setRecipeObj(obj);
+    setRecipeObj(obj.value);
   };
 
   useEffect(() => {
-    async function getMealType() {
+    /**
+     * Récupération des origines des repas en base de donnée
+     *
+     */
+    async function fetchMealType() {
       try {
-        const response = await fetch(`${API_INDEX}/getMealType`);
-        if (response.ok) {
-          const mealType = await response.json();
-          setMealTypeList(mealType);
-        }
+        const mealType = await getMealType();
+        setMealTypeList(mealType);
       } catch (error) {
         console.error(error);
       }
     }
-    getMealType();
+    fetchMealType();
   }, []);
 
   useEffect(() => {
-    async function getSeason() {
+    /**
+     * Récupération des saisons en base de donnée
+     *
+     */
+    async function fetchSeason() {
       try {
-        const response = await fetch(`${API_INDEX}/getSeason`);
-        if (response.ok) {
-          const season = await response.json();
-          setSeasonList(season);
-        }
+        const season = await getSeason();
+        setSeasonList(season);
       } catch (error) {
         console.error(error);
       }
     }
-    getSeason();
+    fetchSeason();
   }, []);
 
   useEffect(() => {
-    async function getCookType() {
+    /**
+     * Récupération type de cuisson en BDD
+     *
+     */
+    async function fetchCookType() {
       try {
-        const response = await fetch(`${API_INDEX}/getCookType`);
-        if (response.ok) {
-          const cookType = await response.json();
-          setCookingList(cookType);
-        }
+        const cookType = await getCookType();
+        setCookingList(cookType);
       } catch (error) {
         console.error(error);
       }
     }
-    getCookType();
+    fetchCookType();
   }, []);
 
   useEffect(() => {
-    async function getDietType() {
+    /**
+     * Récupération des différents régimes en BDD
+     *
+     */
+    async function fetchDietType() {
       try {
-        const response = await fetch(`${API_INDEX}/getDietType`);
-        if (response.ok) {
-          const dietType = await response.json();
-          setDietList(dietType);
-        }
+        const dietType = await getDietType();
+        setDietList(dietType);
       } catch (error) {
         console.error(error);
       }
     }
-    getDietType();
+    fetchDietType();
   }, []);
 
   useEffect(() => {
-    async function getMealMoment() {
+    /**
+     * Récupération des Moments des repas en BDD (entrée, plat, dessert, etc)
+     *
+     */
+    async function fetchMealMoment() {
       try {
-        const response = await fetch(`${API_INDEX}/getMealMoment`);
-        if (response.ok) {
-          const mealType = await response.json();
-          setMealList(mealType);
-        }
+        const mealType = await getMealMoment();
+        setMealList(mealType);
       } catch (error) {
         console.error(error);
       }
     }
-    getMealMoment();
+    fetchMealMoment();
   }, []);
 
   useEffect(() => {
-    async function getUstensils() {
+    /**
+     * Récupération de la liste des ustensils en bdd
+     *
+     */
+    async function fetchUstensils() {
       try {
-        const response = await fetch(`${API_INDEX}/getUstensils`);
-        if (response.ok) {
-          const ustensils = await response.json();
-          setUstensilList(ustensils);
-        }
+        const ustensils = await getUstensils();
+        setUstensilList(ustensils);
       } catch (error) {
         console.error(error);
       }
     }
-    getUstensils();
+    fetchUstensils();
   }, []);
-
-  
 
   const yupSchema = yup.object({
     titleRecipe: yup.string().required("Titre de la recette requise"),
@@ -199,13 +211,11 @@ export default function AddRecipe() {
     mealType: yup.string().required("Veuillez selectionner un type de repas"),
     ustensil: yup.array().default(() => ustensilChoose),
     ingredient: yup.array().default(() => ingredientChoose),
-    descriptions : yup.array().default(() => stepDescriptions),
-    nameImage : yup.object().default(() => recipeObj),
+    descriptions: yup.array().default(() => stepDescriptions),
+    nameImage: yup.object().default(() => recipeObj),
     //numStage : yup.array().default(() => automaticNumStage),
-    idUserConnected: yup
-        .number().default(idUser)
+    idUserConnected: yup.number().default(idUser),
   });
-
 
   const defaultValues = {
     titleRecipe: "",
@@ -223,7 +233,7 @@ export default function AddRecipe() {
     mealType: "",
   };
 
- // console.log(defaultValues);
+  // console.log(defaultValues);
   const {
     register,
     handleSubmit,
@@ -235,7 +245,7 @@ export default function AddRecipe() {
   });
 
   const submit = async (values) => {
-   // console.log(values);
+    // console.log(values);
     try {
       const response = await fetch(`${API_INDEX}/addRecipe`, {
         method: "POST",
@@ -245,7 +255,7 @@ export default function AddRecipe() {
         body: JSON.stringify(values),
       });
       if (response.ok) {
-        SweetAlert('Bravo', 'Votre recette a bien été enregistrée').then(() => {
+        SweetAlert("Bravo", "Votre recette a bien été enregistrée").then(() => {
           window.location.reload();
         });
         const recipe = await response.json();
@@ -258,11 +268,10 @@ export default function AddRecipe() {
   };
 
   function handleInput(e, setSearchFunction) {
-   // console.log(e.target.value);
+    // console.log(e.target.value);
     const keyBoardInput = e.target.value;
     setSearchFunction(keyBoardInput.trim().toLowerCase());
   }
-
 
   function handleAddUstensil(event, id) {
     event.preventDefault();
@@ -302,9 +311,9 @@ export default function AddRecipe() {
   }
 
   /**
-   * permet de rendre visible les input d'ajout d'ustensil selon le compteur 
+   * permet de rendre visible les input d'ajout d'ustensil selon le compteur
    *
-   * @param {*} e 
+   * @param {*} e
    */
   function addInputUstensil(e) {
     e.preventDefault();
@@ -332,17 +341,15 @@ export default function AddRecipe() {
     setCount(count + 1);
   }
 
-    /**
+  /**
    * permet de mettre à jour le tableau d'ingrédient choisi depuis le composant enfant IngredientRecipe
    *
-   * @param {*} newIngredientChoose 
+   * @param {*} newIngredientChoose
    */
-    function handleIngredientChooseUpdate(newIngredientChoose) {
-      setIngredientChoose(newIngredientChoose);
-    }
+  function handleIngredientChooseUpdate(newIngredientChoose) {
+    setIngredientChoose(newIngredientChoose);
+  }
 
-  
-   
   return (
     <div className="d-flex justify-content-center">
       <div className={`${styles.rectangle} m30`}>
@@ -1120,15 +1127,15 @@ export default function AddRecipe() {
             </div>
 
             <Ingredients
-            onIngredientChooseUpdate={handleIngredientChooseUpdate}
-    />
+              onIngredientChooseUpdate={handleIngredientChooseUpdate}
+            />
 
             <Description
-        stepDescriptions={stepDescriptions}
-        onStepDescriptionsChange={handleStepDescriptionsChange}
-      />
+              stepDescriptions={stepDescriptions}
+              onStepDescriptionsChange={handleStepDescriptionsChange}
+            />
 
-            <button disabled={isSubmitting} className="btn btn-primary"  >
+            <button disabled={isSubmitting} className="btn btn-primary">
               Ajouter à vos recettes
             </button>
           </div>
@@ -1137,5 +1144,3 @@ export default function AddRecipe() {
     </div>
   );
 }
-
-

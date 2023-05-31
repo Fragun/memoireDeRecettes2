@@ -6,63 +6,73 @@ import ErrorPage from "./ErrorPage/ErrorPage";
 import Login from "./pages/login/Login";
 import AddRecipe from "./pages/addRecipe/AddRecipe";
 import AddRecipeTest from "./pages/addRecipe/AddRecipeTest";
-import { userLoader } from './loaders/userLoader';
-import Profile from './pages/Account/Profile';
-import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
+import { userLoader } from "./loaders/userLoader";
+import Profile from "./pages/Account/Profile";
+import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
 import RecipePage from "./pages/recipePage/RecipePage";
 import ForgotPassword from "./pages/ForgotPassword/ForgotPassword";
+import ProtectedRouteAdmin from "./components/ProtectedRoute/ProtectedRouteAdmin";
+import AdminPage from "./pages/Admin/AdminPage"
 
 export const router = createBrowserRouter([
-   {
+  {
     path: "/",
     element: <App />,
     errorElement: <ErrorPage />,
     loader: userLoader,
     children: [
-        {
-            index: true,
-            element: <Homepage />,
-        },
-        {
-            path: "/register",
-            element: <Register />,
-        },
-        {
-            path: "/login",
-            element: <Login />,
-        },
-        {
-            path: "/recipePage/:id",
-            element: <RecipePage/>
-        },
-        {
-            path: "/addRecipe",
-            element: (
-            <ProtectedRoute>
+      {
+        index: true,
+        element: <Homepage />,
+      },
+      {
+        path: "/register",
+        element: <Register />,
+      },
+      {
+        path: "/login",
+        element: <Login />,
+      },
+      {
+        path: "/recipePage/:id",
+        element: <RecipePage />,
+      },
+      {
+        path: "/addRecipe",
+        element: (
+          <ProtectedRoute>
             <AddRecipe />,
-            </ProtectedRoute>
-            ),
-        },
-        {
-            path: "/addRecipeTest",
-            element: (
-            <ProtectedRoute>
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "/addRecipeTest",
+        element: (
+          <ProtectedRoute>
             <AddRecipeTest />,
-            </ProtectedRoute>
-            ),
-        },
-        {
-            path: "/forgotpassword",
-            element: <ForgotPassword />
-          },
-        {
-            path: "/profile",
-            element: (
-            <ProtectedRoute>
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "/forgotpassword",
+        element: <ForgotPassword />,
+      },
+      {
+        path: "/profile",
+        element: (
+          <ProtectedRoute>
             <Profile />
-            </ProtectedRoute>
-            ),
-        }
-    ]
-   } 
-])
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "/Admin",
+        element: (
+            <ProtectedRouteAdmin>
+                <AdminPage />
+            </ProtectedRouteAdmin>
+        )
+      }
+    ],
+  },
+]);

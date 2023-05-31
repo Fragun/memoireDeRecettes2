@@ -4,9 +4,9 @@ const router = require("express").Router();
 const bcrypt = require("bcrypt");
 const nodemailer = require("nodemailer");
 const saltRounds = 10;
-const { key, keyPub } = require("../../keys"); 
+const { key, keyPub } = require("../../keys");
 
-router.post("/", (req, res) => { 
+router.post("/", (req, res) => {
   const email = req.body.user_mail;
   console.log(email);
   try {
@@ -22,33 +22,33 @@ router.post("/", (req, res) => {
             algorithm: "RS256",
           }
         );
-        console.log("TOKEN : " + token);
-        console.log(result[0]);
-        console.log(result[0].USER_ID);
+        // console.log("TOKEN : " + token);
+        // console.log(result[0]);
+        // console.log(result[0].USER_ID);
         const link = `http://localhost:8000/api/update/${result[0].USER_ID}/${token}`;
         const transporter = nodemailer.createTransport({
-            service: "gmail",
-            auth: {
-              user: "memoirederecettes@gmail.com",
-              pass: "szmvvclnrtzkbujv",
-            },
+          service: "gmail",
+          auth: {
+            user: "memoirederecettes@gmail.com",
+            pass: "szmvvclnrtzkbujv",
+          },
         });
         console.log("email :" + email);
         console.log("link :" + link);
         const mailOptions = {
-            from: "memoirederecettes@yahoo.com",
-            to: email,
-            subject: "Sending Email using Node.js",
-            text: link,
+          from: "memoirederecettes@yahoo.com",
+          to: email,
+          subject: "Sending Email using Node.js",
+          text: link,
         };
         console.log("Mailoptions :" + mailOptions.subject);
-        
+
         let info = transporter.sendMail(mailOptions, function (error, info) {
-            if (error) {
-                console.log(error);
-            } else {
-                console.log("Email sent: " + info.response);
-            }
+          if (error) {
+            console.log(error);
+          } else {
+            console.log("Email sent: " + info.response);
+          }
         });
         res.send(JSON.stringify(true));
       } else {
@@ -66,8 +66,8 @@ router.get("/:id/:token", async (req, res) => {
   try {
     const verify = jsonwebtoken.verify(token, key);
     const status = false;
-const same = false;
-res.render("index", { email: verify.email, status, same });
+    const same = false;
+    res.render("index", { email: verify.email, status, same });
   } catch (error) {
     res.send("Not Verified");
   }
@@ -83,7 +83,7 @@ router.post("/:id/:token", async (req, res) => {
     if (err) throw err;
     if (result[0]) {
       try {
-        console.log('result : ' + result[0]);
+        console.log("result : " + result[0]);
         const Userpassword = await bcrypt.hash(password, saltRounds);
         console.log("password user : " + Userpassword);
         const verify = jsonwebtoken.verify(token, key);
@@ -109,10 +109,10 @@ router.post("/:id/:token", async (req, res) => {
         }
       } catch (error) {
         console.log(error);
-        res.send(JSON.stringify(false + 'probleme try'));
+        res.send(JSON.stringify(false + "probleme try"));
       }
     } else {
-      res.send(JSON.stringify(false + 'probleme ici' ));
+      res.send(JSON.stringify(false + "probleme ici"));
     }
   });
 });

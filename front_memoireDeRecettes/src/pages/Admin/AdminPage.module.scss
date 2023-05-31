@@ -1,0 +1,35 @@
+.title {
+    background-color: var(--divider2);
+}
+
+.tableau {
+
+    color: white;
+
+    thead, tfoot {
+        box-shadow: 2px 2px 7px 1px #1C6EA4;
+        color: white;
+        text-shadow: 1px 1px 1px black;
+      }
+      
+      thead th, tfoot th, tfoot td {
+        background: linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.5));
+        border: 3px solid rgb(11, 66, 138);
+      }
+
+      tbody tr:nth-child(odd) {
+        background-color: var(--divider);
+      }
+      
+      tbody tr:nth-child(even) {
+        background-color: var(--divider2);
+      }
+      
+      tbody tr {
+        background-color: #1C6EA4;
+      }
+      
+      table {
+        background-color: var(--text-color);
+      }
+}

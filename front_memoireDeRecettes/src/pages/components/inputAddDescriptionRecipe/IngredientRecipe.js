@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import styles from "../../addRecipe/AddRecipe.module.scss";
-const API_INDEX = "/api/recette";
+import { getIngredient } from "../../../apis/recipe";
 
 
 export default function IngredientRecipe({ onIngredientChooseUpdate }) {
@@ -283,18 +283,15 @@ const [ingredientAdded, setIngredientAdded] = useState(false);
   }
 
   useEffect(() => {
-    async function getIngredient() {
+    async function fetchIngredient() {
       try {
-        const response = await fetch(`${API_INDEX}/getIngredient`);
-        if (response.ok) {
-          const ingredients = await response.json();
+        const ingredients = await getIngredient();
           setIngredientList(ingredients);
-        }
       } catch (error) {
         console.error(error);
       }
     }
-    getIngredient();
+    fetchIngredient();
   }, []);
 
 

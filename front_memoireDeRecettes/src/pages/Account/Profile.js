@@ -52,18 +52,6 @@ export default function Profile() {
         avatarUser: yup
             .string()
             .required(false),
-        // password: yup
-        //     .string()
-        //     .required()
-        //     .min(5, "Le mot de passe doit contenir au moins 5 caractères")
-        //     .max(50, "Le mot de passe doit contenir au plus 50 caractères"),
-        // confirm_password: yup
-        //     .string()
-        //     .required("Le mot de passe doit être confirmé")
-        //     .oneOf(
-        //         [yup.ref("password"), ""],
-        //         "Les mots de passe ne correspondent pas"
-        //    ),
       });
 
       //console.log(yupSchema);
