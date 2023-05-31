@@ -272,6 +272,7 @@ router.get("/getRecipes", (req, res) => {
        JOIN diet_type ON r.DIET_TYPE_ID = diet_type.DIET_TYPE_ID
        JOIN season ON r.SEASON_ID = season.SEASON_ID
        JOIN cooking_type ON r.COOKING_TYPE_ID = cooking_type.COOKING_TYPE_ID
+
        LIMIT ${limit}`;
   } else {
     sql = `SELECT * FROM recipe as r 
@@ -282,6 +283,7 @@ router.get("/getRecipes", (req, res) => {
         JOIN diet_type ON r.DIET_TYPE_ID = diet_type.DIET_TYPE_ID
         JOIN season ON r.SEASON_ID = season.SEASON_ID
         JOIN cooking_type ON r.COOKING_TYPE_ID = cooking_type.COOKING_TYPE_ID
+
         `;
   }
 

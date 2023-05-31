@@ -32,4 +32,9 @@ router.delete("/deleteRecipe/:id", (req, res) => {
   });
 });
 
+
+router.post("/modifyRecipe", (req, res) => {
+console.log(req.body);
+});
+
 module.exports = router;

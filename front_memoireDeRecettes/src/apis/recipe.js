@@ -9,7 +9,7 @@ export async function modifyRecipe(recipeId, updatedFields) {
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(updatedFields),
+    body: JSON.stringify(updatedFields, recipeId),
   });
   const backResponse = await response.json();
   if (response.ok) {
