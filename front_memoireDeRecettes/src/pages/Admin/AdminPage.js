@@ -7,6 +7,7 @@ import { RecipeContext } from "../../context/RecipeContext";
 
 export default function AdminPage() {
   const [recipes, setRecipes] = useState([]);
+  const [isEditing, setIsEditing] = useState(false)
 
   const [modifiedValues, setModifiedValues] = useState({});
   console.log(modifiedValues);
@@ -39,11 +40,18 @@ export default function AdminPage() {
     fetchRecipes();
   }, []);
 
-  async function handleModifyRecipe(recipeId) {
+  function handleModifyinput(){
+    setIsEditing(true)
+  }
+
+  async function handleModifyRecipe(recipeId, isEditing) {
     try {
       const updatedFields = modifiedValues[recipeId];
       await modifyRecipe(recipeId, updatedFields);
       fetchRecipes();
+      if (isEditing) {
+        setIsEditing(false); // Désactiver le mode d'édition après avoir modifié la recette
+      }
     } catch (error) {
       console.error(error);
     }
@@ -122,6 +130,7 @@ export default function AdminPage() {
                   <th scope="row">{recipe.RECIPE_ID}</th>
                   <td>
                     {recipe.RECIPE_TITLE}
+                    {isEditing && (
                     <input
                       type="text"
                       value={
@@ -135,9 +144,11 @@ export default function AdminPage() {
                         )
                       }
                     />
+                    )}
                   </td>
                   <td>
                     {recipe.RECIPE_DESCRIPTION}
+                    {isEditing && (
                     <input
                       type="text"
                       value={
@@ -152,6 +163,7 @@ export default function AdminPage() {
                         )
                       }
                     />
+                  )}
                   </td>
                   <td>
                     {date.toLocaleDateString()} <br />
@@ -283,7 +295,38 @@ export default function AdminPage() {
                       ))}
                     </select>
                   </td>
-                  <td>{recipe.DIET_TYPE_NAME}</td>
+                  <td>
+                    {recipe.DIET_TYPE_NAME}
+
+                    <select
+                      id="dietType"
+                      onChange={(e) =>
+                        handleValueChange(
+                          recipe.RECIPE_ID,
+                          "RECIPE_DIET_TYPE",
+                          e.target.value
+                        )
+                      }
+                    >
+                      <option
+                        value={
+                          modifiedValues[recipe.RECIPE_ID]?.RECIPE_DIET_TYPE ||
+                          ""
+                        }
+                        disabled
+                      >
+                        Saison
+                      </option>
+                      {dietType.map((diet) => (
+                        <option
+                          key={diet.DIET_TYPE_ID}
+                          value={diet.DIET_TYPE_ID}
+                        >
+                          {diet.DIET_TYPE_NAME}
+                        </option>
+                      ))}
+                    </select>
+                  </td>
                   <td>
                     {recipe.SEASON_NAME}
                     <select
@@ -311,11 +354,41 @@ export default function AdminPage() {
                       ))}
                     </select>
                   </td>
-                  <td>{recipe.COOKING_TYPE_NAME}</td>
+                  <td>{recipe.COOKING_TYPE_NAME}
+                  <select
+                      id="cooking_principal"
+                      onChange={(e) =>
+                        handleValueChange(
+                          recipe.RECIPE_ID,
+                          "RECIPE_COOKING_PRINCIPAL",
+                          e.target.value
+                        )
+                      }
+                    >
+                      <option
+                        value={
+                          modifiedValues[recipe.RECIPE_ID]?.RECIPE_COOKING_PRINCIPAL|| ""
+                        }
+                        disabled
+                      >
+                        Saison
+                      </option>
+                      {origin.map((o) => (
+                      <option
+                        key={o.COOKING_TYPE_ID}
+                        value={o.COOKING_TYPE_ID}
+                      >
+                        {o.COOKING_TYPE_NAME}
+                      </option>
+                    ))}
+                    </select>
+
+
+                 </td>
                   <td>
                     <button
                       className="btn btn-primary-reverse"
-                      onClick={() => handleModifyRecipe(recipe.RECIPE_ID)}
+                      onClick={() => handleModifyinput()}
                     >
                       Modifier
                     </button>
@@ -323,7 +396,7 @@ export default function AdminPage() {
                   <td>
                     <button
                       className="btn btn-primary-reverse"
-                      onClick={() => handleDeleteRecipe(recipe.RECIPE_ID)}
+                      onClick={() => handleDeleteRecipe(recipe.RECIPE_ID)} //faire une méthode avec compteur
                     >
                       Supprimer
                     </button>
