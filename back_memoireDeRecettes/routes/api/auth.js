@@ -5,7 +5,7 @@ const { key, keyPub } = require("../../keys");
 
 const connection = require("../../database/index");
 
-router.post("/userModify", async(req, res) => {
+router.post("/userModify", async (req, res) => {
   const name = req.body.name;
   const pseudo = req.body.pseudo;
   const firstname = req.body.firstname;
@@ -14,7 +14,6 @@ router.post("/userModify", async(req, res) => {
 
   console.log(pseudo);
 });
-
 
 router.post("/", async (req, res) => {
   const email = req.body.email;
@@ -78,6 +77,22 @@ router.get("/current", async (req, res) => {
 router.delete("/", (req, res) => {
   res.clearCookie("token");
   res.end();
+});
+
+router.get("/fetchUsers", async (req, res) => {
+  try {
+    const sqlUsers = `SELECT * FROM user ORDER BY USER_DATETIME_CREATION DESC`;
+    connection.query(sqlUsers, (err, result) => {
+      if (result) {
+        return res.json(result);
+      } else {
+        return res.json(null);
+      }
+    });
+  } catch (error) {
+    console.error(error);
+    return res.json(null);
+  }
 });
 
 module.exports = router;

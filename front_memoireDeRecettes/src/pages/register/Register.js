@@ -19,36 +19,9 @@ export default function Register() {
   
   const navigate = useNavigate();
   
-  const [profile, setProfile] = useState([]);
-  console.log(profile);
-
-  const clientId =
-    "688851675579-3ousee1qcgn52332o9a1u6rlktesgtfk.apps.googleusercontent.com";
-
-  useEffect(() => {
-    const initClient = () => {
-      gapi.client.init({
-        clientId: clientId,
-        scope: "",
-      });
-    };
-    gapi.load("client:auth2", initClient);
-  });
-
-  const onSuccess = (res) => {
-    setProfile(res.profileObj);
-  };
-  const onFailure = (err) => {
-    console.log("failed:", err);
-  };
-  const logOut = () => {
-    setProfile(null);
-  };
-
   function onChange(value) {
     console.log("Captcha value:", value);
   }
-
 
   
   function generateRandomUsername() {
@@ -236,30 +209,7 @@ export default function Register() {
             Inscription
           </button>
 
-          {profile ? (
-            <div>
-              <img src={profile.imageUrl} alt="utilisateur Google" />
-              <h3>User Logged in</h3>
-              <p>Name: {profile.name}</p>
-              <p>Email Address: {profile.email}</p>
-              <br />
-              <br />
-              <GoogleLogout
-                clientId={clientId}
-                buttonText="Log out"
-                onLogoutSuccess={logOut}
-              />
-            </div>
-          ) : (
-            <GoogleLogin
-              clientId={clientId}
-              buttonText="Sign in with Google"
-              onSuccess={onSuccess}
-              onFailure={onFailure}
-              cookiePolicy={"single_host_origin"}
-              isSignedIn={true}
-            />
-          )}
+          
         </form>
       </div>
     </div>

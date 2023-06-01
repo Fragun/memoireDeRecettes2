@@ -10,7 +10,6 @@ export async function signin(credentials) {
   const backResponse = await response.json();
   console.log(backResponse);
   if (response.ok) {
-    
     return backResponse;
   } else {
     if (backResponse) {
@@ -27,19 +26,27 @@ export async function getCurrentUser() {
 }
 
 export async function signout() {
-  await fetch(API_USERS,{
+  await fetch(API_USERS, {
     method: "DELETE",
   });
 }
 
 export async function modifyUser(values) {
   const response = await fetch(`${API_USERS}/userModify`, {
-    method : 'POST',
-    headers:{
-      "Content-Type": "application/json"
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
     },
-    body: JSON.stringify(values)
+    body: JSON.stringify(values),
   });
   return response.json();
 }
 
+export async function fetchUsers() {
+  try {
+    const response = await fetch(`${API_USERS}/fetchUsers`);
+      return response.json();
+  } catch (error) {
+    console.error(error);
+  }
+}

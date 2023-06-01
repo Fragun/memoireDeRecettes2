@@ -1,15 +1,14 @@
 const API_RECIPE = "/api/recette";
 const API_RECIPE_MODIF = "/api/recipeModif";
 
-export async function modifyRecipe(recipeId, updatedFields) {
-  console.log(recipeId);
-  console.log(updatedFields);
+export async function modifyRecipe(updatedFields) {
+
   const response = await fetch(`${API_RECIPE_MODIF}/modifyRecipe`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(updatedFields, recipeId),
+    body: JSON.stringify(updatedFields),
   });
   const backResponse = await response.json();
   if (response.ok) {

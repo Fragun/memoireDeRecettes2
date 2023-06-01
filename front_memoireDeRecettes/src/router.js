@@ -12,7 +12,10 @@ import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
 import RecipePage from "./pages/recipePage/RecipePage";
 import ForgotPassword from "./pages/ForgotPassword/ForgotPassword";
 import ProtectedRouteAdmin from "./components/ProtectedRoute/ProtectedRouteAdmin";
-import AdminPage from "./pages/Admin/AdminPage"
+import AdminPage from "./pages/Admin/AdminPage";
+import AdminRecipes from "./pages/Admin/AdminRecipes";
+import AdminUsers from "./pages/Admin/AdminUsers";
+
 
 export const router = createBrowserRouter([
   {
@@ -70,6 +73,22 @@ export const router = createBrowserRouter([
         element: (
             <ProtectedRouteAdmin>
                 <AdminPage />
+            </ProtectedRouteAdmin>
+        )
+      },
+      {
+        path: "/Admin/recipes",
+        element: (
+            <ProtectedRouteAdmin>
+                <AdminRecipes />
+            </ProtectedRouteAdmin>
+        )
+      },
+      {
+        path: "/Admin/users",
+        element: (
+            <ProtectedRouteAdmin>
+                <AdminUsers />
             </ProtectedRouteAdmin>
         )
       }
