@@ -4,26 +4,17 @@ import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import ReCAPTCHA from "react-google-recaptcha";
-import { useEffect } from "react";
-import { GoogleLogin, GoogleLogout } from 'react-google-login';
-import { gapi } from 'gapi-script';
 import { createUser } from "../../apis/users";
 import { useNavigate } from "react-router-dom";
 import SweetAlert from "../components/alert/AlertSweet";
-import imageDefault from "./defaultImage";
-import useAnalyticsEventTracker from "../../components/GoogleAnalytics/useAnalyticsEventTracker";
 
 export default function Register() {
-
-  const gaEventTracker = useAnalyticsEventTracker('register');
-  
   const navigate = useNavigate();
-  
+
   function onChange(value) {
     console.log("Captcha value:", value);
   }
 
-  
   function generateRandomUsername() {
     const letters = "abcdefghijklmnopqrstuvwxyz";
     let username = "";
@@ -103,10 +94,8 @@ export default function Register() {
     resolver: yupResolver(yupSchema),
   });
 
-  
-
   const submit = handleSubmit(async (values) => {
-   try{
+    try {
       await createUser(values);
       SweetAlert("Bravo", "Vous êtes inscrit");
       navigate("/login");
@@ -114,9 +103,6 @@ export default function Register() {
       setError("generic", { type: "generic", message });
     }
   });
-
-
-
 
   return (
     <div className=" d-flex justify-content-center">
@@ -201,15 +187,12 @@ export default function Register() {
           <button
             onClick={() => {
               addCount();
-              gaEventTracker('button signup');
             }}
             disabled={isSubmitting}
             className="btn btn-primary"
           >
             Inscription
           </button>
-
-          
         </form>
       </div>
     </div>

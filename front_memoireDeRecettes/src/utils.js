@@ -4,4 +4,4 @@ const initAuth = () => {
       scope: "https://www.googleapis.com/auth/analytics.readonly",
     });
   };
-  
+

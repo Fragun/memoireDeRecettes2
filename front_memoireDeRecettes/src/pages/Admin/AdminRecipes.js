@@ -5,6 +5,7 @@ import { deleteRecipe, getRecipe, modifyRecipe } from "../../apis/recipe";
 import Swal from "sweetalert2";
 import { RecipeContext } from "../../context/RecipeContext";
 import { AuthContext } from "../../context";
+import MenuMyAccountAdmin from "../../components/MenuMyAccount/MenuMyAccountAdmin";
 
 export default function AdminRecipes() {
   const [recipes, setRecipes] = useState([]);
@@ -113,13 +114,13 @@ export default function AdminRecipes() {
   return (
     <>
       {user[0].USER_ROLE === "ADMIN" && (
-        <>
-          <div>
-            <h1 className={`${styles.title}`}>Espace ADMIN</h1>
-          </div>
+        <div className="d-flex justify-content-start ">
+          <MenuMyAccountAdmin />
           <div className={`${styles.tableau}`}>
+            <div>
+              <h2 className={`${styles.title}`}>Tableau Recettes</h2>
+            </div>
             <table>
-              <caption>Liste des recettes</caption>
               <thead>
                 <tr>
                   <th scope="col">ID</th>
@@ -409,7 +410,7 @@ export default function AdminRecipes() {
               </tfoot>
             </table>
           </div>
-        </>
+        </div>
       )}
     </>
   );

@@ -597,7 +597,7 @@ export default function RecipePage() {
                         {...register("notice")}
                       ></textarea>
                     </div>
-                    <button disabled={isSubmitting} onClick={() => handleClickAstuce()} className=" mt10 btn btn-primary">
+                    <button disabled={isSubmitting} onClick={() => handleClickAstuce()} className=" mt10 btn btn-primary" id="addAstuce">
                       Valider
                     </button>
                   </div>

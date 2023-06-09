@@ -2,7 +2,6 @@ const API_RECIPE = "/api/recette";
 const API_RECIPE_MODIF = "/api/recipeModif";
 
 export async function modifyRecipe(updatedFields) {
-
   const response = await fetch(`${API_RECIPE_MODIF}/modifyRecipe`, {
     method: "POST",
     headers: {
@@ -23,7 +22,6 @@ export async function modifyRecipe(updatedFields) {
 }
 
 export async function deleteRecipe(recipeId) {
-  console.log(recipeId);
   const response = await fetch(`${API_RECIPE_MODIF}/deleteRecipe/${recipeId}`, {
     method: "DELETE",
   });
@@ -36,6 +34,12 @@ export async function deleteRecipe(recipeId) {
 
 export async function getRecipe() {
   const response = await fetch(`${API_RECIPE}/getRecipes`);
+  return response.json();
+}
+
+export async function getGoogleAnalytics() {
+  const response = await fetch(`${API_RECIPE_MODIF}/runReport`);
+  //console.log(response.json());
   return response.json();
 }
 

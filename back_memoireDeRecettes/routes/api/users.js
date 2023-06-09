@@ -36,17 +36,18 @@ router.post("/", async (req, res) => {
     }); 
   });   
 
-// app.post("/deleteUser", (req, res) => {
-//     console.log(req.body);
-//     const id = req.body.id;
+router.delete("/deleteUser:idUser", (req, res) => {
+     console.log(req.params.idUser);
+     const id = req.params.idUser;
 
-//     const sqlDelete = `DELETE FROM articles WHERE idArticles= ?`;
-//     const values = id;
-//     connection.query(sqlDelete, values, (err, result) => {
-//         if (err) throw err;
-//         console.log("Article supprimé de la base de données");
-//         res.send(JSON.stringify(true));
-//     });
-// });
+    const sqlDelete = `DELETE FROM user WHERE USER_ID = ?`;
+     const values = id;
+
+     connection.query(sqlDelete, values, (err, result) => {
+         if (err) throw err;
+         console.log("Utilisateur supprimé de la base de données");
+         res.send(JSON.stringify(true));
+     });
+ });
 
   module.exports = router;

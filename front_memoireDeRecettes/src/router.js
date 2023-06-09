@@ -15,6 +15,7 @@ import ProtectedRouteAdmin from "./components/ProtectedRoute/ProtectedRouteAdmin
 import AdminPage from "./pages/Admin/AdminPage";
 import AdminRecipes from "./pages/Admin/AdminRecipes";
 import AdminUsers from "./pages/Admin/AdminUsers";
+import AdminCookingType from "./pages/Admin/AdminCookingType";
 
 
 export const router = createBrowserRouter([
@@ -91,7 +92,15 @@ export const router = createBrowserRouter([
                 <AdminUsers />
             </ProtectedRouteAdmin>
         )
-      }
+      },
+      {
+        path: "/Admin/cookingType",
+        element: (
+            <ProtectedRouteAdmin>
+                <AdminCookingType />
+            </ProtectedRouteAdmin>
+        )
+      },
     ],
   },
 ]);

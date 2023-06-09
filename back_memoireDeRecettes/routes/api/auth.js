@@ -5,15 +5,31 @@ const { key, keyPub } = require("../../keys");
 
 const connection = require("../../database/index");
 
-router.post("/userModify", async (req, res) => {
-  const name = req.body.name;
-  const pseudo = req.body.pseudo;
-  const firstname = req.body.firstname;
-  const birthday = req.body.birthday;
-  const avatar = req.body.avatarUser;
+router.put("/modifUser", async (req, res) => {
+  const name = req.body.USER_NAME;
+  const pseudo = req.body.USER_PSEUDO;
+  const firstname = req.body.USER_FIRSTNAME;
+  const birthday = req.body.USER_BIRTHDAY;
+  const role = req.body.USER_ROLE;
+  const useCondition = req.body.USER_UTILISATION_CONDITION;
+  const gender = req.body.USER_GENDER;
+  console.log(gender);
+  const userId = req.body.userId;
+  // const avatar = req.body.avatarUser;
+  console.log(req.body);
 
-  console.log(pseudo);
-});
+   try {
+    const sql = `UPDATE user SET USER_GENDER_ID = ?, USER_ROLE = ?, USER_BIRTHDAY = ?, USER_NAME = ?, USER_PSEUDO = ?, USER_FIRSTNAME = ?, USER_UTILISATION_CONDITION = ? WHERE USER_ID = ?`;
+    const values = [gender, role, birthday, name, pseudo, firstname, useCondition, userId];
+    connection.query(sql, values, (err, result) => {
+      if (err) throw err;
+      console.log("Utilisateur modifié en base de données");
+      res.send(JSON.stringify(true));
+    });
+   } catch (error) {
+    console.error(error);
+   }
+  })
 
 router.post("/", async (req, res) => {
   const email = req.body.email;

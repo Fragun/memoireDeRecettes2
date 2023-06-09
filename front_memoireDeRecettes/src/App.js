@@ -6,17 +6,13 @@ import { Suspense, useEffect } from "react";
 import AuthProvider from "./components/Provider/AuthProvider";
 import UpdateProvider from "./components/Provider/UpdateProvider";
 import RecipeProvider from "./components/Provider/RecipeProvider";
-import ReactGA from "react-ga";
-const TRACKING_ID = "UA-270085249-1"; // OUR_TRACKING_ID  migrate to ga4 : https://www.c-sharpcorner.com/article/integrate-google-analytics-in-react-website/
-ReactGA.initialize(TRACKING_ID); // reporting  : https://developers.google.com/analytics/devguides/reporting/core/v4/quickstart/web-js?hl=fr
+import ReactGA from "react-ga4";
+
+ReactGA.initialize("G-GH9C2R3EQH");
 
 function App() {
-  const user = useLoaderData();
-  console.log(user);
 
-  useEffect(() => {
-    ReactGA.pageview(window.location.pathname + window.location.search);
-  }, []);
+  //const user = useLoaderData();
 
   return (
     <div className={`d-flex flex-column ${styles.appContainer}`}>

@@ -1,28 +1,33 @@
-import React, { useContext } from 'react';
-import { useForm } from 'react-hook-form';
-import * as Yup from 'yup';
-import styles from '../register/Register.module.scss';
+import React, { useContext } from "react";
+import { useForm } from "react-hook-form";
+import * as Yup from "yup";
+import styles from "../register/Register.module.scss";
 import { AuthContext } from "../../context/AuthContext";
-import { yupResolver } from '@hookform/resolvers/yup';
-import { Link, Navigate, useNavigate } from 'react-router-dom';
-import useAnalyticsEventTracker from '../../components/GoogleAnalytics/useAnalyticsEventTracker';
+import { yupResolver } from "@hookform/resolvers/yup";
+import { Link, Navigate, useNavigate } from "react-router-dom";
+// import ReactGA from 'react-ga4';
+
+// const gaEventTracker = () => {
+//   ReactGA.event({
+//     action: 'login_action',
+//     category: 'login_category',
+//     label: 'login_label',
+//     value: 'XXXXX',
+//   })
+// }
 
 export default function Login() {
 
-  
-  const gaEventTracker = useAnalyticsEventTracker('Login');
-
   const { signin, user } = useContext(AuthContext);
+
   const navigate = useNavigate();
 
   const validationSchema = Yup.object().shape({
-    email: Yup
-      .string()
-      .email('Email non valide')
-      .required('Ce champ doit être saisi'),
-    password: Yup
-      .string()
-      .required('Required')
+    email: Yup.string()
+      .email("Email non valide")
+      .required("Ce champ doit être saisi"),
+    password: Yup.string()
+      .required("Required")
       .min(6, "Le mot de passe doit contenir 6 caractères min."),
   });
 
@@ -30,7 +35,6 @@ export default function Login() {
     email: "",
     password: "",
   };
-
 
   const {
     handleSubmit,
@@ -43,17 +47,14 @@ export default function Login() {
     resolver: yupResolver(validationSchema),
   });
 
-
-
   const submit = handleSubmit(async (values) => {
-    
     try {
       clearErrors();
       console.log(values);
       await signin(values);
-      navigate('/');
+      navigate("/");
     } catch (message) {
-      setError("generic", { type: "generic", message })
+      setError("generic", { type: "generic", message });
     }
   });
 
@@ -106,7 +107,11 @@ export default function Login() {
                 </p>
               </Link>
               <div className="">
-                <button disabled={isSubmitting} className="btn btn-primary" onClick={gaEventTracker("button signIn")}>
+                <button
+                  disabled={isSubmitting}
+                  className="btn btn-primary"
+                  // onClick={gaEventTracker}
+                >
                   Se connecter
                 </button>
               </div>
@@ -116,7 +121,4 @@ export default function Login() {
       )}
     </>
   );
-};
-
-
-
+}

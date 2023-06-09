@@ -2,6 +2,56 @@ const express = require("express");
 const router = require("express").Router();
 const connection = require("../../database/index");
 
+router.get("/runReport", async (req, res) => {
+  // const { GoogleAuth } = require("google-auth-library");
+  // const { BetaAnalyticsDataClient } = require("@google-analytics/data");
+
+  // // Créez une nouvelle instance de GoogleAuth
+  // const auth = new GoogleAuth({
+  //   keyFilename: "./memoiresderecettes-feb3cf3e35bd.json", // Remplacez par le chemin vers votre fichier de certificat de compte de service
+  //   scopes: ["https://www.googleapis.com/auth/analytics"], // Adaptez la portée en fonction de vos besoins
+  // });
+
+  // // Obtenez le client authentifié
+  // const authClient = await auth.getClient();
+  // //console.log(authClient);
+
+  // const analyticsDataClient = new BetaAnalyticsDataClient({ auth: authClient });
+  // console.log({ analyticsDataClient });
+  // const propertyId = "379094571";
+  // // console.log(propertyId);
+  // try {
+  //   const response = await analyticsDataClient.runReport({
+  //     property: `properties/${propertyId}`,
+  //     dateRanges: [
+  //       {
+  //         startDate: "2023-06-03",
+  //         endDate: "today",
+  //       },
+  //     ],
+  //     dimensions: [
+  //       {
+  //         name: "city",
+  //       },
+  //     ],
+  //     metrics: [
+  //       {
+  //         name: "activeUsers",
+  //       },
+  //     ],
+  //   });
+  //   console.log("Résultat du rapport :");
+  //   response.rows.forEach((row) => {
+  //     console.log(row.dimensionValues[0], row.metricValues[0]);
+  //   });
+
+  //   res.send(JSON.stringify(response.rows));
+  // } catch (error) {
+  //   console.error("Error Api google analytics");
+  //   res.sendStatus(500);
+  // }
+});
+
 router.delete("/deleteRecipe/:id", (req, res) => {
   console.log(req.params.id);
   const id = req.params.id;
@@ -32,9 +82,8 @@ router.delete("/deleteRecipe/:id", (req, res) => {
   });
 });
 
-
 router.post("/modifyRecipe", (req, res) => {
-  const modifiedValues = req.body; 
+  const modifiedValues = req.body;
   console.log(modifiedValues);
 
   // Parcourir les valeurs modifiées et mettre à jour la base de données
@@ -53,7 +102,6 @@ router.post("/modifyRecipe", (req, res) => {
     const recipeDietType = fields.RECIPE_DIET_TYPE;
     const recipeSeason = fields.RECIPE_SEASON;
     const recipeCookingPrincipal = fields.RECIPE_COOKING_PRINCIPAL;
-    
 
     console.log(`Recipe ID: ${recipeId}`);
     console.log(`Meal Type: ${mealType}`);
@@ -75,23 +123,20 @@ router.post("/modifyRecipe", (req, res) => {
         if (result.length > 0) {
           const sql = `INSERT INTO recipe (RECIPE_TITLE, RECIPE_DESCRIPTION, RECIPE_DIFFICULTY, RECIPE_PRICE, PREP_TIME, COOKING_TIME,  ID_TYPE_DE_REPAS, MEAL_TYPE_ID, DIET_TYPE_ID, SEASON_ID, COOKING_TYPE_ID)
           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-          WHERE RECIPE_ID = '${recipeId}'`
-        }  else {
-          console.log("Cette recette est inexistante dans notre base de données");
+          WHERE RECIPE_ID = '${recipeId}'`;
+        } else {
+          console.log(
+            "Cette recette est inexistante dans notre base de données"
+          );
           res.send(JSON.stringify(false));
         }
 
-
-
         console.log("Recette changée en base de données");
         res.send(JSON.stringify(true));
-      })
-      
+      });
     } catch (error) {
       console.error(error);
     }
-
-
   });
 
   res.send(JSON.stringify(true));

@@ -2,11 +2,10 @@ import { UpdateContext } from "../../context/UpdateContext";
 import { resetPassword } from "../../apis/update";
 
 export default function UpdateProvider({ children }) {
-
   async function forgotpassword(email) {
-	console.log(email);
+    console.log(email);
     const responseFromBackEnd = await resetPassword(email);
-	console.log(responseFromBackEnd);
+    console.log(responseFromBackEnd);
     return responseFromBackEnd;
   }
 
@@ -16,3 +15,5 @@ export default function UpdateProvider({ children }) {
     </UpdateContext.Provider>
   );
 }
+
+

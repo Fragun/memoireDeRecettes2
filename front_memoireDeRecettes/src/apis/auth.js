@@ -32,14 +32,23 @@ export async function signout() {
 }
 
 export async function modifyUser(values) {
-  const response = await fetch(`${API_USERS}/userModify`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(values),
-  });
-  return response.json();
+  const response = await fetch (`${API_USERS}/modifUser`, {
+      method: 'PUT',
+      headers: {
+          "Content-Type": "application/json"
+      },
+      body: JSON.stringify(values)
+  })
+  const responseBack = await response.json();
+  if (response.ok) {
+      return responseBack;
+  } else {
+      if (responseBack) {
+          throw responseBack
+      } else {
+          throw new Error("Error Api modify User")
+      }
+  }
 }
 
 export async function fetchUsers() {

@@ -1,16 +1,26 @@
 import { useEffect, useState } from "react";
-import { getCookType, getDietType, getIngredient, getMealMoment, getMealType, getSeason, getUstensils } from "../../apis/recipe";
+import {
+  getCookType,
+  getDietType,
+  getGoogleAnalytics,
+  getIngredient,
+  getMealMoment,
+  getMealType,
+  getSeason,
+  getUstensils,
+} from "../../apis/recipe";
 import { RecipeContext } from "../../context/RecipeContext";
 
 export default function RecipeProvider({ children }) {
-
   const [mealType, setMealType] = useState([]);
   const [season, setSeason] = useState([]);
   const [origin, setOrigin] = useState([]);
-  const[dietType, setDietType] = useState([]);
-  const[mealMoment, setMealMoment] = useState([]);
-  const[ustensils, setUstensils] = useState([]);
-  const[ingredients, setIngredients] =useState([]);
+  const [dietType, setDietType] = useState([]);
+  const [mealMoment, setMealMoment] = useState([]);
+  const [ustensils, setUstensils] = useState([]);
+  const [ingredients, setIngredients] = useState([]);
+  const [analytics, setAnalytics] = useState([]);
+  //console.log(analytics);
 
   useEffect(() => {
     async function fetchMealType() {
@@ -43,7 +53,7 @@ export default function RecipeProvider({ children }) {
     }
     fetchDietType();
   }, []);
-  
+
   useEffect(() => {
     async function fetchMealMoment() {
       const mealMoment = await getMealMoment();
@@ -68,8 +78,13 @@ export default function RecipeProvider({ children }) {
     fetchIngredients();
   }, []);
 
-  
-  
+  useEffect(() => {
+    async function fetchGoogleAnalytic() {
+      const ga = await getGoogleAnalytics();
+      setAnalytics(ga);
+    }
+    fetchGoogleAnalytic();
+  }, []);
 
   return (
     <RecipeContext.Provider
@@ -81,6 +96,7 @@ export default function RecipeProvider({ children }) {
         mealMoment,
         ustensils,
         ingredients,
+        analytics,
       }}
     >
       {children}

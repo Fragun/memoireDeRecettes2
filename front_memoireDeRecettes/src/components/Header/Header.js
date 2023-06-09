@@ -5,15 +5,12 @@ import { useState } from "react";
 import MobileMenu from "./components/MobileMenu";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../../context";
-import useAnalyticsEventTracker from "../../components/GoogleAnalytics/useAnalyticsEventTracker";
 
 export default function Header() {
   const { user, signout } = useContext(AuthContext);
   //console.log(user);
   const [showMenu, setShowMenu] = useState(false);
   const [count, setCount] = useState(0);
-
-  const gaEventTracker = useAnalyticsEventTracker("header");
 
   function addCount() {
     setCount(count + 1);
@@ -107,7 +104,7 @@ export default function Header() {
       </div>
 
       <div className="d-flex justify-content-center">
-        <Link to="/" onClick={() => gaEventTracker("logoClick")}>
+        <Link to="/">
           <img src={logo} alt="Logo Mémoire de Recettes" />
         </Link>
       </div>
