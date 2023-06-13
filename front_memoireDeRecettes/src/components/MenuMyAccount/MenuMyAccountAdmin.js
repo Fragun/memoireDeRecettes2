@@ -20,7 +20,12 @@ export default function MenuMyAccountAdmin() {
           </Link>
           <Link to="/admin/cookingType">
             <button className="btn btn-primary p10 s10 mt10">
-              Modes de cuisson
+              Mode de cuisson
+            </button>
+          </Link>
+          <Link to="/admin/dietType">
+            <button className="btn btn-primary p10 s10 mt10">
+              Régime alimentaire
             </button>
           </Link>
           <Link to="/admin">

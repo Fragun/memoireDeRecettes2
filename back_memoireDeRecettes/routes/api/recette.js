@@ -225,7 +225,7 @@ router.get("/getCookType", (req, res) => {
   /*****************************************récup type de régime*******************************************************/
 }
 router.get("/getDietType", (req, res) => {
-  const sql = `SELECT * FROM diet_type ORDER BY DIET_TYPE_NAME DESC`;
+  const sql = `SELECT * FROM diet_type ORDER BY DIET_TYPE_ID DESC`;
   connection.query(sql, (err, result) => {
     if (err) throw err;
     //console.log("Récupération type de régime");

@@ -16,6 +16,7 @@ import AdminPage from "./pages/Admin/AdminPage";
 import AdminRecipes from "./pages/Admin/AdminRecipes";
 import AdminUsers from "./pages/Admin/AdminUsers";
 import AdminCookingType from "./pages/Admin/AdminCookingType";
+import AdminDietType from "./pages/Admin/AdminDietType";
 
 
 export const router = createBrowserRouter([
@@ -98,6 +99,14 @@ export const router = createBrowserRouter([
         element: (
             <ProtectedRouteAdmin>
                 <AdminCookingType />
+            </ProtectedRouteAdmin>
+        )
+      },
+      {
+        path: "/Admin/dietType",
+        element: (
+            <ProtectedRouteAdmin>
+                <AdminDietType />
             </ProtectedRouteAdmin>
         )
       },
