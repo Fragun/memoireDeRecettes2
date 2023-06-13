@@ -12,15 +12,15 @@ export async function deleteMealType(id) {
         if (backResponse) {
             throw backResponse
         } else {
-            throw new Error("Error Api delete Diet_type")
+            throw new Error("Error Api delete Meal_type")
         }
     }
 
 }
 
-export async function modifyDietTypeById(values) {
+export async function modifyMealTypeById(values) {
     console.log(values);
-    const response = await fetch(`${API_MEAL_TYPE}/putDietType`, {
+    const response = await fetch(`${API_MEAL_TYPE}/putMealType`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -34,14 +34,14 @@ export async function modifyDietTypeById(values) {
         if (backResponse) {
           throw backResponse;
         } else {
-          throw new Error("Error Api Modify DietType");
+          throw new Error("Error Api Modify MealType");
         }
       }
     }
 
-export async function createDietType(value) {
+export async function createMealType(value) {
   console.log(value);
-  const response = await fetch(`${API_MEAL_TYPE}/createDietType`, {
+  const response = await fetch(`${API_MEAL_TYPE}/createMealType`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -55,7 +55,7 @@ export async function createDietType(value) {
     if (backResponse) {
       throw backResponse;
     } else {
-      throw new Error("Error Api Create DietType");
+      throw new Error("Error Api Create MealType");
     }
   }
 }
