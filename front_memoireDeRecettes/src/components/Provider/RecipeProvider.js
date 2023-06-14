@@ -85,6 +85,9 @@ export default function RecipeProvider({ children }) {
     }
     fetchGoogleAnalytic();
   }, []);
+  console.log(mealType);
+console.log('ofzofhzef');
+  console.log(origin);
 
   return (
     <RecipeContext.Provider

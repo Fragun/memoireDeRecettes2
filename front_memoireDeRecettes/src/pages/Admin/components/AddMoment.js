@@ -3,16 +3,15 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import Swal from "sweetalert2";
 import * as yup from "yup";
-import { createMealType } from "../../../apis/mealType";
-import  styles from "../AdminPage.module.scss";
+import { createMoment } from "../../../apis/moment";
+import styles from "../AdminPage.module.scss";
 
-export default function AddMealType() {
-
+export default function AddMoment() {
   const [showInput, setShowInput] = useState(false);
   const [disabledButton, setDisabledButton] = useState(false);
 
-  const newMealTypeSchema = yup.object().shape({
-    newMealType: yup.string().required("Le champ est requis"),
+  const newMomentSchema = yup.object().shape({
+    newMoment: yup.string().required("Le champ est requis"),
   });
 
   const {
@@ -22,14 +21,14 @@ export default function AddMealType() {
     setError,
     clearErrors,
   } = useForm({
-    resolver: yupResolver(newMealTypeSchema),
+    resolver: yupResolver(newMomentSchema),
   });
 
   const submitAdd = handleSubmit(async (value) => {
     console.log(value);
     {
       Swal.fire({
-        title: "Ajouter l'origine culinaire ?",
+        title: `Ajouter ${value.newMoment} ?`,
         text: "",
         icon: "question",
         showCancelButton: true,
@@ -42,10 +41,10 @@ export default function AddMealType() {
           try {
             clearErrors();
             console.log(value);
-            await createMealType(value);
+            await createMoment(value);
             Swal.fire(
               "Ajouté !",
-              `L'origine culinaire ${value.newMealType} a été ajouté avec succès`,
+              `Le type de repas "${value.newMoment}" a été ajouté avec succès`,
               "success"
             ).then(() => {
               window.location.reload();
@@ -61,30 +60,30 @@ export default function AddMealType() {
   return (
     <div>
       <div className="d-flex justify-content-end align-items-end">
-       { !disabledButton && <button
-          type="button"
-          className="btn btn-primary"
-          onClick={() => {
-            setShowInput(true);
-            setDisabledButton(true);
-          }}
-        >
-             Ajouter
-        </button>
-       }
-         
+        {!disabledButton && (
+          <button
+            type="button"
+            className="btn btn-primary"
+            onClick={() => {
+              setShowInput(true);
+              setDisabledButton(true);
+            }}
+          >
+            Ajouter
+          </button>
+        )}
       </div>
       <form>
         {showInput && (
           <div>
             <input
               type="text"
-              placeholder="Nouvelle origine culinaire"
+              placeholder="Nouveau type de repas"
               className={`${styles.inputNewCookingType}`}
-              {...register("newMealType")}
+              {...register("newMoment")}
             />
-            {errors.mealType && (
-              <p className="form-error">{errors.newMealType.message}</p>
+            {errors.newMoment && (
+              <p className="form-error">{errors.newMoment.message}</p>
             )}
             <button className="btn btn-primary" onClick={submitAdd}>
               Enregistrer

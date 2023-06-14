@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { AuthContext } from "../../context";
 import styles from "./AdminPage.module.scss";
 import MenuMyAccountAdmin from "../../components/MenuMyAccount/MenuMyAccountAdmin";
@@ -7,45 +7,17 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { RecipeContext } from "../../context/RecipeContext";
-import { modifyDietTypeById, deleteDietType } from "../../apis/dietType";
-import AddDietType from "./components/AddDietType";
+import { deleteMoment, modifyMomentById } from "../../apis/moment";
+import AddMoment from "./components/AddMoment";
 
-export default function AdminDietType() {
+export default function AdminMoment() {
   const [buttonDisabled, setButtonDisabled] = useState(false);
   const { user } = useContext(AuthContext);
-  const { dietType } = useContext(RecipeContext);
-  console.log(dietType);
-  const [editingDietTypeId, setEditingDietTypeId] = useState(0);
-  
-  const [sortOrder, setSortOrder] = useState("asc");
-  const [sortedDietTypes, setSortedDietTypes] = useState([]);
-  const [sortedColumnId, setSortedColumnId] = useState("");
-
-  useEffect(() => {
-    let sorted = [...dietType];
-  
-    if (sortedColumnId === "id") {
-      sorted = sorted.sort((a, b) =>
-        sortOrder === "asc" ? a.DIET_TYPE_ID - b.DIET_TYPE_ID : b.DIET_TYPE_ID - a.DIET_TYPE_ID
-      );
-    }
-  
-    setSortedDietTypes(sorted);
-  }, [dietType, sortOrder, sortedColumnId]);
-
-  const handleSort = (columnId) => {
-    if (columnId === sortedColumnId) {
-      // Si la même colonne est cliquée, inversez l'ordre de tri
-      setSortOrder(sortOrder === "asc" ? "desc" : "asc");
-    } else {
-      // Si une nouvelle colonne est cliquée, triez par ordre croissant
-      setSortOrder("asc");
-      setSortedColumnId(columnId);
-    }
-  };
+  const { mealMoment } = useContext(RecipeContext);
+  const [editingMomentId, setEditingMomentId] = useState(0);
 
   const userSchema = yup.object().shape({
-    DIET_TYPE_NAME: yup.string(),
+    NOM_TYPE_DE_REPAS: yup.string(),
   });
 
   /** Utilisation de useForm pour initialiser le formulaire et configurer la résolution de validation avec yupResolver : */
@@ -60,11 +32,11 @@ export default function AdminDietType() {
   });
 
   /**
-   * Permet de supprimer un mode de cuisson
+   * Permet de supprimer un type de repas
    * utilisation de sweetAlert2
    * @param {*} id
    */
-  async function deleteDietTypeById(id) {
+  async function deleteMomentById(id) {
     console.log(id);
     Swal.fire({
       title: "Êtes-vous sûr ?",
@@ -77,11 +49,11 @@ export default function AdminDietType() {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          const response = await deleteDietType(id);
+          const response = await deleteMoment(id);
           console.log(response);
           Swal.fire(
             "Supprimé !",
-            "Cette data a été supprimée.",
+             `Cette data a été supprimée.`,
             "success"
           ).then(() => {
             window.location.reload();
@@ -93,29 +65,27 @@ export default function AdminDietType() {
     });
   }
 
-  /** @type {*}  modification d'un mode de cuisson*/
+  /** @type {*}  modification du type de repas*/
   const submit = handleSubmit(async (value) => {
     Swal.fire({
-      title: "Êtes-vous sûr de vouloir modifier le nom du régime alimentaire?",
+      title: `Êtes-vous sûr de vouloir modifier ${value.NOM_TYPE_DE_REPAS} ?`,
       text: "",
       icon: "question",
       showCancelButton: true,
       cancelButtonText: "Annuler",
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
-      confirmButtonText: "Oui, je veux modifier !",
+      confirmButtonText: `Oui, je veux modifier ${value.NOM_TYPE_DE_REPAS} !`,
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
           clearErrors();
-          value.cookingTypeId = editingDietTypeId;
+          value.momentId = editingMomentId;
           console.log(value);
-          await modifyDietTypeById(value);
-          console.log("on est la");
-          console.log("maintenant ici");
+          await modifyMomentById(value);
           Swal.fire(
             "Modifié !",
-            "Ce régime alimentaire a été modifié.",
+            `${value.NOM_TYPE_DE_REPAS} a été modifié.`,
             "success"
           ).then(() => {
             window.location.reload();
@@ -135,39 +105,39 @@ export default function AdminDietType() {
           <div className={`${styles.tableau}`}>
             <div>
               <h2 className={`${styles.title} pl20`}>
-                Tableau Régime alimentaire
+                Tableau Type de repas
               </h2>
             </div>
             <form>
               <table>
                 <thead>
                   <tr>
-                  <th scope="col" onClick={() => handleSort("id")}>ID</th>
+                    <th scope="col">ID</th>
                     <th scope="col">nom</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {sortedDietTypes.map((d) => {
+                  {mealMoment.map((m) => {
                     return (
-                      <tr key={d.DIET_TYPE_ID}>
-                        <th scope="row">{d.DIET_TYPE_ID}</th>
+                      <tr key={m.ID_TYPE_DE_REPAS}>
+                        <th scope="row">{m.ID_TYPE_DE_REPAS}</th>
                         <td>
-                          {editingDietTypeId === d.DIET_TYPE_ID ? (
+                          {editingMomentId === m.ID_TYPE_DE_REPAS ? (
                             <input
                               type="text"
-                              defaultValue={d.DIET_TYPE_NAME}
-                              {...register("DIET_TYPE_NAME")}
+                              defaultValue={m.NOM_TYPE_DE_REPAS}
+                              {...register("NOM_TYPE_DE_REPAS")}
                             />
                           ) : (
-                            <p scope="row">{d.DIET_TYPE_NAME}</p>
+                            <p scope="row">{m.NOM_TYPE_DE_REPAS}</p>
                           )}
-                          {errors.DIET_TYPE_NAME && (
+                          {errors.NOM_TYPE_DE_REPAS && (
                             <p className="form-error">
-                              {errors.DIET_TYPE_NAME.message}
+                              {errors.NOM_TYPE_DE_REPAS.message}
                             </p>
                           )}
                         </td>
-                        {editingDietTypeId === d.DIET_TYPE_ID ? (
+                        {editingMomentId === m.ID_TYPE_DE_REPAS ? (
                           <td className="d-flex">
                             <button
                               disabled={isSubmitting}
@@ -177,10 +147,11 @@ export default function AdminDietType() {
                             >
                               Enregistrer
                             </button>
+
                             <button
                               type="button"
                               onClick={() => {
-                                setEditingDietTypeId(0);
+                                setEditingMomentId(0);
                                 setButtonDisabled(false);
                               }}
                               className="btn btn-primary-reverse"
@@ -193,7 +164,7 @@ export default function AdminDietType() {
                             <td>
                               <button
                                 onClick={() => {
-                                  setEditingDietTypeId(d.DIET_TYPE_ID);
+                                  setEditingMomentId(m.ID_TYPE_DE_REPAS);
                                   setButtonDisabled(true);
                                 }}
                                 type="button"
@@ -209,7 +180,7 @@ export default function AdminDietType() {
                                 type="button"
                                 className="btn btn-primary-reverse"
                                 onClick={() =>
-                                  deleteDietTypeById(d.DIET_TYPE_ID)
+                                  deleteMomentById(m.ID_TYPE_DE_REPAS)
                                 }
                               >
                                 Supprimer
@@ -226,12 +197,12 @@ export default function AdminDietType() {
                     <th scope="row" colSpan="2">
                       Nombre total de mode de cuisson :
                     </th>
-                    <td colSpan="2">{dietType.length}</td>
+                    <td colSpan="2">{mealMoment.length}</td>
                   </tr>
                 </tfoot>
               </table>
             </form>
-            <AddDietType />
+            <AddMoment />
           </div>
         </div>
       )}

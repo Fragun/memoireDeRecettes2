@@ -17,6 +17,8 @@ import AdminRecipes from "./pages/Admin/AdminRecipes";
 import AdminUsers from "./pages/Admin/AdminUsers";
 import AdminCookingType from "./pages/Admin/AdminCookingType";
 import AdminDietType from "./pages/Admin/AdminDietType";
+import AdminMealType from "./pages/Admin/AdminMealType";
+import AdminMoment from "./pages/Admin/AdminMoment";
 
 
 export const router = createBrowserRouter([
@@ -107,6 +109,22 @@ export const router = createBrowserRouter([
         element: (
             <ProtectedRouteAdmin>
                 <AdminDietType />
+            </ProtectedRouteAdmin>
+        )
+      },
+      {
+        path: "/Admin/mealType",
+        element: (
+            <ProtectedRouteAdmin>
+                <AdminMealType />
+            </ProtectedRouteAdmin>
+        )
+      },
+      {
+        path: "/Admin/moment",
+        element: (
+            <ProtectedRouteAdmin>
+                <AdminMoment />
             </ProtectedRouteAdmin>
         )
       },

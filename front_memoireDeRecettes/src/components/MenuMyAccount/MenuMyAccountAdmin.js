@@ -28,6 +28,16 @@ export default function MenuMyAccountAdmin() {
               Régime alimentaire
             </button>
           </Link>
+          <Link to="/admin/mealType">
+            <button className="btn btn-primary p10 s10 mt10">
+              Origine de la cuisine
+            </button>
+          </Link>
+          <Link to="/admin/moment">
+            <button className="btn btn-primary p10 s10 mt10">
+              Type de repas
+            </button>
+          </Link>
           <Link to="/admin">
             <button
               className={`${styles.adminSpace} btn btn-primary-reverse p10 s10 mt10`}
