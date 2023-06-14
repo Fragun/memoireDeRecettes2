@@ -5,16 +5,8 @@ import styles from "../register/Register.module.scss";
 import { AuthContext } from "../../context/AuthContext";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Link, Navigate, useNavigate } from "react-router-dom";
-// import ReactGA from 'react-ga4';
+import ReactGA from 'react-ga4';
 
-// const gaEventTracker = () => {
-//   ReactGA.event({
-//     action: 'login_action',
-//     category: 'login_category',
-//     label: 'login_label',
-//     value: 'XXXXX',
-//   })
-// }
 
 export default function Login() {
 
@@ -55,8 +47,15 @@ export default function Login() {
       navigate("/");
     } catch (message) {
       setError("generic", { type: "generic", message });
+
+      ReactGA.event({
+        action: "login_error",
+        category: "login_category",
+        label: message,
+      });
     }
   });
+
 
   return (
     <>
@@ -110,7 +109,6 @@ export default function Login() {
                 <button
                   disabled={isSubmitting}
                   className="btn btn-primary"
-                  // onClick={gaEventTracker}
                 >
                   Se connecter
                 </button>

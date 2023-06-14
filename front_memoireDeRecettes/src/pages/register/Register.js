@@ -7,9 +7,24 @@ import ReCAPTCHA from "react-google-recaptcha";
 import { createUser } from "../../apis/users";
 import { useNavigate } from "react-router-dom";
 import SweetAlert from "../components/alert/AlertSweet";
+import ReactGA from 'react-ga4';
 
 export default function Register() {
+
+  const [clickCount, setClickCount] = useState(0)
+  
+  const trackButtonClick = () => {
+    setClickCount(count + 1);
+    ReactGA.event({
+      action: "tentative d'inscription",
+      category: "login_category",
+      label: 'email',
+      value: clickCount,
+    });
+  };
+
   const navigate = useNavigate();
+  const [count, setCount] = useState(0);
 
   function onChange(value) {
     console.log("Captcha value:", value);
@@ -31,7 +46,7 @@ export default function Register() {
     return username;
   }
 
-  const [count, setCount] = useState(0);
+  
 
   const yupSchema = yup.object({
     name: yup.string().required(false),
@@ -180,13 +195,14 @@ export default function Register() {
             {errors?.condition && <p>{errors.condition.message}</p>}
           </div>
           <ReCAPTCHA
-            sitekey="6LfjDWElAAAAAJDlM5G-WQIx26C_WAIqdZYbjx7f"
+            sitekey={`${process.env.REACT_APP_RECAPTCHA}`}
             onChange={onChange}
           />
 
           <button
             onClick={() => {
               addCount();
+              trackButtonClick()
             }}
             disabled={isSubmitting}
             className="btn btn-primary"
