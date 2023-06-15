@@ -77,9 +77,9 @@ export default function AddRecipe() {
   const [count, setCount] = useState(0);
 
   const [recipeObj, setRecipeObj] = useState();
+  console.log(recipeObj);
 
   const handleFileUpload = (obj) => {
-    console.log(obj.value);
     setRecipeObj(obj.value);
   };
 
@@ -115,7 +115,7 @@ export default function AddRecipe() {
     ustensil: yup.array().default(() => ustensilChoose),
     ingredient: yup.array().default(() => ingredientChoose),
     descriptions: yup.array().default(() => stepDescriptions),
-    nameImage: yup.object().default(() => recipeObj),
+    //nameImage: yup.object().default(() => recipeObj),
     //numStage : yup.array().default(() => automaticNumStage),
     idUserConnected: yup.number().default(idUser),
   });
@@ -150,6 +150,7 @@ export default function AddRecipe() {
   const submit = async (values) => {
     // console.log(values);
     try {
+      values.nameImage = recipeObj
       const response = await fetch(`${API_INDEX}/addRecipe`, {
         method: "POST",
         headers: {
@@ -163,7 +164,7 @@ export default function AddRecipe() {
         });
         const recipe = await response.json();
         reset(defaultValues);
-        console.log(recipe);
+        //console.log(recipe);
       }
     } catch (error) {
       console.error(error);
@@ -744,10 +745,11 @@ export default function AddRecipe() {
                       ))}
                   </select>
                   <button
+                  role="button"
                     className="btn btn-primary"
                     onClick={(e) => handleAddUstensil(e, "ustensils")}
                   >
-                    Valider ustensil
+                    Valider ustensile
                   </button>
                 </div>
               </div>
@@ -781,6 +783,7 @@ export default function AddRecipe() {
                       ))}
                   </select>
                   <button
+                  role="button"
                     className="btn btn-primary"
                     onClick={(e) => handleAddUstensil(e, "ustensils2")}
                   >
@@ -818,6 +821,7 @@ export default function AddRecipe() {
                       ))}
                   </select>
                   <button
+                  role="button"
                     className="btn btn-primary"
                     onClick={(e) => handleAddUstensil(e, "ustensils3")}
                   >
@@ -855,6 +859,7 @@ export default function AddRecipe() {
                       ))}
                   </select>
                   <button
+                  role="button"
                     className="btn btn-primary"
                     onClick={(e) => handleAddUstensil(e, "ustensils4")}
                   >
@@ -892,6 +897,7 @@ export default function AddRecipe() {
                       ))}
                   </select>
                   <button
+                  role="button"
                     className="btn btn-primary"
                     onClick={(e) => handleAddUstensil(e, "ustensils5")}
                   >
@@ -929,6 +935,7 @@ export default function AddRecipe() {
                       ))}
                   </select>
                   <button
+                    role="button"
                     className="btn btn-primary"
                     onClick={(e) => handleAddUstensil(e, "ustensils6")}
                   >
@@ -966,6 +973,7 @@ export default function AddRecipe() {
                       ))}
                   </select>
                   <button
+                    role="button"
                     className="btn btn-primary"
                     onClick={(e) => handleAddUstensil(e, "ustensils7")}
                   >
@@ -1003,6 +1011,7 @@ export default function AddRecipe() {
                       ))}
                   </select>
                   <button
+                    role="button"
                     className="btn btn-primary"
                     onClick={(e) => handleAddUstensil(e, "ustensils8")}
                   >
@@ -1028,17 +1037,16 @@ export default function AddRecipe() {
                 </span>
               </div>
             </div>
-
             <Ingredients
               onIngredientChooseUpdate={handleIngredientChooseUpdate}
             />
-
             <Description
               stepDescriptions={stepDescriptions}
               onStepDescriptionsChange={handleStepDescriptionsChange}
             />
-
-            <button disabled={isSubmitting} className="btn btn-primary">
+            <button
+             disabled={isSubmitting} 
+             className="btn btn-primary">
               Ajouter à vos recettes
             </button>
           </div>

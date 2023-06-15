@@ -3,7 +3,6 @@ import { AuthContext } from "../../context";
 import { RecipeContext } from "../../context/RecipeContext";
 import MenuMyAccountAdmin from "../../components/MenuMyAccount/MenuMyAccountAdmin";
 
-
 export default function AdminPage() {
   const { user } = useContext(AuthContext);
   const { analytics } = useContext(RecipeContext);

@@ -14,39 +14,37 @@ const URL_API = "/api/recette";
 // import imageDefault from "./defaultImage";
 
 export default function RecipePage() {
-
   const { user } = useContext(AuthContext);
 
   const [recipeClick, setRecipeClick] = useState([]);
   console.log(recipeClick);
   const [ustensilsRecipe, setUstensilsRecipe] = useState([]);
   const [ingredientsRecipe, setIngredientsRecipe] = useState([]);
-  console.log(ingredientsRecipe);
+  //console.log(ingredientsRecipe);
   const [noticeRecipe, setNoticeRecipe] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [previewImageRecipe, setPreviewImageRecipe] = useState();
-  const [stageRecipe, setStageRecipe] = useState([]);
-  console.log(stageRecipe);
   console.log(previewImageRecipe);
 
+  const [stageRecipe, setStageRecipe] = useState([]);
+  // console.log(stageRecipe);
+  // console.log(previewImageRecipe);
 
   useEffect(() => {
     const fetchImageAndSetPreviewImageRecipe = async () => {
       if (recipeClick.length > 0) {
         const imageRecipe = recipeClick[0].PHOTO_NAME;
+
         console.log("imageRecipe /", imageRecipe.data);
         const uint8Array = new Uint8Array(imageRecipe.data);
         const blob = new Blob([uint8Array]);
         const urlImage = URL.createObjectURL(blob);
-        console.log("urlIMAGE", urlImage);
-        fetch(urlImage)
-          .then((response) => response.text())
-          .then((text) => {
-            setPreviewImageRecipe(text);
-            console.log({ text });
-          })
-          .catch((error) => console.log(error));
-
+        console.log(urlImage);
+        const response = await fetch(urlImage);
+        console.log(response);
+        const text = await response.text();
+        console.log(text);
+        setPreviewImageRecipe(text);
       }
     };
 
@@ -103,9 +101,6 @@ export default function RecipePage() {
     getRecipeClicked();
   }, [id]);
 
-
-
-
   useEffect(() => {
     async function getUstensil() {
       try {
@@ -125,7 +120,9 @@ export default function RecipePage() {
   useEffect(() => {
     async function getIngredient() {
       try {
-        const response = await fetch(`${URL_API}/getIngredientsByIdRecipe/${id}`);
+        const response = await fetch(
+          `${URL_API}/getIngredientsByIdRecipe/${id}`
+        );
         if (response.ok) {
           const ingredient = await response.json();
           setIngredientsRecipe(ingredient);
@@ -276,11 +273,10 @@ export default function RecipePage() {
   });
 
   function handleClickAstuce() {
-
-    { SweetAlert('Bravo', 'Votre message a bien été envoyé') }
+    {
+      SweetAlert("Bravo", "Votre message a bien été envoyé");
+    }
   }
-
-
 
   const submit = handleSubmit(async (values) => {
     console.log(values);
@@ -306,8 +302,6 @@ export default function RecipePage() {
     }
   });
 
-
-
   return (
     <div className="d-flex flex-column justify-content-center">
       {isLoading ? (
@@ -330,10 +324,10 @@ export default function RecipePage() {
                 )}
                 <div className="d-flex flex-column justify-content-center align-items-center">
                   <img
-                    className={` ${styles.bigImage} m10 d-flex `}
-                    src={previewImageRecipe}
+                    className={`${styles.bigImage} m10 d-flex `}
+                    src={`${previewImageRecipe}`}
                     alt="recette principale"
-                  ></img>
+                  />
                   <div className="d-flex justify-content-center">
                     <i>
                       ❝{" "}
@@ -477,30 +471,33 @@ export default function RecipePage() {
               <h3 className="m20 pl20">Le coin des astuces</h3>
               <div className={`${styles.mobileFlex}`}>
                 <div className={`${styles.container6}`}>
-
-
                   {noticeRecipe.map((n, i) => (
                     <div className={` d-flex flex-column`}>
                       {n.NOTICE_TRICK_RECIPE.length > 0 ? (
                         <>
                           <div className={`d-flex flex-row`}>
-                            <img src={`../../assets/images/${n.USER_PHOTO}`}
+                            <img
+                              src={`../../assets/images/${n.USER_PHOTO}`}
                               alt="logo du propriétaire de la recette"
-                              className={`${styles.imgUserSize}`} />
-                            {n.NOTICE_STAR_NUMBER ? renderStarRating(n.NOTICE_STAR_NUMBER) : ''}
+                              className={`${styles.imgUserSize}`}
+                            />
+                            {n.NOTICE_STAR_NUMBER
+                              ? renderStarRating(n.NOTICE_STAR_NUMBER)
+                              : ""}
                             <p>Chef {n.USER_PSEUDO}</p>
                           </div>
                           <div className={`d-flex flex-row`}>
                             <div className={`${styles.littleGreen2}`}> </div>
-                            <p className={`${styles.container7}`}>{n.NOTICE_TRICK_RECIPE}</p>
+                            <p className={`${styles.container7}`}>
+                              {n.NOTICE_TRICK_RECIPE}
+                            </p>
                           </div>
                         </>
-                      ) : ("")}
+                      ) : (
+                        ""
+                      )}
                     </div>
-
                   ))}
-
-
                 </div>
                 {user ? (
                   <div className="d-flex flex-column justify-content-end m1">
@@ -508,7 +505,6 @@ export default function RecipePage() {
                     <div className={`d-flex flex-row`}>
                       <div className={`${styles.littleGreen}`}></div>
                       <textarea
-
                         placeholder="Noter ici une astuce pour cette recette..."
                         className={``}
                         {...register("astuce")}
@@ -529,39 +525,72 @@ export default function RecipePage() {
             >
               <h3 className="m20 pl20">Le coin des avis</h3>
               <div className={`${styles.mobileFlex}`}>
-
                 <div className={`${styles.container6} `}>
-
-
                   {noticeRecipe.map((n, i) => (
-
                     <div className={` d-flex flex-column `}>
                       {n.NOTICE_RECIPE.length > 0 ? (
                         <>
                           <div className={`d-flex flex-row `}>
-                            <img src={`../../assets/images/${n.USER_PHOTO}`}
+                            <img
+                              src={`../../assets/images/${n.USER_PHOTO}`}
                               alt="logo du propriétaire de la recette"
-                              className={`${styles.imgUserSize}`} />
-                            {n.NOTICE_STAR_NUMBER === 1 ?
-                              (<div><i class="la la-star"></i><i class="lar la-star"></i><i class="lar la-star"></i><i class="lar la-star"></i><i class="lar la-star"></i></div>)
-                              : n.NOTICE_STAR_NUMBER === 2 ?
-                                (<div><i class="la la-star"></i><i class="la la-star"></i><i class="lar la-star"></i><i class="lar la-star"></i><i class="lar la-star"></i></div>)
-                                : n.NOTICE_STAR_NUMBER === 3 ?
-                                  (<div><i class="la la-star"></i><i class="la la-star"></i><i class="la la-star"></i><i class="lar la-star"></i><i class="lar la-star"></i></div>)
-                                  : n.NOTICE_STAR_NUMBER === 4 ?
-                                    (<div><i class="la la-star"></i><i class="la la-star"></i><i class="la la-star"></i><i class="la la-star"></i><i class="lar la-star"></i></div>)
-                                    : n.NOTICE_STAR_NUMBER === 5 ?
-                                      (<div><i class="la la-star"></i><i class="la la-star"></i><i class="la la-star"></i><i class="la la-star"></i><i class="la la-star"></i></div>)
-                                      : ("")
-                            }
+                              className={`${styles.imgUserSize}`}
+                            />
+                            {n.NOTICE_STAR_NUMBER === 1 ? (
+                              <div>
+                                <i class="la la-star"></i>
+                                <i class="lar la-star"></i>
+                                <i class="lar la-star"></i>
+                                <i class="lar la-star"></i>
+                                <i class="lar la-star"></i>
+                              </div>
+                            ) : n.NOTICE_STAR_NUMBER === 2 ? (
+                              <div>
+                                <i class="la la-star"></i>
+                                <i class="la la-star"></i>
+                                <i class="lar la-star"></i>
+                                <i class="lar la-star"></i>
+                                <i class="lar la-star"></i>
+                              </div>
+                            ) : n.NOTICE_STAR_NUMBER === 3 ? (
+                              <div>
+                                <i class="la la-star"></i>
+                                <i class="la la-star"></i>
+                                <i class="la la-star"></i>
+                                <i class="lar la-star"></i>
+                                <i class="lar la-star"></i>
+                              </div>
+                            ) : n.NOTICE_STAR_NUMBER === 4 ? (
+                              <div>
+                                <i class="la la-star"></i>
+                                <i class="la la-star"></i>
+                                <i class="la la-star"></i>
+                                <i class="la la-star"></i>
+                                <i class="lar la-star"></i>
+                              </div>
+                            ) : n.NOTICE_STAR_NUMBER === 5 ? (
+                              <div>
+                                <i class="la la-star"></i>
+                                <i class="la la-star"></i>
+                                <i class="la la-star"></i>
+                                <i class="la la-star"></i>
+                                <i class="la la-star"></i>
+                              </div>
+                            ) : (
+                              ""
+                            )}
                             <p>Chef {n.USER_PSEUDO}</p>
                           </div>
                           <div className={`d-flex flex-row`}>
                             <div className={`${styles.littleGreen2} `}> </div>
-                            <p className={`${styles.container7} `}>{n.NOTICE_RECIPE}</p>
+                            <p className={`${styles.container7} `}>
+                              {n.NOTICE_RECIPE}
+                            </p>
                           </div>
                         </>
-                      ) : ("")}
+                      ) : (
+                        ""
+                      )}
                     </div>
                   ))}
                 </div>
@@ -597,15 +626,20 @@ export default function RecipePage() {
                         {...register("notice")}
                       ></textarea>
                     </div>
-                    <button disabled={isSubmitting} onClick={() => handleClickAstuce()} className=" mt10 btn btn-primary" id="addAstuce">
+                    <button
+                      disabled={isSubmitting}
+                      onClick={() => handleClickAstuce()}
+                      className=" mt10 btn btn-primary"
+                      id="addAstuce"
+                    >
                       Valider
                     </button>
                   </div>
-                ) : ("")}
-
+                ) : (
+                  ""
+                )}
               </div>
               <div>{errors?.notice && <p>{errors.notice.message}</p>}</div>
-
             </div>
           </form>
         </div>
