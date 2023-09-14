@@ -5,6 +5,7 @@ const bodyParser = require("body-parser");
 // on initialise l'application
 const app = express();
 const routes = require("./routes");
+const path = require("path");
 // Middleware pour éviter les problèmes de CORS
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
@@ -28,6 +29,8 @@ app.set("view engine", "ejs");
 app.use('*', (req, res) => {
   res.status(404).end();
 })
+
+app.use("/images", express.static("images"));
 
 // on écoute sur le port 8000
 app.listen(8000);

@@ -5,17 +5,14 @@ const connection = require("../../database/index");
 router.get("/runReport", async (req, res) => {
   // const { GoogleAuth } = require("google-auth-library");
   // const { BetaAnalyticsDataClient } = require("@google-analytics/data");
-
   // // Créez une nouvelle instance de GoogleAuth
   // const auth = new GoogleAuth({
   //   keyFilename: "./memoiresderecettes-feb3cf3e35bd.json", // Remplacez par le chemin vers votre fichier de certificat de compte de service
   //   scopes: ["https://www.googleapis.com/auth/analytics"], // Adaptez la portée en fonction de vos besoins
   // });
-
   // // Obtenez le client authentifié
   // const authClient = await auth.getClient();
   // //console.log(authClient);
-
   // const analyticsDataClient = new BetaAnalyticsDataClient({ auth: authClient });
   // console.log({ analyticsDataClient });
   // const propertyId = "379094571";
@@ -44,7 +41,6 @@ router.get("/runReport", async (req, res) => {
   //   response.rows.forEach((row) => {
   //     console.log(row.dimensionValues[0], row.metricValues[0]);
   //   });
-
   //   res.send(JSON.stringify(response.rows));
   // } catch (error) {
   //   console.error("Error Api google analytics");
@@ -56,6 +52,7 @@ router.delete("/deleteRecipe/:id", (req, res) => {
   console.log(req.params.id);
   const id = req.params.id;
   const values = [id];
+  const sqlDeleteLove = `DELETE FROM love WHERE RECIPE_ID = ?`;
   const sqlDeleteStage = `DELETE FROM stage WHERE RECIPE_ID = ?`;
   const sqlDelete = `DELETE FROM recipe WHERE RECIPE_ID = ?`;
   const sqlDeleteUstensil = `DELETE FROM used WHERE RECIPE_ID = ?`;
@@ -70,10 +67,13 @@ router.delete("/deleteRecipe/:id", (req, res) => {
           if (err) throw err;
           connection.query(sqlDeleteStage, values, (err, result) => {
             if (err) throw err;
-            connection.query(sqlDelete, values, (err, result) => {
+            connection.query(sqlDeleteLove, values, (err, result) => {
               if (err) throw err;
-              console.log("Recette supprimée de la base de données");
-              res.send(JSON.stringify(true));
+              connection.query(sqlDelete, values, (err, result) => {
+                if (err) throw err;
+                console.log("Recette supprimée de la base de données");
+                res.send(JSON.stringify(true));
+              });
             });
           });
         });
