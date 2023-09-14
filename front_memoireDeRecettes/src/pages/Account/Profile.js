@@ -1,16 +1,14 @@
 import { useContext, useRef, useState } from "react";
 import styles from "../addRecipe/AddRecipe.module.scss";
 import { AuthContext } from "../../context";
-import MenuMyAccount from "../../components/MenuMyAccount/MenuMyAccount";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { modifyUser } from "../../apis/auth";
+import ImageViewer from "../components/imageViewer/ImageViewer";
 
 export default function Profile() {
   const { user } = useContext(AuthContext);
-  //console.log(user);
-
   const [editMode, setEditMode] = useState(false);
   const [avatar, setAvatar] = useState(null);
   const inputFileRef = useRef(null);
@@ -27,28 +25,27 @@ export default function Profile() {
       setAvatar(reader.result);
     };
   }
+
   function handleRemove() {
     setAvatar(null);
     inputFileRef.current.value = "";
   }
 
   const yupSchema = yup.object({
-    name: yup.string().required(false),
+    name: yup.string().notRequired(),
     pseudo: yup
       .string()
       .required("Vous pouvez renseigner ce champs avec un pseudo"),
-    firstname: yup.string().required(false),
-    birthday: yup.string().required(false),
-    avatarUser: yup.string().required(false),
+    firstname: yup.string().notRequired(),
+    //birthday: yup.date().notRequired(),
+    avatarUser: yup.string().notRequired(),
   });
 
-  //console.log(yupSchema);
   const defaultValues = {
     pseudo: user[0].USER_PSEUDO,
-    firstname: "",
-    //password: "",
-    name: "",
-    birthday: "",
+    firstname: user[0].USER_FIRSTNAME,
+    name: user[0].USER_NAME,
+    //birthday: "",
     avatarUser: "",
   };
   const {
@@ -62,127 +59,139 @@ export default function Profile() {
     resolver: yupResolver(yupSchema),
   });
 
-  const submit = handleSubmit(async (values) => {
-    console.log(values);
+  const submit = handleSubmit(async (data) => {
+    const userId = user[0].USER_ID;
+    const formData = new FormData();
+    if (avatar !== null) {
+      formData.append("avatarUser", avatar);
+    }
+    formData.append("userId", userId);
+    formData.append("name", data.name);
+    formData.append("pseudo", data.pseudo);
+    formData.append("firstname", data.firstname);
+    // const birthdayInput = data.birthday;
+    // const dateObject = new Date(birthdayInput);
+    // const formattedBirthday = dateObject.toISOString().split("T")[0];
+    // formData.append("birthday", formattedBirthday);
+
     try {
       setEditMode(false);
       clearErrors();
-      await modifyUser(values);
+      await modifyUser(formData);
       //   navigate('/profile')
     } catch (message) {
       setError("generic", { type: "generic", message });
     }
   });
 
+  // let userBirthday = user[0].USER_BIRTHDAY.split("T")[0];
+
+  // const dateObject = new Date(userBirthday);
+  // const day = dateObject.getDate().toString().padStart(2, '0'); // Obtenez le jour (ajoute un 0 si nécessaire)
+  // const month = (dateObject.getMonth() + 1).toString().padStart(2, '0'); // Obtenez le mois (ajoute un 0 si nécessaire) - notez que les mois sont indexés à partir de 0, donc nous ajoutons 1
+  // const year = dateObject.getFullYear(); // Obtenez l'année
+
+  // const formattedBirthday = `${day}-${month}-${year}`;
+
   return (
     <div className="d-flex justify-content-start ">
-      <MenuMyAccount />
-      <section className={`${styles.rectangle} m30`}>
-        <form
-          onSubmit={submit}
-          className="d-flex flex-column justify-content-center p20"
-        >
-          <h2 className="text-align-center ">Mon compte</h2>
-          <div>
-            <input
-              type="file"
-              onChange={handleFileSelect}
-              className={`${styles.inputDouble}`}
-              disabled={!editMode}
-              ref={inputFileRef}
-              {...register("avatarUser")}
-            />
-            {errors?.avatarUser && <p>{errors.avatarUser.message}</p>}
-            {avatar && (
-              <div>
-                <img className="imageAvatar" src={avatar} />
-                <button onClick={handleRemove} className="btn btn-secundary">
-                  Supprimer
-                </button>
-              </div>
-            )}
-          </div>
+      {user[0] && (
+        <section className={`${styles.rectangle} m30`}>
+          <form
+            onSubmit={handleSubmit(submit)}
+            className="d-flex flex-column justify-content-center p20"
+            encType="multipart/form-data"
+          >
+            <h2 className="text-align-center ">Mon compte</h2>
+            <div>
+              <input
+                type="file"
+                onChange={handleFileSelect}
+                className={`${styles.inputDouble}`}
+                disabled={!editMode}
+                name="avatarUser"
+                ref={inputFileRef}
+              />
+              {errors?.avatarUser && <p>{errors.avatarUser.message}</p>}
 
-          <div className="d-flex justify-content-center">
-            <div className="flex-column">
-              <h3 className="ml20">Nom</h3>
-              <div className="mr10 d-flex">
-                <div className={`${styles.inputStart}`}></div>
-                <div
-                  className={`${styles.inputDeco} p10 d-flex justify-content-center`}
-                >
-                  <input
-                    type="text"
-                    placeholder={`${user[0].USER_NAME}`}
-                    className={`${styles.inputDouble}`}
-                    disabled={!editMode}
-                    {...register("name")}
-                  />
-                  {errors?.name && <p>{errors.name.message}</p>}
-                </div>
+              <div className={`d-flex justify-content-end mr20`}>
+                {user[0].USER_PHOTO && (
+                  <ImageViewer imageData={user[0].USER_PHOTO} />
+                )}
+                {avatar && (
+                  <div className="d-flex align-items-center">
+                    <i class="las la-exchange-alt la-3x"></i>
+                    <img
+                      className="imageAvatar"
+                      src={avatar}
+                      alt="nouvel avatar"
+                    />
+                    <button
+                      onClick={handleRemove}
+                      className="btn btn-secundary"
+                    >
+                      Supprimer
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
-            <div className="flex-column">
-              <h3 className="ml20">Prénom</h3>
-              <div className="mr10 d-flex">
-                <div className={`${styles.inputStart}`}></div>
-                <div
-                  className={`${styles.inputDeco} p10 d-flex justify-content-center`}
-                >
-                  <input
-                    type="text"
-                    placeholder={
-                      user[0].USER_FIRSTNAME === undefined
-                        ? "Votre prénom ici"
-                        : user[0].USER_FIRSTNAME
-                    }
-                    className={`${styles.inputDouble} `}
-                    disabled={!editMode}
-                    {...register("firstname")}
-                  />
-                  {errors?.firstname && <p>{errors.firstname.message}</p>}
-                </div>
+
+            <h3 className="ml20">Nom</h3>
+            <div className="mr10 d-flex">
+              <div className={`${styles.inputStart}`}></div>
+              <div
+                className={`${styles.inputDeco} p10 d-flex justify-content-center`}
+              >
+                <input
+                  type="text"
+                  placeholder={`${user[0].USER_NAME}`}
+                  className={`${styles.inputDouble}`}
+                  disabled={!editMode}
+                  {...register("name")}
+                />
+                {errors?.name && <p>{errors.name.message}</p>}
               </div>
             </div>
-          </div>
-          <div className="d-flex justify-content-center mt10">
-            <div className="flex-column">
-              <h3 className="ml20">Pseudo</h3>
-              <div className="mr10 d-flex">
-                <div className={`${styles.inputStart}`}></div>
-                <div
-                  className={`${styles.inputDeco} p10 d-flex justify-content-center`}
-                >
-                  <input
-                    type="text"
-                    placeholder={`${user[0].USER_PSEUDO}`}
-                    className={`${styles.inputDouble} `}
-                    disabled={!editMode}
-                    {...register("pseudo")}
-                  />
-                  {errors?.pseudo && <p>{errors.pseudo.message}</p>}
-                </div>
+
+            <h3 className="ml20">Prénom</h3>
+            <div className="mr10 d-flex">
+              <div className={`${styles.inputStart}`}></div>
+              <div
+                className={`${styles.inputDeco} p10 d-flex justify-content-center`}
+              >
+                <input
+                  type="text"
+                  placeholder={
+                    user[0].USER_FIRSTNAME
+                      ? user[0].USER_FIRSTNAME
+                      : "Votre prénom ici"
+                  }
+                  className={`${styles.inputDouble} `}
+                  disabled={!editMode}
+                  {...register("firstname")}
+                />
+                {errors?.firstname && <p>{errors.firstname.message}</p>}
               </div>
             </div>
-            <div className="flex-column">
-              <h3 className="ml20">Mot de passe</h3>
-              <div className="mr10 d-flex">
-                <div className={`${styles.inputStart}`}></div>
-                <div
-                  className={`${styles.inputDeco} p10 d-flex justify-content-center`}
-                >
-                  <input
-                    type="text"
-                    placeholder="******"
-                    className={`${styles.inputDouble} `}
-                    disabled={!editMode}
-                  />
-                </div>
+            <h3 className="ml20">Pseudo</h3>
+            <div className="mr10 d-flex">
+              <div className={`${styles.inputStart}`}></div>
+              <div
+                className={`${styles.inputDeco} p10 d-flex justify-content-center`}
+              >
+                <input
+                  type="text"
+                  placeholder={`${user[0].USER_PSEUDO}`}
+                  className={`${styles.inputDouble} `}
+                  disabled={!editMode}
+                  {...register("pseudo")}
+                />
+                {errors?.pseudo && <p>{errors.pseudo.message}</p>}
               </div>
             </div>
-          </div>
-          <div className="flex-column">
-            <h3>Date de naissance</h3>
+
+            {/* <h3>Date de naissance</h3>
             <div className="mr10 d-flex">
               <div className={`${styles.inputStart}`}></div>
               <div
@@ -190,31 +199,34 @@ export default function Profile() {
               >
                 <input
                   type="date"
-                  placeholder={
-                    user[0].USER_BIRTHDAY === undefined
-                      ? "Votre prénom ici"
-                      : user[0].USER_BIRTHDAY
-                  }
                   className={`${styles.inputDouble} `}
                   {...register("birthday")}
+                  value={formattedBirthday}
                 />
                 {errors?.birthday && <p>{errors.birthday.message}</p>}
               </div>
+            </div> */}
+            <div className="d-flex justify-content-center">
+              {editMode && (
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="btn btn-secundary mt10 width200"
+                >
+                  Enregistrer
+                </button>
+              )}
             </div>
+          </form>
+          <div className="d-flex justify-content-center">
+            {!editMode && (
+              <button onClick={handleEdit} className="btn mt10 width200 mb10">
+                Activer la modification
+              </button>
+            )}
           </div>
-
-          {editMode && (
-            <button disabled={isSubmitting} className="btn btn-secundary">
-              Enregistrer
-            </button>
-          )}
-          {!editMode && (
-            <button onClick={handleEdit} className="btn btn-primary">
-              Activer la modification
-            </button>
-          )}
-        </form>
-      </section>
+        </section>
+      )}
     </div>
   );
 }

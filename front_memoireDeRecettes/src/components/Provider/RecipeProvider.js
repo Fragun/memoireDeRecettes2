@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   getCookType,
   getDietType,
@@ -6,6 +6,8 @@ import {
   getIngredient,
   getMealMoment,
   getMealType,
+  getRating,
+  getRecipesFavorite,
   getSeason,
   getUstensils,
 } from "../../apis/recipe";
@@ -20,7 +22,10 @@ export default function RecipeProvider({ children }) {
   const [ustensils, setUstensils] = useState([]);
   const [ingredients, setIngredients] = useState([]);
   const [analytics, setAnalytics] = useState([]);
-  //console.log(analytics);
+  const [recipeByIdUser, setRecipeByIdUser] = useState([]);
+
+  const [ratings, setRatings] = useState(null);
+  const currentUserId = useRef(null);
 
   useEffect(() => {
     async function fetchMealType() {
@@ -86,6 +91,20 @@ export default function RecipeProvider({ children }) {
     fetchGoogleAnalytic();
   }, []);
 
+  async function recipesFavorite(userId, page) {
+    if (userId !== currentUserId.current) {
+      currentUserId.current = userId;
+      const recipeFavorites = await getRecipesFavorite(userId, page);
+      setRecipeByIdUser(recipeFavorites);
+    }
+  }
+
+  async function recipesRating(idRecipe) {
+    const response = await getRating(idRecipe);
+    setRatings(response.averageRating);
+    return response.averageRating;
+  }
+
   return (
     <RecipeContext.Provider
       value={{
@@ -97,6 +116,10 @@ export default function RecipeProvider({ children }) {
         ustensils,
         ingredients,
         analytics,
+        recipesFavorite,
+        recipeByIdUser,
+        recipesRating,
+        ratings,
       }}
     >
       {children}

@@ -1,0 +1,103 @@
+@use "../../../assets/styles/mixins" as mixin;
+
+.buttonFilter{
+     background-color: var(--background-color);
+    border-radius: 0 0 10px 10px;
+    width: 100px;
+    cursor: pointer;
+    box-shadow: var(--box-shadow3);
+    border-top: 0;
+}
+
+.filterContainer {
+    display: grid;
+    grid-template-columns: repeat(7, auto); 
+    gap: 40px; 
+   
+    @include mixin.md-lt {
+      display: grid;
+      grid-template-columns: repeat(4, auto); 
+      gap: 2px; 
+      margin-bottom: 15px;
+  }
+
+
+    .dnone {
+        display: none;
+    }
+
+    select{
+        border-radius: 10px 10px 10px 0px;
+        height: 30px;
+        cursor: pointer;
+        box-shadow: var(--box-shadow);
+        background-color: var(--background-color);
+        @include mixin.md-lt {
+          width: 70px;
+      }
+    }
+  }
+  
+  .filter {
+    width: 90px; 
+    height: 70px; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transform-origin: 50% 200%; 
+    transition: transform 0.3s ease; 
+    @include mixin.md-lt {
+      transform-origin: 0%;
+      transition: none; 
+      width: 70px; 
+      height: 40px; 
+  }
+  }
+  
+  .filter:nth-child(1) {
+    transform: translateY(-75px);
+    @include mixin.md-lt {
+      transform: translateY(0px);
+  }
+  }
+  
+  .filter:nth-child(2) {
+    transform: translateY(-60px);
+    @include mixin.md-lt {
+      transform: translateY(0px);
+  }
+  }
+  
+  .filter:nth-child(3) {
+    transform: translateY(-30px);
+    @include mixin.md-lt {
+      transform: translateY(0px);
+  }
+  }
+  .filter:nth-child(4) {
+    transform: translateY(-10px);
+    @include mixin.md-lt {
+      transform: translateY(0px);
+  }
+  }
+  .filter:nth-child(5) {
+    transform: translateY(-30px);
+    @include mixin.md-lt {
+      transform: translateY(0px);
+  }
+  }
+  .filter:nth-child(6) {
+    transform: translateY(-60px);
+    @include mixin.md-lt {
+      transform: translateY(0px);
+  }
+  }
+  .filter:nth-child(7) {
+    transform: translateY(-75px);
+    @include mixin.md-lt {
+      transform: translateY(0px);
+  }
+  }
+
+  
+  

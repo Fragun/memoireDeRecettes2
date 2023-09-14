@@ -8,7 +8,6 @@ export async function signin(credentials) {
   });
 
   const backResponse = await response.json();
-  console.log(backResponse);
   if (response.ok) {
     return backResponse;
   } else {
@@ -30,31 +29,27 @@ export async function signout() {
     method: "DELETE",
   });
 }
+export async function modifyUser(formData) {
+  const response = await fetch(`${API_USERS}/modifUser`, {
+    method: "PUT",
+    body: formData,
+  });
 
-export async function modifyUser(values) {
-  const response = await fetch (`${API_USERS}/modifUser`, {
-      method: 'PUT',
-      headers: {
-          "Content-Type": "application/json"
-      },
-      body: JSON.stringify(values)
-  })
   const responseBack = await response.json();
   if (response.ok) {
-      return responseBack;
+    return responseBack;
   } else {
-      if (responseBack) {
-          throw responseBack
-      } else {
-          throw new Error("Error Api modify User")
-      }
+    if (responseBack) {
+      throw responseBack;
+    } else {
+      throw new Error("Erreur de l'API modifyUser");
+    }
   }
 }
-
 export async function fetchUsers() {
   try {
     const response = await fetch(`${API_USERS}/fetchUsers`);
-      return response.json();
+    return response.json();
   } catch (error) {
     console.error(error);
   }

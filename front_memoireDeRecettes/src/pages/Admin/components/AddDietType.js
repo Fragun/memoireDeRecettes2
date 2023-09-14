@@ -28,7 +28,7 @@ export default function AddDietType() {
     console.log(value);
     {
       Swal.fire({
-        title: "Ajouter ce régime alimentaire ?",
+        title: `Ajouter "${value.newDietType}" comme nouveau régime alimentaire ?`,
         text: "",
         icon: "question",
         showCancelButton: true,

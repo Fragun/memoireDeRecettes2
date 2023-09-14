@@ -1,6 +1,20 @@
 const API_RECIPE = "/api/recette";
 const API_RECIPE_MODIF = "/api/recipeModif";
 
+export async function getRecipesFavorite(idUser, page) {
+  try {
+    const response = await fetch(`${API_RECIPE}/getRecipeByUser/${idUser}?limit=${page * 6}`);
+    if (response.ok) {
+      const data = await response.json();
+      return data;
+    } else {
+      console.error(`Response not OK, status: ${response.status}`);
+    }
+  } catch (error) {
+    console.error(error.message);
+  }
+}
+
 export async function modifyRecipe(updatedFields) {
   const response = await fetch(`${API_RECIPE_MODIF}/modifyRecipe`, {
     method: "POST",
@@ -20,7 +34,6 @@ export async function modifyRecipe(updatedFields) {
     }
   }
 }
-
 export async function deleteRecipe(recipeId) {
   const response = await fetch(`${API_RECIPE_MODIF}/deleteRecipe/${recipeId}`, {
     method: "DELETE",
@@ -32,14 +45,13 @@ export async function deleteRecipe(recipeId) {
   }
 }
 
-export async function getRecipe() {
+export async function getRecipe(userId) {
   const response = await fetch(`${API_RECIPE}/getRecipes`);
   return response.json();
 }
 
 export async function getGoogleAnalytics() {
   const response = await fetch(`${API_RECIPE_MODIF}/runReport`);
-  //console.log(response.json());
   return response.json();
 }
 
@@ -117,5 +129,63 @@ export async function getIngredient() {
     }
   } catch (error) {
     console.error(error);
+  }
+}
+
+export async function getImages(filename) {
+  try {
+    const response = await fetch(`${API_RECIPE}/image/${filename}`);
+    if (response.ok) {
+      return response;
+    }
+  } catch (error) {
+    console.error(error.message);
+  }
+}
+
+export async function getRating(idRecipe) {
+  try {
+    const response = await fetch(`${API_RECIPE}/rating/${idRecipe}`);
+    if (response.ok) {
+      return response.json();
+    }
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export async function getTrickByRecipe(id) {
+  try {
+    const response = await fetch(`${API_RECIPE}/getTrick/${id}`);
+    if (response.ok) {
+      return response.json();
+    }
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export async function addTrick(values, id, idUser) {
+  try {
+    const response = await fetch(
+      `${API_RECIPE}/addTrickRecipe/${id}/${idUser}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(values),
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+    const backResponse = await response.text();
+
+    return backResponse;
+  } catch (error) {
+    console.error("Error in addTrick:", error);
+    throw error;
   }
 }

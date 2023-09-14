@@ -65,12 +65,12 @@ export default function AdminDietType() {
    * @param {*} id
    */
   async function deleteDietTypeById(id) {
-    console.log(id);
     Swal.fire({
       title: "Êtes-vous sûr ?",
       text: "La suppression est irréversible",
       icon: "warning",
       showCancelButton: true,
+      cancelButtonText:'Annuler',
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
       confirmButtonText: "Oui, supprimez-la !",
@@ -78,9 +78,8 @@ export default function AdminDietType() {
       if (result.isConfirmed) {
         try {
           const response = await deleteDietType(id);
-          console.log(response);
           Swal.fire(
-            "Supprimé !",
+            "Supprimée !",
             "Cette data a été supprimée.",
             "success"
           ).then(() => {
@@ -93,10 +92,10 @@ export default function AdminDietType() {
     });
   }
 
-  /** @type {*}  modification d'un mode de cuisson*/
+  /** @type {*}  modification d'un régime alimentaire*/
   const submit = handleSubmit(async (value) => {
     Swal.fire({
-      title: "Êtes-vous sûr de vouloir modifier le nom du régime alimentaire?",
+      title: `Êtes-vous sûr de vouloir modifier cette donnée par "${value.DIET_TYPE_NAME}" ?`,
       text: "",
       icon: "question",
       showCancelButton: true,
@@ -108,14 +107,14 @@ export default function AdminDietType() {
       if (result.isConfirmed) {
         try {
           clearErrors();
-          value.cookingTypeId = editingDietTypeId;
+          value.dietTypeId = editingDietTypeId;
           console.log(value);
           await modifyDietTypeById(value);
           console.log("on est la");
           console.log("maintenant ici");
           Swal.fire(
             "Modifié !",
-            "Ce régime alimentaire a été modifié.",
+            `Ce régime alimentaire a été modifié par "${value.DIET_TYPE_NAME}".`,
             "success"
           ).then(() => {
             window.location.reload();
@@ -129,7 +128,7 @@ export default function AdminDietType() {
 
   return (
     <>
-      {user[0].USER_ROLE === "ADMIN" && (
+      {user && user[0].USER_ROLE === "ADMIN" && (
         <div className="d-flex justify-content-start ">
           <MenuMyAccountAdmin />
           <div className={`${styles.tableau}`}>

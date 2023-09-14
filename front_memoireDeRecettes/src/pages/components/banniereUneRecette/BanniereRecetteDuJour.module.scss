@@ -1,18 +1,106 @@
+@use "../../../assets/styles/mixins.scss" as mixin;
 
 .containerBanniere {
 
     background-color: var(--background-color3);
     box-shadow: var(--box-shadow2);
-    border-radius: 20px;
-    height: 400px;
-    width: auto;
+    border-radius: 20px 20px 20px 0;
+    height: 100%;
+    width: 80%;
 
-    img {
-        height: 100%;
-        width: 40%;
-        border-radius: 20px;
-        padding: 10px;
+    @include mixin.xs {
+        width: 100%;
     }
+
+    .displayFlexBolck {
+        display: flex;
+        justify-content: center;
+
+        @include mixin.sm {
+            display: block;
+        }
+
+        @include mixin.xs {
+            display: block;
+        }
+    }
+
+    .containerImage {
+        width: 50%;
+        height: 350px;
+
+        .relativePos {
+            position: relative;
+
+            .price {
+                font-size: large;
+                font-weight: bold;
+                position: absolute;
+                z-index: 5;
+                left: 1px;
+                bottom: -340px;
+                box-shadow: var(--box-shadow);
+                background-color: var(--background-color-transparent);
+                border-radius: 0 10px 10px 0;
+                color: var(--text-color);
+
+            }
+
+            .stars {
+                position: absolute;
+                z-index: 6;
+                color: rgb(241, 241, 89);
+                top: 20px;
+                background-color: var(--background-color-transparent);
+                border-radius: 0 10px 10px 0;
+            }
+
+            .stars:hover {
+                background-color: var(--color-logo);
+            }
+
+            .regime {
+                position: absolute;
+                z-index: 2;
+                width: 60px;
+                height: 60px;
+                bottom: -340px;
+                right: 5px;
+                border-radius: 30px;
+            }
+
+            .heart {
+                position: absolute;
+                z-index: 6;
+                width: 50px;
+                height: 50px;
+                top: 10px;
+                right: 0px;
+                color: var(--error);
+            }
+
+            .imageRecette {
+                height: 350px;
+                width: 100%;
+                border-radius: 20px 0 0 0;
+                position: absolute;
+                z-index: 1;
+                transition: 1s transform;
+
+                @include mixin.sm {
+                    border-radius: 20px 20px 0 0;
+                    width: 200%;
+                }
+
+                @include mixin.xs {
+                    border-radius: 20px 20px 0 0;
+                    width: 200%;
+                }
+            }
+        }
+    }
+
+
 
     .imageAvatar {
         height: 70px;
@@ -24,4 +112,25 @@
         height: 70px;
         width: 70px;
     }
+
+    .difficulty i {
+
+        color: var(--primary);
+
+    }
+
+    .time {
+        box-shadow: var(--box-shadow);
+        border-radius: 10px 10px 10px 0;
+        margin: 5px;
+        padding: 5px;
+        height: 30px;
+    }
+
 }
+        .imageAvatarPosition{
+            position: absolute;
+            z-index: 5;
+            bottom: 3px;
+            right: 2px;
+        }

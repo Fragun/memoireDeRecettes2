@@ -17,6 +17,9 @@
 .pl20 {
     padding-left: 30px;
 }
+.pr40{
+    padding-right: 40px;
+}
 
 .pt20 {
     padding-top: 50px;
@@ -57,6 +60,9 @@
 .ml20 {
     margin-left: 20px;
 }
+.ml50 {
+    margin-left: 50px;
+}
 
 .mb10 {
     margin-bottom: 10px;
@@ -72,6 +78,10 @@
 
 .mr20 {
     margin-right: 20px;
+}
+
+.mr50{
+    margin-right: 50px;
 }
 
 .m20 {
@@ -121,23 +131,10 @@
 }
 
 .container{
-    max-width: 1200px;
+    max-width: 1400px;
     margin: auto;
     width: 100%;
 }
-
-.menuMyAccount {
-    width: 200px;
-    background-color: var(--background-color3);
-    box-shadow: var(--box-shadow2);
-    border-radius: 20px;
-  }
-
-.menuMyAccount:hover {
-    background-color: var(--gray-1);
-    box-shadow: var(--box-shadow);
-    cursor: pointer;
-  }
 
 .imageAvatar {
     border-radius: 40px;
@@ -161,4 +158,62 @@
     width: 200px;
 }
 
+.imageRecette {
+    width: 200px;
+    height: 200px;
+}
 
+.dnone {
+    display: none;
+  }
+
+
+.scroll-on-hover {
+    white-space: nowrap;
+    overflow: hidden;
+    display: inline-block;
+    width: 12ch;
+  }
+  
+  .scroll-text {
+    display: inline-block;
+    animation: scroll linear infinite;
+    animation-duration: 3s;
+    animation-timing-function: linear;
+    animation-play-state: paused;
+  }
+  
+  .scroll-on-hover:hover .scroll-text {
+    animation-play-state: running;
+  }
+  
+  @keyframes scroll {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-100%);
+    }
+  }
+  .fs30 {
+    font-size: 40px;
+  }
+
+  .imageAvatar{
+    width: 50px;
+    height: 50px;
+    border-radius: 10px;
+  }
+  .width200{
+    width: 200px;
+  }
+
+  .pRelative{
+    position: relative;
+  }
+
+  .cw{
+    color: white;
+    box-shadow: var(--box-shadow2);
+    margin-top: 20px;
+  }

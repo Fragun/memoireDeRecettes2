@@ -1,4 +1,12 @@
-.adminSpace {
-    
-    
-}
+.menuMyAccount {
+    width: 200px;
+    background-color: var(--background-color3);
+    box-shadow: var(--box-shadow2);
+    border-radius: 20px;
+  }
+
+.menuMyAccount:hover {
+    background-color: var(--gray-1);
+    box-shadow: var(--box-shadow);
+    cursor: pointer;
+  }

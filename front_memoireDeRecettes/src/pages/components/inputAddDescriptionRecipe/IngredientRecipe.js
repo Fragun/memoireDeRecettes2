@@ -2,27 +2,26 @@ import { useEffect, useState } from "react";
 import styles from "../../addRecipe/AddRecipe.module.scss";
 import { getIngredient } from "../../../apis/recipe";
 
-
 export default function IngredientRecipe({ onIngredientChooseUpdate }) {
+  const [ingredientList, setIngredientList] = useState([]);
+  const [count2, setCount2] = useState(0);
 
-    const [ingredientList, setIngredientList] = useState([]);
-    const [count2, setCount2] = useState(0);
+  let arrayMeasure = [
+    "Millilitres",
+    "Centilitres",
+    "Litres",
+    "Grammes",
+    "Kilogrammes",
+    "Cuillères à soupe",
+    "Cuillères à café",
+    "Verre",
+    "Tasse",
+    "Pincée",
+    "Unité",
+    "Yaourt",
+  ];
 
-    let arrayMeasure = [
-        'Millilitres (ml)',
-        'Centilitres (cl)',
-        'Litres (l)',
-        'Grammes (g)',
-        'Kilogrammes (kg)',
-        'Cuillères à soupe',
-        'Cuillères à café',
-        'Verre',
-        'Tasse',
-        'Pincée',
-        'Unité'
-      ];
-
-    const [searchIngredient1, setSearchIngredient1] = useState([]);
+  const [searchIngredient1, setSearchIngredient1] = useState([]);
   const [searchIngredient2, setSearchIngredient2] = useState([]);
   const [searchIngredient3, setSearchIngredient3] = useState([]);
   const [searchIngredient4, setSearchIngredient4] = useState([]);
@@ -46,12 +45,8 @@ export default function IngredientRecipe({ onIngredientChooseUpdate }) {
   const [searchIngredient22, setSearchIngredient22] = useState([]);
   const [searchIngredient23, setSearchIngredient23] = useState([]);
   const [searchIngredient24, setSearchIngredient24] = useState([]);
-  
- const [ingredientChoose, setIngredientChoose] = useState([]);
-//console.log(ingredientChoose);
-
-
-const [ingredientAdded, setIngredientAdded] = useState(false);
+  const [ingredientChoose, setIngredientChoose] = useState([]);
+  const [ingredientAdded, setIngredientAdded] = useState(false);
   const [ingredientAdded2, setIngredientAdded2] = useState(false);
   const [ingredientAdded3, setIngredientAdded3] = useState(false);
   const [ingredientAdded4, setIngredientAdded4] = useState(false);
@@ -100,112 +95,138 @@ const [ingredientAdded, setIngredientAdded] = useState(false);
   const [inputIngredientAdded23, setInputIngredientadded23] = useState("dnone");
   const [inputIngredientAdded24, setInputIngredientadded24] = useState("dnone");
 
-
   useEffect(() => {
     onIngredientChooseUpdate(ingredientChoose);
-  }, [ingredientChoose]);
+  }, [ingredientChoose, onIngredientChooseUpdate]);
 
   function handleInputIngredient(e, index) {
-    // console.log(e.target.value);
-     const keyBoardInput = e.target.value;
-     switch (index) {
-       case 2:
-         setSearchIngredient2(keyBoardInput.trim().toLowerCase());
-         break;
-       case 3:
-         setSearchIngredient3(keyBoardInput.trim().toLowerCase());
-         break;
-       case 4:
-         setSearchIngredient4(keyBoardInput.trim().toLowerCase());
-         break;
-       case 5:
-         setSearchIngredient5(keyBoardInput.trim().toLowerCase());
-         break;
-       case 6:
-         setSearchIngredient6(keyBoardInput.trim().toLowerCase());
-         break;
-       case 7:
-         setSearchIngredient7(keyBoardInput.trim().toLowerCase());
-         break;
-       case 8:
-         setSearchIngredient8(keyBoardInput.trim().toLowerCase());
-         break;
-       case 9:
-         setSearchIngredient9(keyBoardInput.trim().toLowerCase());
-         break;
-       case 10:
-         setSearchIngredient10(keyBoardInput.trim().toLowerCase());
-         break;
-       case 11:
-         setSearchIngredient11(keyBoardInput.trim().toLowerCase());
-         break;
-       case 12:
-         setSearchIngredient12(keyBoardInput.trim().toLowerCase());
-         break;
-       case 13:
-         setSearchIngredient13(keyBoardInput.trim().toLowerCase());
-         break;
-       case 14:
-         setSearchIngredient14(keyBoardInput.trim().toLowerCase());
-         break;
-       case 15:
-         setSearchIngredient15(keyBoardInput.trim().toLowerCase());
-         break;
-       case 16:
-         setSearchIngredient16(keyBoardInput.trim().toLowerCase());
-         break;
-       case 17:
-         setSearchIngredient17(keyBoardInput.trim().toLowerCase());
-         break;
-       case 18:
-         setSearchIngredient18(keyBoardInput.trim().toLowerCase());
-         break;
-       case 19:
-         setSearchIngredient19(keyBoardInput.trim().toLowerCase());
-         break;
-       case 20:
-         setSearchIngredient20(keyBoardInput.trim().toLowerCase());
-         break;
-       case 21:
-         setSearchIngredient21(keyBoardInput.trim().toLowerCase());
-         break;
-       case 22:
-         setSearchIngredient22(keyBoardInput.trim().toLowerCase());
-         break;
-       case 23:
-         setSearchIngredient23(keyBoardInput.trim().toLowerCase());
-         break;
-       case 24:
-         setSearchIngredient24(keyBoardInput.trim().toLowerCase());
-         break;
-       default:
-         setSearchIngredient1(keyBoardInput.trim().toLowerCase());
-     }
-   }
-
-   function handleDeleteIngredient(inputId, addedStateSetter, inputQuantity, inputMeasure) {
-    return function(event) {
-      event.preventDefault();
-      const selectedIngredientId = document.getElementById(inputId).value;
-      setIngredientChoose(prevIngredients => prevIngredients.filter((ingredient) => ingredient.id !== selectedIngredientId));
-      document.getElementById(inputQuantity).value = "";
-      document.getElementById(inputMeasure).value = "";
-      addedStateSetter(false)
+    const keyBoardInput = e.target.value;
+    switch (index) {
+      case 2:
+        setSearchIngredient2(keyBoardInput.trim().toLowerCase());
+        break;
+      case 3:
+        setSearchIngredient3(keyBoardInput.trim().toLowerCase());
+        break;
+      case 4:
+        setSearchIngredient4(keyBoardInput.trim().toLowerCase());
+        break;
+      case 5:
+        setSearchIngredient5(keyBoardInput.trim().toLowerCase());
+        break;
+      case 6:
+        setSearchIngredient6(keyBoardInput.trim().toLowerCase());
+        break;
+      case 7:
+        setSearchIngredient7(keyBoardInput.trim().toLowerCase());
+        break;
+      case 8:
+        setSearchIngredient8(keyBoardInput.trim().toLowerCase());
+        break;
+      case 9:
+        setSearchIngredient9(keyBoardInput.trim().toLowerCase());
+        break;
+      case 10:
+        setSearchIngredient10(keyBoardInput.trim().toLowerCase());
+        break;
+      case 11:
+        setSearchIngredient11(keyBoardInput.trim().toLowerCase());
+        break;
+      case 12:
+        setSearchIngredient12(keyBoardInput.trim().toLowerCase());
+        break;
+      case 13:
+        setSearchIngredient13(keyBoardInput.trim().toLowerCase());
+        break;
+      case 14:
+        setSearchIngredient14(keyBoardInput.trim().toLowerCase());
+        break;
+      case 15:
+        setSearchIngredient15(keyBoardInput.trim().toLowerCase());
+        break;
+      case 16:
+        setSearchIngredient16(keyBoardInput.trim().toLowerCase());
+        break;
+      case 17:
+        setSearchIngredient17(keyBoardInput.trim().toLowerCase());
+        break;
+      case 18:
+        setSearchIngredient18(keyBoardInput.trim().toLowerCase());
+        break;
+      case 19:
+        setSearchIngredient19(keyBoardInput.trim().toLowerCase());
+        break;
+      case 20:
+        setSearchIngredient20(keyBoardInput.trim().toLowerCase());
+        break;
+      case 21:
+        setSearchIngredient21(keyBoardInput.trim().toLowerCase());
+        break;
+      case 22:
+        setSearchIngredient22(keyBoardInput.trim().toLowerCase());
+        break;
+      case 23:
+        setSearchIngredient23(keyBoardInput.trim().toLowerCase());
+        break;
+      case 24:
+        setSearchIngredient24(keyBoardInput.trim().toLowerCase());
+        break;
+      default:
+        setSearchIngredient1(keyBoardInput.trim().toLowerCase());
     }
   }
-  
-  function handleAddIngredient(inputId, addedStateSetter, inputQuantity, inputMeasure) {
-    return function(event) {
+
+  function handleDeleteIngredient(
+    inputId,
+    addedStateSetter,
+    inputQuantity,
+    inputMeasure
+  ) {
+    return function (event) {
       event.preventDefault();
-      //console.log(inputId);
       const selectedIngredientId = document.getElementById(inputId).value;
-      const selectedIngredientQuantities = document.getElementById(`${inputQuantity}`).value;
-      const selectedIngredientMeasure = document.getElementById(`${inputMeasure}`).value;
-      if (!ingredientChoose.some((ingredient) => ingredient.id === selectedIngredientId)) {
-        setIngredientChoose([...ingredientChoose, { id: selectedIngredientId, quantities: selectedIngredientQuantities, measure: selectedIngredientMeasure }]);
-        addedStateSetter(true)
+      setIngredientChoose((prevIngredients) =>
+        prevIngredients.filter(
+          (ingredient) => ingredient.id !== selectedIngredientId
+        )
+      );
+      document.getElementById(inputQuantity).value = "";
+      document.getElementById(inputMeasure).value = "";
+      addedStateSetter(false);
+    };
+  }
+
+  function handleAddIngredient(
+    inputId,
+    addedStateSetter,
+    inputQuantity,
+    inputMeasure
+  ) {
+    return function (event) {
+      event.preventDefault();
+      const selectedIngredientId = document.getElementById(inputId).value;
+      const selectedIngredientQuantities = document.getElementById(
+        `${inputQuantity}`
+      ).value;
+      const selectedIngredientMeasure = document.getElementById(
+        `${inputMeasure}`
+      ).value;
+      if (
+        !ingredientChoose.some(
+          (ingredient) => ingredient.id === selectedIngredientId
+        )
+      ) {
+        setIngredientChoose([
+          ...ingredientChoose,
+          {
+            id: selectedIngredientId,
+            quantities: selectedIngredientQuantities,
+            measure: selectedIngredientMeasure,
+          },
+        ]);
+        addedStateSetter(true);
       }
-    }
+    };
   }
 
   function addInputIngredient(i) {
@@ -286,7 +307,7 @@ const [ingredientAdded, setIngredientAdded] = useState(false);
     async function fetchIngredient() {
       try {
         const ingredients = await getIngredient();
-          setIngredientList(ingredients);
+        setIngredientList(ingredients);
       } catch (error) {
         console.error(error);
       }
@@ -294,32 +315,32 @@ const [ingredientAdded, setIngredientAdded] = useState(false);
     fetchIngredient();
   }, []);
 
+  return (
+    <div className="d-flex flex-column mb20">
+      <h2>De quels ingrédients de cuisine a t-on besoin ?</h2>
+      <div className="d-flex">
+        <div
+          className={`${styles.inputDeco} p10 d-flex justify-content-center`}
+        >
+          <div className={`${styles.containerSelect}`}>
+            <div>
+              <div className={`${styles.inputStart}`}></div>
+              <input
+                type="text"
+                onInput={(e) => handleInputIngredient(e, 1)}
+                className="flex-fill"
+                placeholder="Search ..."
+                disabled={ingredientAdded}
+              ></input>
+            </div>
 
-
-    return(
-        <div className="d-flex flex-column mb20">
-        <h2>De quels ingrédients de cuisine a t-on besoin ?</h2>
-        <div className="d-flex">
-          <div
-            className={`${styles.inputDeco} p10 d-flex justify-content-center`}
-          >
-            <div className={`${styles.inputStart}`}></div>
-            <input
-              type="text"
-              onInput={(e) => handleInputIngredient(e, 1)}
-              className="flex-fill"
-              placeholder="Search ..."
-              disabled={ingredientAdded}
-            ></input>
             <select id="ingredients" disabled={ingredientAdded}>
               <option value="" disabled>
                 Quel ingredient?
               </option>
               {ingredientList
                 .filter((i) =>
-                  i.INGREDIENT_FR_NAME.toLowerCase().startsWith(
-                    searchIngredient1
-                  )
+                  i.INGREDIENT_FR_NAME.toLowerCase().includes(searchIngredient1)
                 )
                 .map((ingredient) => (
                   <option
@@ -330,30 +351,29 @@ const [ingredientAdded, setIngredientAdded] = useState(false);
                   </option>
                 ))}
             </select>
-            <select id="quantities" disabled={ingredientAdded}>
-              <option value="" disabled>
-                Quelle quantité?
+          </div> <div className={`${styles.containerSelect}`}>
+
+          <select id="quantities" disabled={ingredientAdded}>
+            <option value="" disabled>
+              Quelle quantité?
+            </option>
+            {Array.from(Array(9900).keys()).map((quantity) => (
+              <option key={quantity} value={(quantity + 1) / 10} step="0.1">
+                {(quantity + 1) / 10}
               </option>
-              {Array.from(Array(2000).keys()).map((quantity) => (
-                <option
-                  key={quantity}
-                  value={(quantity + 1) / 10}
-                  step="0.1"
-                >
-                  {(quantity + 1) / 10}
-                </option>
-              ))}
-            </select>
-            <select id="measure" disabled={ingredientAdded}>
-              {arrayMeasure.map((measure1) => (
-                <option key={measure1} value={measure1}>
-                  {" "}
-                  {measure1}{" "}
-                </option>
-              ))}
-            </select>
+            ))}
+          </select>
+          <select id="measure" disabled={ingredientAdded}>
+            {arrayMeasure.map((measure1) => (
+              <option key={measure1} value={measure1}>
+                {" "}
+                {measure1}{" "}
+              </option>
+            ))}
+          </select></div>
+          <div className={`${styles.containerButton}`}>
             <button
-              className="btn btn-primary"
+              className="buttonAddRecipe"
               onClick={handleAddIngredient(
                 "ingredients",
                 setIngredientAdded,
@@ -361,10 +381,10 @@ const [ingredientAdded, setIngredientAdded] = useState(false);
                 "measure"
               )}
             >
-              Valider ingrédient
+              Valider
             </button>
             <button
-              className="btn btn-primary-reverse"
+              className="buttonDeleteRecipe"
               onClick={handleDeleteIngredient(
                 "ingredients",
                 setIngredientAdded,
@@ -372,31 +392,33 @@ const [ingredientAdded, setIngredientAdded] = useState(false);
                 "measure"
               )}
             >
-              Supprimer ingrédient
+              Supprimer
             </button>
           </div>
         </div>
-        <div className={`${inputIngredientAdded2}`}>
-          <div
-            className={`${styles.inputDeco} p10 d-flex justify-content-center`}
-          >
-            <div className={`${styles.inputStart}`}></div>
-            <input
-              type="text"
-              onInput={(e) => handleInputIngredient(e, 2)}
-              className="flex-fill"
-              placeholder="Search ..."
-              disabled={ingredientAdded2}
-            ></input>
+      </div>
+      <div className={`${inputIngredientAdded2}`}>
+        <div
+          className={`${styles.inputDeco} p10 d-flex justify-content-center`}
+        >
+          <div className={`${styles.containerSelect}`}>
+            <div>
+              <div className={`${styles.inputStart}`}></div>
+              <input
+                type="text"
+                onInput={(e) => handleInputIngredient(e, 2)}
+                className="flex-fill"
+                placeholder="Search ..."
+                disabled={ingredientAdded2}
+              ></input>
+            </div>
             <select id="ingredients2" disabled={ingredientAdded2}>
               <option value="" disabled>
                 Quel ingrédient ?
               </option>
               {ingredientList
                 .filter((i) =>
-                  i.INGREDIENT_FR_NAME.toLowerCase().startsWith(
-                    searchIngredient2
-                  )
+                  i.INGREDIENT_FR_NAME.toLowerCase().includes(searchIngredient2)
                 )
                 .map((ingredient2) => (
                   <option
@@ -407,30 +429,28 @@ const [ingredientAdded, setIngredientAdded] = useState(false);
                   </option>
                 ))}
             </select>
-            <select id="quantities2" disabled={ingredientAdded2}>
-              <option value="" disabled>
-                Quelle quantité?
+          </div> <div className={`${styles.containerSelect}`}>
+          <select id="quantities2" disabled={ingredientAdded2}>
+            <option value="" disabled>
+              Quelle quantité?
+            </option>
+            {Array.from(Array(9900).keys()).map((quantity2) => (
+              <option key={quantity2} value={(quantity2 + 1) / 10} step="0.1">
+                {(quantity2 + 1) / 10}
               </option>
-              {Array.from(Array(2000).keys()).map((quantity2) => (
-                <option
-                  key={quantity2}
-                  value={(quantity2 + 1) / 10}
-                  step="0.1"
-                >
-                  {(quantity2 + 1) / 10}
-                </option>
-              ))}
-            </select>
-            <select id="measure2" disabled={ingredientAdded2}>
-              {arrayMeasure.map((measure2) => (
-                <option key={measure2} value={measure2}>
-                  {" "}
-                  {measure2}{" "}
-                </option>
-              ))}
-            </select>
+            ))}
+          </select>
+          <select id="measure2" disabled={ingredientAdded2}>
+            {arrayMeasure.map((measure2) => (
+              <option key={measure2} value={measure2}>
+                {" "}
+                {measure2}{" "}
+              </option>
+            ))}
+          </select></div>
+          <div className={`${styles.containerButton}`}>
             <button
-              className="btn btn-primary"
+              className="buttonAddRecipe"
               onClick={handleAddIngredient(
                 "ingredients2",
                 setIngredientAdded2,
@@ -438,10 +458,10 @@ const [ingredientAdded, setIngredientAdded] = useState(false);
                 "measure2"
               )}
             >
-              Valider ingrédient
+              Valider
             </button>
             <button
-              className="btn btn-primary-reverse"
+              className="buttonDeleteRecipe"
               onClick={handleDeleteIngredient(
                 "ingredients2",
                 setIngredientAdded2,
@@ -449,32 +469,34 @@ const [ingredientAdded, setIngredientAdded] = useState(false);
                 "measure2"
               )}
             >
-              Supprimer ingrédient
+              Supprimer
             </button>
           </div>
         </div>
+      </div>
 
-        <div className={`${inputIngredientAdded3}`}>
-          <div
-            className={`${styles.inputDeco} p10 d-flex justify-content-center`}
-          >
-            <div className={`${styles.inputStart}`}></div>
-            <input
-              type="text"
-              onInput={(e) => handleInputIngredient(e, 3)}
-              className="flex-fill"
-              placeholder="Search ..."
-              disabled={ingredientAdded3}
-            ></input>
+      <div className={`${inputIngredientAdded3}`}>
+        <div
+          className={`${styles.inputDeco} p10 d-flex justify-content-center`}
+        >
+          <div className={`${styles.containerSelect}`}>
+            <div>
+              <div className={`${styles.inputStart}`}></div>
+              <input
+                type="text"
+                onInput={(e) => handleInputIngredient(e, 3)}
+                className="flex-fill"
+                placeholder="Search ..."
+                disabled={ingredientAdded3}
+              ></input>
+            </div>
             <select id="ingredients3" disabled={ingredientAdded3}>
               <option value="" disabled>
                 Quel ingrédient ?
               </option>
               {ingredientList
                 .filter((i) =>
-                  i.INGREDIENT_FR_NAME.toLowerCase().startsWith(
-                    searchIngredient3
-                  )
+                  i.INGREDIENT_FR_NAME.toLowerCase().includes(searchIngredient3)
                 )
                 .map((ingredient3) => (
                   <option
@@ -485,30 +507,28 @@ const [ingredientAdded, setIngredientAdded] = useState(false);
                   </option>
                 ))}
             </select>
-            <select id="quantities3" disabled={ingredientAdded3}>
-              <option value="" disabled>
-                Quelle quantité?
+          </div> <div className={`${styles.containerSelect}`}>
+          <select id="quantities3" disabled={ingredientAdded3}>
+            <option value="" disabled>
+              Quelle quantité?
+            </option>
+            {Array.from(Array(9900).keys()).map((quantity3) => (
+              <option key={quantity3} value={(quantity3 + 1) / 10} step="0.1">
+                {(quantity3 + 1) / 10}
               </option>
-              {Array.from(Array(2000).keys()).map((quantity3) => (
-                <option
-                  key={quantity3}
-                  value={(quantity3 + 1) / 10}
-                  step="0.1"
-                >
-                  {(quantity3 + 1) / 10}
-                </option>
-              ))}
-            </select>
-            <select id="measure3" disabled={ingredientAdded3}>
-              {arrayMeasure.map((measure3) => (
-                <option key={measure3} value={measure3}>
-                  {" "}
-                  {measure3}{" "}
-                </option>
-              ))}
-            </select>
+            ))}
+          </select>
+          <select id="measure3" disabled={ingredientAdded3}>
+            {arrayMeasure.map((measure3) => (
+              <option key={measure3} value={measure3}>
+                {" "}
+                {measure3}{" "}
+              </option>
+            ))}
+          </select></div>
+          <div className={`${styles.containerButton}`}>
             <button
-              className="btn btn-primary"
+              className="buttonAddRecipe"
               onClick={handleAddIngredient(
                 "ingredients3",
                 setIngredientAdded3,
@@ -516,10 +536,10 @@ const [ingredientAdded, setIngredientAdded] = useState(false);
                 "measure3"
               )}
             >
-              Valider ingrédient
+              Valider
             </button>
             <button
-              className="btn btn-primary-reverse"
+              className="buttonDeleteRecipe"
               onClick={handleDeleteIngredient(
                 "ingredients3",
                 setIngredientAdded3,
@@ -527,32 +547,34 @@ const [ingredientAdded, setIngredientAdded] = useState(false);
                 "measure3"
               )}
             >
-              Supprimer ingrédient
+              Supprimer
             </button>
           </div>
         </div>
+      </div>
 
-        <div className={`${inputIngredientAdded4}`}>
-          <div
-            className={`${styles.inputDeco} p10 d-flex justify-content-center`}
-          >
-            <div className={`${styles.inputStart}`}></div>
-            <input
-              type="text"
-              onInput={(e) => handleInputIngredient(e, 4)}
-              className="flex-fill"
-              placeholder="Search ..."
-              disabled={ingredientAdded4}
-            ></input>
+      <div className={`${inputIngredientAdded4}`}>
+        <div
+          className={`${styles.inputDeco} p10 d-flex justify-content-center`}
+        >
+          <div className={`${styles.containerSelect}`}>
+            <div>
+              <div className={`${styles.inputStart}`}></div>
+              <input
+                type="text"
+                onInput={(e) => handleInputIngredient(e, 4)}
+                className="flex-fill"
+                placeholder="Search ..."
+                disabled={ingredientAdded4}
+              ></input>
+            </div>
             <select id="ingredients4" disabled={ingredientAdded4}>
               <option value="" disabled>
                 Quel ingrédient ?
               </option>
               {ingredientList
                 .filter((i) =>
-                  i.INGREDIENT_FR_NAME.toLowerCase().startsWith(
-                    searchIngredient4
-                  )
+                  i.INGREDIENT_FR_NAME.toLowerCase().includes(searchIngredient4)
                 )
                 .map((ingredient4) => (
                   <option
@@ -563,30 +585,28 @@ const [ingredientAdded, setIngredientAdded] = useState(false);
                   </option>
                 ))}
             </select>
-            <select id="quantities4" disabled={ingredientAdded4}>
-              <option value="" disabled>
-                Quelle quantité?
+          </div> <div className={`${styles.containerSelect}`}>
+          <select id="quantities4" disabled={ingredientAdded4}>
+            <option value="" disabled>
+              Quelle quantité?
+            </option>
+            {Array.from(Array(9900).keys()).map((quantity4) => (
+              <option key={quantity4} value={(quantity4 + 1) / 10} step="0.1">
+                {(quantity4 + 1) / 10}
               </option>
-              {Array.from(Array(2000).keys()).map((quantity4) => (
-                <option
-                  key={quantity4}
-                  value={(quantity4 + 1) / 10}
-                  step="0.1"
-                >
-                  {(quantity4 + 1) / 10}
-                </option>
-              ))}
-            </select>
-            <select id="measure4" disabled={ingredientAdded4}>
-              {arrayMeasure.map((measure4) => (
-                <option key={measure4} value={measure4}>
-                  {" "}
-                  {measure4}{" "}
-                </option>
-              ))}
-            </select>
+            ))}
+          </select>
+          <select id="measure4" disabled={ingredientAdded4}>
+            {arrayMeasure.map((measure4) => (
+              <option key={measure4} value={measure4}>
+                {" "}
+                {measure4}{" "}
+              </option>
+            ))}
+          </select></div>
+          <div className={`${styles.containerButton}`}>
             <button
-              className="btn btn-primary"
+              className="buttonAddRecipe"
               onClick={handleAddIngredient(
                 "ingredients4",
                 setIngredientAdded4,
@@ -594,10 +614,10 @@ const [ingredientAdded, setIngredientAdded] = useState(false);
                 "measure4"
               )}
             >
-              Valider ingrédient
+              Valider
             </button>
             <button
-              className="btn btn-primary-reverse"
+              className="buttonDeleteRecipe"
               onClick={handleDeleteIngredient(
                 "ingredients4",
                 setIngredientAdded4,
@@ -605,32 +625,34 @@ const [ingredientAdded, setIngredientAdded] = useState(false);
                 "measure4"
               )}
             >
-              Supprimer ingrédient
+              Supprimer
             </button>
           </div>
         </div>
+      </div>
 
-        <div className={`${inputIngredientAdded5}`}>
-          <div
-            className={`${styles.inputDeco} p10 d-flex justify-content-center`}
-          >
-            <div className={`${styles.inputStart}`}></div>
-            <input
-              type="text"
-              onInput={(e) => handleInputIngredient(e, 5)}
-              className="flex-fill"
-              placeholder="Search ..."
-              disabled={ingredientAdded5}
-            ></input>
+      <div className={`${inputIngredientAdded5}`}>
+        <div
+          className={`${styles.inputDeco} p10 d-flex justify-content-center`}
+        >
+          <div className={`${styles.containerSelect}`}>
+            <div>
+              <div className={`${styles.inputStart}`}></div>
+              <input
+                type="text"
+                onInput={(e) => handleInputIngredient(e, 5)}
+                className="flex-fill"
+                placeholder="Search ..."
+                disabled={ingredientAdded5}
+              ></input>
+            </div>
             <select id="ingredients5" disabled={ingredientAdded5}>
               <option value="" disabled>
                 Quel ingrédient ?
               </option>
               {ingredientList
                 .filter((i) =>
-                  i.INGREDIENT_FR_NAME.toLowerCase().startsWith(
-                    searchIngredient5
-                  )
+                  i.INGREDIENT_FR_NAME.toLowerCase().includes(searchIngredient5)
                 )
                 .map((ingredient5) => (
                   <option
@@ -641,30 +663,28 @@ const [ingredientAdded, setIngredientAdded] = useState(false);
                   </option>
                 ))}
             </select>
-            <select id="quantities5" disabled={ingredientAdded5}>
-              <option value="" disabled>
-                Quelle quantité?
+          </div> <div className={`${styles.containerSelect}`}>
+          <select id="quantities5" disabled={ingredientAdded5}>
+            <option value="" disabled>
+              Quelle quantité?
+            </option>
+            {Array.from(Array(9900).keys()).map((quantity5) => (
+              <option key={quantity5} value={(quantity5 + 1) / 10} step="0.1">
+                {(quantity5 + 1) / 10}
               </option>
-              {Array.from(Array(2000).keys()).map((quantity5) => (
-                <option
-                  key={quantity5}
-                  value={(quantity5 + 1) / 10}
-                  step="0.1"
-                >
-                  {(quantity5 + 1) / 10}
-                </option>
-              ))}
-            </select>
-            <select id="measure5" disabled={ingredientAdded5}>
-              {arrayMeasure.map((measure5) => (
-                <option key={measure5} value={measure5}>
-                  {" "}
-                  {measure5}{" "}
-                </option>
-              ))}
-            </select>
+            ))}
+          </select>
+          <select id="measure5" disabled={ingredientAdded5}>
+            {arrayMeasure.map((measure5) => (
+              <option key={measure5} value={measure5}>
+                {" "}
+                {measure5}{" "}
+              </option>
+            ))}
+          </select></div>
+          <div className={`${styles.containerButton}`}>
             <button
-              className="btn btn-primary"
+              className="buttonAddRecipe"
               onClick={handleAddIngredient(
                 "ingredients5",
                 setIngredientAdded5,
@@ -672,10 +692,10 @@ const [ingredientAdded, setIngredientAdded] = useState(false);
                 "measure5"
               )}
             >
-              Valider ingrédient
+              Valider
             </button>
             <button
-              className="btn btn-primary-reverse"
+              className="buttonDeleteRecipe"
               onClick={handleDeleteIngredient(
                 "ingredients5",
                 setIngredientAdded5,
@@ -683,32 +703,34 @@ const [ingredientAdded, setIngredientAdded] = useState(false);
                 "measure5"
               )}
             >
-              Supprimer ingrédient
+              Supprimer
             </button>
           </div>
         </div>
+      </div>
 
-        <div className={`${inputIngredientAdded6}`}>
-          <div
-            className={`${styles.inputDeco} p10 d-flex justify-content-center`}
-          >
-            <div className={`${styles.inputStart}`}></div>
-            <input
-              type="text"
-              onInput={(e) => handleInputIngredient(e, 6)}
-              className="flex-fill"
-              placeholder="Search ..."
-              disabled={ingredientAdded6}
-            ></input>
+      <div className={`${inputIngredientAdded6}`}>
+        <div
+          className={`${styles.inputDeco} p10 d-flex justify-content-center`}
+        >
+          <div className={`${styles.containerSelect}`}>
+            <div>
+              <div className={`${styles.inputStart}`}></div>
+              <input
+                type="text"
+                onInput={(e) => handleInputIngredient(e, 6)}
+                className="flex-fill"
+                placeholder="Search ..."
+                disabled={ingredientAdded6}
+              ></input>
+            </div>
             <select id="ingredients6" disabled={ingredientAdded6}>
               <option value="" disabled>
                 Quel ingrédient ?
               </option>
               {ingredientList
                 .filter((i) =>
-                  i.INGREDIENT_FR_NAME.toLowerCase().startsWith(
-                    searchIngredient6
-                  )
+                  i.INGREDIENT_FR_NAME.toLowerCase().includes(searchIngredient6)
                 )
                 .map((ingredient6) => (
                   <option
@@ -719,30 +741,28 @@ const [ingredientAdded, setIngredientAdded] = useState(false);
                   </option>
                 ))}
             </select>
-            <select id="quantities6" disabled={ingredientAdded6}>
-              <option value="" disabled>
-                Quelle quantité?
+          </div> <div className={`${styles.containerSelect}`}>
+          <select id="quantities6" disabled={ingredientAdded6}>
+            <option value="" disabled>
+              Quelle quantité?
+            </option>
+            {Array.from(Array(9900).keys()).map((quantity6) => (
+              <option key={quantity6} value={(quantity6 + 1) / 10} step="0.1">
+                {(quantity6 + 1) / 10}
               </option>
-              {Array.from(Array(2000).keys()).map((quantity6) => (
-                <option
-                  key={quantity6}
-                  value={(quantity6 + 1) / 10}
-                  step="0.1"
-                >
-                  {(quantity6 + 1) / 10}
-                </option>
-              ))}
-            </select>
-            <select id="measure6" disabled={ingredientAdded6}>
-              {arrayMeasure.map((measure6) => (
-                <option key={measure6} value={measure6}>
-                  {" "}
-                  {measure6}{" "}
-                </option>
-              ))}
-            </select>
+            ))}
+          </select>
+          <select id="measure6" disabled={ingredientAdded6}>
+            {arrayMeasure.map((measure6) => (
+              <option key={measure6} value={measure6}>
+                {" "}
+                {measure6}{" "}
+              </option>
+            ))}
+          </select></div>
+          <div className={`${styles.containerButton}`}>
             <button
-              className="btn btn-primary"
+              className="buttonAddRecipe"
               onClick={handleAddIngredient(
                 "ingredients6",
                 setIngredientAdded6,
@@ -750,10 +770,10 @@ const [ingredientAdded, setIngredientAdded] = useState(false);
                 "measure6"
               )}
             >
-              Valider ingrédient
+              Valider
             </button>
             <button
-              className="btn btn-primary-reverse"
+              className="buttonDeleteRecipe"
               onClick={handleDeleteIngredient(
                 "ingredients6",
                 setIngredientAdded6,
@@ -761,32 +781,34 @@ const [ingredientAdded, setIngredientAdded] = useState(false);
                 "measure6"
               )}
             >
-              Supprimer ingrédient
+              Supprimer
             </button>
           </div>
         </div>
+      </div>
 
-        <div className={`${inputIngredientAdded7}`}>
-          <div
-            className={`${styles.inputDeco} p10 d-flex justify-content-center`}
-          >
-            <div className={`${styles.inputStart}`}></div>
-            <input
-              type="text"
-              onInput={(e) => handleInputIngredient(e, 7)}
-              className="flex-fill"
-              placeholder="Search ..."
-              disabled={ingredientAdded7}
-            ></input>
+      <div className={`${inputIngredientAdded7}`}>
+        <div
+          className={`${styles.inputDeco} p10 d-flex justify-content-center`}
+        >
+          <div className={`${styles.containerSelect}`}>
+            <div>
+              <div className={`${styles.inputStart}`}></div>
+              <input
+                type="text"
+                onInput={(e) => handleInputIngredient(e, 7)}
+                className="flex-fill"
+                placeholder="Search ..."
+                disabled={ingredientAdded7}
+              ></input>
+            </div>
             <select id="ingredients7" disabled={ingredientAdded7}>
               <option value="" disabled>
                 Quel ingrédient ?
               </option>
               {ingredientList
                 .filter((i) =>
-                  i.INGREDIENT_FR_NAME.toLowerCase().startsWith(
-                    searchIngredient7
-                  )
+                  i.INGREDIENT_FR_NAME.toLowerCase().includes(searchIngredient7)
                 )
                 .map((ingredient7) => (
                   <option
@@ -797,30 +819,28 @@ const [ingredientAdded, setIngredientAdded] = useState(false);
                   </option>
                 ))}
             </select>
-            <select id="quantities7" disabled={ingredientAdded7}>
-              <option value="" disabled>
-                Quelle quantité?
+          </div> <div className={`${styles.containerSelect}`}>
+          <select id="quantities7" disabled={ingredientAdded7}>
+            <option value="" disabled>
+              Quelle quantité?
+            </option>
+            {Array.from(Array(9900).keys()).map((quantity7) => (
+              <option key={quantity7} value={(quantity7 + 1) / 10} step="0.1">
+                {(quantity7 + 1) / 10}
               </option>
-              {Array.from(Array(2000).keys()).map((quantity7) => (
-                <option
-                  key={quantity7}
-                  value={(quantity7 + 1) / 10}
-                  step="0.1"
-                >
-                  {(quantity7 + 1) / 10}
-                </option>
-              ))}
-            </select>
-            <select id="measure7" disabled={ingredientAdded7}>
-              {arrayMeasure.map((measure7) => (
-                <option key={measure7} value={measure7}>
-                  {" "}
-                  {measure7}{" "}
-                </option>
-              ))}
-            </select>
+            ))}
+          </select>
+          <select id="measure7" disabled={ingredientAdded7}>
+            {arrayMeasure.map((measure7) => (
+              <option key={measure7} value={measure7}>
+                {" "}
+                {measure7}{" "}
+              </option>
+            ))}
+          </select></div>
+          <div className={`${styles.containerButton}`}>
             <button
-              className="btn btn-primary"
+              className="buttonAddRecipe"
               onClick={handleAddIngredient(
                 "ingredients7",
                 setIngredientAdded7,
@@ -828,10 +848,10 @@ const [ingredientAdded, setIngredientAdded] = useState(false);
                 "measure7"
               )}
             >
-              Valider ingrédient
+              Valider
             </button>
             <button
-              className="btn btn-primary-reverse"
+              className="buttonDeleteRecipe"
               onClick={handleDeleteIngredient(
                 "ingredients7",
                 setIngredientAdded7,
@@ -839,32 +859,34 @@ const [ingredientAdded, setIngredientAdded] = useState(false);
                 "measure7"
               )}
             >
-              Supprimer ingrédient
+              Supprimer
             </button>
           </div>
         </div>
+      </div>
 
-        <div className={`${inputIngredientAdded8}`}>
-          <div
-            className={`${styles.inputDeco} p10 d-flex justify-content-center`}
-          >
-            <div className={`${styles.inputStart}`}></div>
-            <input
-              type="text"
-              onInput={(e) => handleInputIngredient(e, 8)}
-              className="flex-fill"
-              placeholder="Search ..."
-              disabled={ingredientAdded8}
-            ></input>
+      <div className={`${inputIngredientAdded8}`}>
+        <div
+          className={`${styles.inputDeco} p10 d-flex justify-content-center`}
+        >
+          <div className={`${styles.containerSelect}`}>
+            <div>
+              <div className={`${styles.inputStart}`}></div>
+              <input
+                type="text"
+                onInput={(e) => handleInputIngredient(e, 8)}
+                className="flex-fill"
+                placeholder="Search ..."
+                disabled={ingredientAdded8}
+              ></input>
+            </div>
             <select id="ingredients8" disabled={ingredientAdded8}>
               <option value="" disabled>
                 Quel ingrédient ?
               </option>
               {ingredientList
                 .filter((i) =>
-                  i.INGREDIENT_FR_NAME.toLowerCase().startsWith(
-                    searchIngredient8
-                  )
+                  i.INGREDIENT_FR_NAME.toLowerCase().includes(searchIngredient8)
                 )
                 .map((ingredient8) => (
                   <option
@@ -875,30 +897,28 @@ const [ingredientAdded, setIngredientAdded] = useState(false);
                   </option>
                 ))}
             </select>
-            <select id="quantities8" disabled={ingredientAdded8}>
-              <option value="" disabled>
-                Quelle quantité?
+          </div> <div className={`${styles.containerSelect}`}>
+          <select id="quantities8" disabled={ingredientAdded8}>
+            <option value="" disabled>
+              Quelle quantité?
+            </option>
+            {Array.from(Array(9900).keys()).map((quantity8) => (
+              <option key={quantity8} value={(quantity8 + 1) / 10} step="0.1">
+                {(quantity8 + 1) / 10}
               </option>
-              {Array.from(Array(2000).keys()).map((quantity8) => (
-                <option
-                  key={quantity8}
-                  value={(quantity8 + 1) / 10}
-                  step="0.1"
-                >
-                  {(quantity8 + 1) / 10}
-                </option>
-              ))}
-            </select>
-            <select id="measure8" disabled={ingredientAdded8}>
-              {arrayMeasure.map((measure8) => (
-                <option key={measure8} value={measure8}>
-                  {" "}
-                  {measure8}{" "}
-                </option>
-              ))}
-            </select>
+            ))}
+          </select>
+          <select id="measure8" disabled={ingredientAdded8}>
+            {arrayMeasure.map((measure8) => (
+              <option key={measure8} value={measure8}>
+                {" "}
+                {measure8}{" "}
+              </option>
+            ))}
+          </select></div>
+          <div className={`${styles.containerButton}`}>
             <button
-              className="btn btn-primary"
+              className="buttonAddRecipe"
               onClick={handleAddIngredient(
                 "ingredients8",
                 setIngredientAdded8,
@@ -906,10 +926,10 @@ const [ingredientAdded, setIngredientAdded] = useState(false);
                 "measure8"
               )}
             >
-              Valider ingrédient
+              Valider
             </button>
             <button
-              className="btn btn-primary-reverse"
+              className="buttonDeleteRecipe"
               onClick={handleDeleteIngredient(
                 "ingredients8",
                 setIngredientAdded8,
@@ -917,32 +937,34 @@ const [ingredientAdded, setIngredientAdded] = useState(false);
                 "measure8"
               )}
             >
-              Supprimer ingrédient
+              Supprimer
             </button>
           </div>
         </div>
+      </div>
 
-        <div className={`${inputIngredientAdded9}`}>
-          <div
-            className={`${styles.inputDeco} p10 d-flex justify-content-center`}
-          >
-            <div className={`${styles.inputStart}`}></div>
-            <input
-              type="text"
-              onInput={(e) => handleInputIngredient(e, 9)}
-              className="flex-fill"
-              placeholder="Search ..."
-              disabled={ingredientAdded9}
-            ></input>
+      <div className={`${inputIngredientAdded9}`}>
+        <div
+          className={`${styles.inputDeco} p10 d-flex justify-content-center`}
+        >
+          <div className={`${styles.containerSelect}`}>
+            <div>
+              <div className={`${styles.inputStart}`}></div>
+              <input
+                type="text"
+                onInput={(e) => handleInputIngredient(e, 9)}
+                className="flex-fill"
+                placeholder="Search ..."
+                disabled={ingredientAdded9}
+              ></input>
+            </div>
             <select id="ingredients9" disabled={ingredientAdded9}>
               <option value="" disabled>
                 Quel ingrédient ?
               </option>
               {ingredientList
                 .filter((i) =>
-                  i.INGREDIENT_FR_NAME.toLowerCase().startsWith(
-                    searchIngredient9
-                  )
+                  i.INGREDIENT_FR_NAME.toLowerCase().includes(searchIngredient9)
                 )
                 .map((ingredient9) => (
                   <option
@@ -953,30 +975,28 @@ const [ingredientAdded, setIngredientAdded] = useState(false);
                   </option>
                 ))}
             </select>
-            <select id="quantities9" disabled={ingredientAdded9}>
-              <option value="" disabled>
-                Quelle quantité?
+          </div> <div className={`${styles.containerSelect}`}>
+          <select id="quantities9" disabled={ingredientAdded9}>
+            <option value="" disabled>
+              Quelle quantité?
+            </option>
+            {Array.from(Array(9900).keys()).map((quantity9) => (
+              <option key={quantity9} value={(quantity9 + 1) / 10} step="0.1">
+                {(quantity9 + 1) / 10}
               </option>
-              {Array.from(Array(2000).keys()).map((quantity9) => (
-                <option
-                  key={quantity9}
-                  value={(quantity9 + 1) / 10}
-                  step="0.1"
-                >
-                  {(quantity9 + 1) / 10}
-                </option>
-              ))}
-            </select>
-            <select id="measure9" disabled={ingredientAdded9}>
-              {arrayMeasure.map((measure9) => (
-                <option key={measure9} value={measure9}>
-                  {" "}
-                  {measure9}{" "}
-                </option>
-              ))}
-            </select>
+            ))}
+          </select>
+          <select id="measure9" disabled={ingredientAdded9}>
+            {arrayMeasure.map((measure9) => (
+              <option key={measure9} value={measure9}>
+                {" "}
+                {measure9}{" "}
+              </option>
+            ))}
+          </select></div>
+          <div className={`${styles.containerButton}`}>
             <button
-              className="btn btn-primary"
+              className="buttonAddRecipe"
               onClick={handleAddIngredient(
                 "ingredients9",
                 setIngredientAdded9,
@@ -984,10 +1004,10 @@ const [ingredientAdded, setIngredientAdded] = useState(false);
                 "measure9"
               )}
             >
-              Valider ingrédient
+              Valider
             </button>
             <button
-              className="btn btn-primary-reverse"
+              className="buttonDeleteRecipe"
               onClick={handleDeleteIngredient(
                 "ingredients9",
                 setIngredientAdded9,
@@ -995,30 +1015,34 @@ const [ingredientAdded, setIngredientAdded] = useState(false);
                 "measure9"
               )}
             >
-              Supprimer ingrédient
+              Supprimer
             </button>
           </div>
         </div>
+      </div>
 
-        <div className={`${inputIngredientAdded10}`}>
-          <div
-            className={`${styles.inputDeco} p10 d-flex justify-content-center`}
-          >
-            <div className={`${styles.inputStart}`}></div>
-            <input
-              type="text"
-              onInput={(e) => handleInputIngredient(e, 10)}
-              className="flex-fill"
-              placeholder="Search ..."
-              disabled={ingredientAdded10}
-            ></input>
+      <div className={`${inputIngredientAdded10}`}>
+        <div
+          className={`${styles.inputDeco} p10 d-flex justify-content-center`}
+        >
+          <div className={`${styles.containerSelect}`}>
+            <div>
+              <div className={`${styles.inputStart}`}></div>
+              <input
+                type="text"
+                onInput={(e) => handleInputIngredient(e, 10)}
+                className="flex-fill"
+                placeholder="Search ..."
+                disabled={ingredientAdded10}
+              ></input>
+            </div>
             <select id="ingredients10" disabled={ingredientAdded10}>
               <option value="" disabled>
                 Quel ingrédient ?
               </option>
               {ingredientList
                 .filter((i) =>
-                  i.INGREDIENT_FR_NAME.toLowerCase().startsWith(
+                  i.INGREDIENT_FR_NAME.toLowerCase().includes(
                     searchIngredient10
                   )
                 )
@@ -1031,30 +1055,28 @@ const [ingredientAdded, setIngredientAdded] = useState(false);
                   </option>
                 ))}
             </select>
-            <select id="quantities10" disabled={ingredientAdded10}>
-              <option value="" disabled>
-                Quelle quantité?
+          </div> <div className={`${styles.containerSelect}`}>
+          <select id="quantities10" disabled={ingredientAdded10}>
+            <option value="" disabled>
+              Quelle quantité?
+            </option>
+            {Array.from(Array(9900).keys()).map((quantity10) => (
+              <option key={quantity10} value={(quantity10 + 1) / 10} step="0.1">
+                {(quantity10 + 1) / 10}
               </option>
-              {Array.from(Array(2000).keys()).map((quantity10) => (
-                <option
-                  key={quantity10}
-                  value={(quantity10 + 1) / 10}
-                  step="0.1"
-                >
-                  {(quantity10 + 1) / 10}
-                </option>
-              ))}
-            </select>
-            <select id="measure10" disabled={ingredientAdded10}>
-              {arrayMeasure.map((measure10) => (
-                <option key={measure10} value={measure10}>
-                  {" "}
-                  {measure10}{" "}
-                </option>
-              ))}
-            </select>
+            ))}
+          </select>
+          <select id="measure10" disabled={ingredientAdded10}>
+            {arrayMeasure.map((measure10) => (
+              <option key={measure10} value={measure10}>
+                {" "}
+                {measure10}{" "}
+              </option>
+            ))}
+          </select></div>
+          <div className={`${styles.containerButton}`}>
             <button
-              className="btn btn-primary"
+              className="buttonAddRecipe"
               onClick={handleAddIngredient(
                 "ingredients10",
                 setIngredientAdded10,
@@ -1062,10 +1084,10 @@ const [ingredientAdded, setIngredientAdded] = useState(false);
                 "measure10"
               )}
             >
-              Valider ingrédient
+              Valider
             </button>
             <button
-              className="btn btn-primary-reverse"
+              className="buttonDeleteRecipe"
               onClick={handleDeleteIngredient(
                 "ingredients10",
                 setIngredientAdded10,
@@ -1073,30 +1095,34 @@ const [ingredientAdded, setIngredientAdded] = useState(false);
                 "measure10"
               )}
             >
-              Supprimer ingrédient
+              Supprimer
             </button>
           </div>
         </div>
+      </div>
 
-        <div className={`${inputIngredientAdded11}`}>
-          <div
-            className={`${styles.inputDeco} p10 d-flex justify-content-center`}
-          >
-            <div className={`${styles.inputStart}`}></div>
-            <input
-              type="text"
-              onInput={(e) => handleInputIngredient(e, 11)}
-              className="flex-fill"
-              placeholder="Search ..."
-              disabled={ingredientAdded11}
-            ></input>
+      <div className={`${inputIngredientAdded11}`}>
+        <div
+          className={`${styles.inputDeco} p10 d-flex justify-content-center`}
+        >
+          <div className={`${styles.containerSelect}`}>
+            <div>
+              <div className={`${styles.inputStart}`}></div>
+              <input
+                type="text"
+                onInput={(e) => handleInputIngredient(e, 11)}
+                className="flex-fill"
+                placeholder="Search ..."
+                disabled={ingredientAdded11}
+              ></input>
+            </div>
             <select id="ingredients11" disabled={ingredientAdded11}>
               <option value="" disabled>
                 Quel ingrédient ?
               </option>
               {ingredientList
                 .filter((i) =>
-                  i.INGREDIENT_FR_NAME.toLowerCase().startsWith(
+                  i.INGREDIENT_FR_NAME.toLowerCase().includes(
                     searchIngredient11
                   )
                 )
@@ -1109,30 +1135,28 @@ const [ingredientAdded, setIngredientAdded] = useState(false);
                   </option>
                 ))}
             </select>
-            <select id="quantities11" disabled={ingredientAdded11}>
-              <option value="" disabled>
-                Quelle quantité?
+          </div> <div className={`${styles.containerSelect}`}>
+          <select id="quantities11" disabled={ingredientAdded11}>
+            <option value="" disabled>
+              Quelle quantité?
+            </option>
+            {Array.from(Array(9900).keys()).map((quantity11) => (
+              <option key={quantity11} value={(quantity11 + 1) / 10} step="0.1">
+                {(quantity11 + 1) / 10}
               </option>
-              {Array.from(Array(2000).keys()).map((quantity11) => (
-                <option
-                  key={quantity11}
-                  value={(quantity11 + 1) / 10}
-                  step="0.1"
-                >
-                  {(quantity11 + 1) / 10}
-                </option>
-              ))}
-            </select>
-            <select id="measure11" disabled={ingredientAdded11}>
-              {arrayMeasure.map((measure11) => (
-                <option key={measure11} value={measure11}>
-                  {" "}
-                  {measure11}{" "}
-                </option>
-              ))}
-            </select>
+            ))}
+          </select>
+          <select id="measure11" disabled={ingredientAdded11}>
+            {arrayMeasure.map((measure11) => (
+              <option key={measure11} value={measure11}>
+                {" "}
+                {measure11}{" "}
+              </option>
+            ))}
+          </select></div>
+          <div className={`${styles.containerButton}`}>
             <button
-              className="btn btn-primary"
+              className="buttonAddRecipe"
               onClick={handleAddIngredient(
                 "ingredients11",
                 setIngredientAdded11,
@@ -1140,10 +1164,10 @@ const [ingredientAdded, setIngredientAdded] = useState(false);
                 "measure11"
               )}
             >
-              Valider ingrédient
+              Valider
             </button>
             <button
-              className="btn btn-primary-reverse"
+              className="buttonDeleteRecipe"
               onClick={handleDeleteIngredient(
                 "ingredients11",
                 setIngredientAdded11,
@@ -1151,30 +1175,34 @@ const [ingredientAdded, setIngredientAdded] = useState(false);
                 "measure11"
               )}
             >
-              Supprimer ingrédient
+              Supprimer
             </button>
           </div>
         </div>
+      </div>
 
-        <div className={`${inputIngredientAdded12}`}>
-          <div
-            className={`${styles.inputDeco} p10 d-flex justify-content-center`}
-          >
-            <div className={`${styles.inputStart}`}></div>
-            <input
-              type="text"
-              onInput={(e) => handleInputIngredient(e, 12)}
-              className="flex-fill"
-              placeholder="Search ..."
-              disabled={ingredientAdded12}
-            ></input>
+      <div className={`${inputIngredientAdded12}`}>
+        <div
+          className={`${styles.inputDeco} p10 d-flex justify-content-center`}
+        >
+          <div className={`${styles.containerSelect}`}>
+            <div>
+              <div className={`${styles.inputStart}`}></div>
+              <input
+                type="text"
+                onInput={(e) => handleInputIngredient(e, 12)}
+                className="flex-fill"
+                placeholder="Search ..."
+                disabled={ingredientAdded12}
+              ></input>
+            </div>
             <select id="ingredients12" disabled={ingredientAdded12}>
               <option value="" disabled>
                 Quel ingrédient ?
               </option>
               {ingredientList
                 .filter((i) =>
-                  i.INGREDIENT_FR_NAME.toLowerCase().startsWith(
+                  i.INGREDIENT_FR_NAME.toLowerCase().includes(
                     searchIngredient12
                   )
                 )
@@ -1187,30 +1215,28 @@ const [ingredientAdded, setIngredientAdded] = useState(false);
                   </option>
                 ))}
             </select>
-            <select id="quantities12" disabled={ingredientAdded12}>
-              <option value="" disabled>
-                Quelle quantité?
+          </div> <div className={`${styles.containerSelect}`}>
+          <select id="quantities12" disabled={ingredientAdded12}>
+            <option value="" disabled>
+              Quelle quantité?
+            </option>
+            {Array.from(Array(9900).keys()).map((quantity12) => (
+              <option key={quantity12} value={(quantity12 + 1) / 10} step="0.1">
+                {(quantity12 + 1) / 10}
               </option>
-              {Array.from(Array(2000).keys()).map((quantity12) => (
-                <option
-                  key={quantity12}
-                  value={(quantity12 + 1) / 10}
-                  step="0.1"
-                >
-                  {(quantity12 + 1) / 10}
-                </option>
-              ))}
-            </select>
-            <select id="measure12" disabled={ingredientAdded12}>
-              {arrayMeasure.map((measure12) => (
-                <option key={measure12} value={measure12}>
-                  {" "}
-                  {measure12}{" "}
-                </option>
-              ))}
-            </select>
+            ))}
+          </select>
+          <select id="measure12" disabled={ingredientAdded12}>
+            {arrayMeasure.map((measure12) => (
+              <option key={measure12} value={measure12}>
+                {" "}
+                {measure12}{" "}
+              </option>
+            ))}
+          </select></div>
+          <div className={`${styles.containerButton}`}>
             <button
-              className="btn btn-primary"
+              className="buttonAddRecipe"
               onClick={handleAddIngredient(
                 "ingredients12",
                 setIngredientAdded12,
@@ -1218,10 +1244,10 @@ const [ingredientAdded, setIngredientAdded] = useState(false);
                 "measure12"
               )}
             >
-              Valider ingrédient
+              Valider
             </button>
             <button
-              className="btn btn-primary-reverse"
+              className="buttonDeleteRecipe"
               onClick={handleDeleteIngredient(
                 "ingredients12",
                 setIngredientAdded12,
@@ -1229,30 +1255,34 @@ const [ingredientAdded, setIngredientAdded] = useState(false);
                 "measure12"
               )}
             >
-              Supprimer ingrédient
+              Supprimer
             </button>
           </div>
         </div>
+      </div>
 
-        <div className={`${inputIngredientAdded13}`}>
-          <div
-            className={`${styles.inputDeco} p10 d-flex justify-content-center`}
-          >
-            <div className={`${styles.inputStart}`}></div>
-            <input
-              type="text"
-              onInput={(e) => handleInputIngredient(e, 13)}
-              className="flex-fill"
-              placeholder="Search ..."
-              disabled={ingredientAdded13}
-            ></input>
+      <div className={`${inputIngredientAdded13}`}>
+        <div
+          className={`${styles.inputDeco} p10 d-flex justify-content-center`}
+        >
+          <div className={`${styles.containerSelect}`}>
+            <div>
+              <div className={`${styles.inputStart}`}></div>
+              <input
+                type="text"
+                onInput={(e) => handleInputIngredient(e, 13)}
+                className="flex-fill"
+                placeholder="Search ..."
+                disabled={ingredientAdded13}
+              ></input>
+            </div>
             <select id="ingredients13" disabled={ingredientAdded13}>
               <option value="" disabled>
                 Quel ingrédient ?
               </option>
               {ingredientList
                 .filter((i) =>
-                  i.INGREDIENT_FR_NAME.toLowerCase().startsWith(
+                  i.INGREDIENT_FR_NAME.toLowerCase().includes(
                     searchIngredient13
                   )
                 )
@@ -1265,30 +1295,28 @@ const [ingredientAdded, setIngredientAdded] = useState(false);
                   </option>
                 ))}
             </select>
-            <select id="quantities13" disabled={ingredientAdded13}>
-              <option value="" disabled>
-                Quelle quantité?
+          </div> <div className={`${styles.containerSelect}`}>
+          <select id="quantities13" disabled={ingredientAdded13}>
+            <option value="" disabled>
+              Quelle quantité?
+            </option>
+            {Array.from(Array(9900).keys()).map((quantity13) => (
+              <option key={quantity13} value={(quantity13 + 1) / 10} step="0.1">
+                {(quantity13 + 1) / 10}
               </option>
-              {Array.from(Array(2000).keys()).map((quantity13) => (
-                <option
-                  key={quantity13}
-                  value={(quantity13 + 1) / 10}
-                  step="0.1"
-                >
-                  {(quantity13 + 1) / 10}
-                </option>
-              ))}
-            </select>
-            <select id="measure13" disabled={ingredientAdded13}>
-              {arrayMeasure.map((measure13) => (
-                <option key={measure13} value={measure13}>
-                  {" "}
-                  {measure13}{" "}
-                </option>
-              ))}
-            </select>
+            ))}
+          </select>
+          <select id="measure13" disabled={ingredientAdded13}>
+            {arrayMeasure.map((measure13) => (
+              <option key={measure13} value={measure13}>
+                {" "}
+                {measure13}{" "}
+              </option>
+            ))}
+          </select></div>
+          <div className={`${styles.containerButton}`}>
             <button
-              className="btn btn-primary"
+              className="buttonAddRecipe"
               onClick={handleAddIngredient(
                 "ingredients13",
                 setIngredientAdded13,
@@ -1296,10 +1324,10 @@ const [ingredientAdded, setIngredientAdded] = useState(false);
                 "measure13"
               )}
             >
-              Valider ingrédient
+              Valider
             </button>
             <button
-              className="btn btn-primary-reverse"
+              className="buttonDeleteRecipe"
               onClick={handleDeleteIngredient(
                 "ingredients13",
                 setIngredientAdded13,
@@ -1307,30 +1335,34 @@ const [ingredientAdded, setIngredientAdded] = useState(false);
                 "measure13"
               )}
             >
-              Supprimer ingrédient
+              Supprimer
             </button>
           </div>
         </div>
+      </div>
 
-        <div className={`${inputIngredientAdded14}`}>
-          <div
-            className={`${styles.inputDeco} p10 d-flex justify-content-center`}
-          >
-            <div className={`${styles.inputStart}`}></div>
-            <input
-              type="text"
-              onInput={(e) => handleInputIngredient(e, 14)}
-              className="flex-fill"
-              placeholder="Search ..."
-              disabled={ingredientAdded14}
-            ></input>
+      <div className={`${inputIngredientAdded14}`}>
+        <div
+          className={`${styles.inputDeco} p10 d-flex justify-content-center`}
+        >
+          <div className={`${styles.containerSelect}`}>
+            <div>
+              <div className={`${styles.inputStart}`}></div>
+              <input
+                type="text"
+                onInput={(e) => handleInputIngredient(e, 14)}
+                className="flex-fill"
+                placeholder="Search ..."
+                disabled={ingredientAdded14}
+              ></input>
+            </div>
             <select id="ingredients14" disabled={ingredientAdded14}>
               <option value="" disabled>
                 Quel ingrédient ?
               </option>
               {ingredientList
                 .filter((i) =>
-                  i.INGREDIENT_FR_NAME.toLowerCase().startsWith(
+                  i.INGREDIENT_FR_NAME.toLowerCase().includes(
                     searchIngredient14
                   )
                 )
@@ -1343,30 +1375,28 @@ const [ingredientAdded, setIngredientAdded] = useState(false);
                   </option>
                 ))}
             </select>
-            <select id="quantities14" disabled={ingredientAdded14}>
-              <option value="" disabled>
-                Quelle quantité?
+          </div> <div className={`${styles.containerSelect}`}>
+          <select id="quantities14" disabled={ingredientAdded14}>
+            <option value="" disabled>
+              Quelle quantité?
+            </option>
+            {Array.from(Array(9900).keys()).map((quantity14) => (
+              <option key={quantity14} value={(quantity14 + 1) / 10} step="0.1">
+                {(quantity14 + 1) / 10}
               </option>
-              {Array.from(Array(2000).keys()).map((quantity14) => (
-                <option
-                  key={quantity14}
-                  value={(quantity14 + 1) / 10}
-                  step="0.1"
-                >
-                  {(quantity14 + 1) / 10}
-                </option>
-              ))}
-            </select>
-            <select id="measure14" disabled={ingredientAdded14}>
-              {arrayMeasure.map((measure14) => (
-                <option key={measure14} value={measure14}>
-                  {" "}
-                  {measure14}{" "}
-                </option>
-              ))}
-            </select>
+            ))}
+          </select>
+          <select id="measure14" disabled={ingredientAdded14}>
+            {arrayMeasure.map((measure14) => (
+              <option key={measure14} value={measure14}>
+                {" "}
+                {measure14}{" "}
+              </option>
+            ))}
+          </select></div>
+          <div className={`${styles.containerButton}`}>
             <button
-              className="btn btn-primary"
+              className="buttonAddRecipe"
               onClick={handleAddIngredient(
                 "ingredients14",
                 setIngredientAdded14,
@@ -1374,10 +1404,10 @@ const [ingredientAdded, setIngredientAdded] = useState(false);
                 "measure14"
               )}
             >
-              Valider ingrédient
+              Valider
             </button>
             <button
-              className="btn btn-primary-reverse"
+              className="buttonDeleteRecipe"
               onClick={handleDeleteIngredient(
                 "ingredients14",
                 setIngredientAdded14,
@@ -1385,30 +1415,34 @@ const [ingredientAdded, setIngredientAdded] = useState(false);
                 "measure14"
               )}
             >
-              Supprimer ingrédient
+              Supprimer
             </button>
           </div>
         </div>
+      </div>
 
-        <div className={`${inputIngredientAdded15}`}>
-          <div
-            className={`${styles.inputDeco} p10 d-flex justify-content-center`}
-          >
-            <div className={`${styles.inputStart}`}></div>
-            <input
-              type="text"
-              onInput={(e) => handleInputIngredient(e, 15)}
-              className="flex-fill"
-              placeholder="Search ..."
-              disabled={ingredientAdded15}
-            ></input>
+      <div className={`${inputIngredientAdded15}`}>
+        <div
+          className={`${styles.inputDeco} p10 d-flex justify-content-center`}
+        >
+          <div className={`${styles.containerSelect}`}>
+            <div>
+              <div className={`${styles.inputStart}`}></div>
+              <input
+                type="text"
+                onInput={(e) => handleInputIngredient(e, 15)}
+                className="flex-fill"
+                placeholder="Search ..."
+                disabled={ingredientAdded15}
+              ></input>
+            </div>
             <select id="ingredients15" disabled={ingredientAdded15}>
               <option value="" disabled>
                 Quel ingrédient ?
               </option>
               {ingredientList
                 .filter((i) =>
-                  i.INGREDIENT_FR_NAME.toLowerCase().startsWith(
+                  i.INGREDIENT_FR_NAME.toLowerCase().includes(
                     searchIngredient15
                   )
                 )
@@ -1421,30 +1455,28 @@ const [ingredientAdded, setIngredientAdded] = useState(false);
                   </option>
                 ))}
             </select>
-            <select id="quantities15" disabled={ingredientAdded15}>
-              <option value="" disabled>
-                Quelle quantité?
+          </div> <div className={`${styles.containerSelect}`}>
+          <select id="quantities15" disabled={ingredientAdded15}>
+            <option value="" disabled>
+              Quelle quantité?
+            </option>
+            {Array.from(Array(9900).keys()).map((quantity15) => (
+              <option key={quantity15} value={(quantity15 + 1) / 10} step="0.1">
+                {(quantity15 + 1) / 10}
               </option>
-              {Array.from(Array(2000).keys()).map((quantity15) => (
-                <option
-                  key={quantity15}
-                  value={(quantity15 + 1) / 10}
-                  step="0.1"
-                >
-                  {(quantity15 + 1) / 10}
-                </option>
-              ))}
-            </select>
-            <select id="measure15" disabled={ingredientAdded15}>
-              {arrayMeasure.map((measure15) => (
-                <option key={measure15} value={measure15}>
-                  {" "}
-                  {measure15}{" "}
-                </option>
-              ))}
-            </select>
+            ))}
+          </select>
+          <select id="measure15" disabled={ingredientAdded15}>
+            {arrayMeasure.map((measure15) => (
+              <option key={measure15} value={measure15}>
+                {" "}
+                {measure15}{" "}
+              </option>
+            ))}
+          </select></div>
+          <div className={`${styles.containerButton}`}>
             <button
-              className="btn btn-primary"
+              className="buttonAddRecipe"
               onClick={handleAddIngredient(
                 "ingredients15",
                 setIngredientAdded15,
@@ -1452,10 +1484,10 @@ const [ingredientAdded, setIngredientAdded] = useState(false);
                 "measure15"
               )}
             >
-              Valider ingrédient
+              Valider
             </button>
             <button
-              className="btn btn-primary-reverse"
+              className="buttonDeleteRecipe"
               onClick={handleDeleteIngredient(
                 "ingredient15",
                 setIngredientAdded15,
@@ -1463,30 +1495,34 @@ const [ingredientAdded, setIngredientAdded] = useState(false);
                 "measure15"
               )}
             >
-              Supprimer ingrédient
+              Supprimer
             </button>
           </div>
         </div>
+      </div>
 
-        <div className={`${inputIngredientAdded16}`}>
-          <div
-            className={`${styles.inputDeco} p10 d-flex justify-content-center`}
-          >
-            <div className={`${styles.inputStart}`}></div>
-            <input
-              type="text"
-              onInput={(e) => handleInputIngredient(e, 16)}
-              className="flex-fill"
-              placeholder="Search ..."
-              disabled={ingredientAdded16}
-            ></input>
+      <div className={`${inputIngredientAdded16}`}>
+        <div
+          className={`${styles.inputDeco} p10 d-flex justify-content-center`}
+        >
+          <div className={`${styles.containerSelect}`}>
+            <div>
+              <div className={`${styles.inputStart}`}></div>
+              <input
+                type="text"
+                onInput={(e) => handleInputIngredient(e, 16)}
+                className="flex-fill"
+                placeholder="Search ..."
+                disabled={ingredientAdded16}
+              ></input>
+            </div>
             <select id="ingredients16" disabled={ingredientAdded16}>
               <option value="" disabled>
                 Quel ingrédient ?
               </option>
               {ingredientList
                 .filter((i) =>
-                  i.INGREDIENT_FR_NAME.toLowerCase().startsWith(
+                  i.INGREDIENT_FR_NAME.toLowerCase().includes(
                     searchIngredient16
                   )
                 )
@@ -1499,30 +1535,28 @@ const [ingredientAdded, setIngredientAdded] = useState(false);
                   </option>
                 ))}
             </select>
-            <select id="quantities16" disabled={ingredientAdded16}>
-              <option value="" disabled>
-                Quelle quantité?
+          </div> <div className={`${styles.containerSelect}`}>
+          <select id="quantities16" disabled={ingredientAdded16}>
+            <option value="" disabled>
+              Quelle quantité?
+            </option>
+            {Array.from(Array(9900).keys()).map((quantity16) => (
+              <option key={quantity16} value={(quantity16 + 1) / 10} step="0.1">
+                {(quantity16 + 1) / 10}
               </option>
-              {Array.from(Array(2000).keys()).map((quantity16) => (
-                <option
-                  key={quantity16}
-                  value={(quantity16 + 1) / 10}
-                  step="0.1"
-                >
-                  {(quantity16 + 1) / 10}
-                </option>
-              ))}
-            </select>
-            <select id="measure16" disabled={ingredientAdded16}>
-              {arrayMeasure.map((measure16) => (
-                <option key={measure16} value={measure16}>
-                  {" "}
-                  {measure16}{" "}
-                </option>
-              ))}
-            </select>
+            ))}
+          </select>
+          <select id="measure16" disabled={ingredientAdded16}>
+            {arrayMeasure.map((measure16) => (
+              <option key={measure16} value={measure16}>
+                {" "}
+                {measure16}{" "}
+              </option>
+            ))}
+          </select></div>
+          <div className={`${styles.containerButton}`}>
             <button
-              className="btn btn-primary"
+              className="buttonAddRecipe"
               onClick={handleAddIngredient(
                 "ingredients16",
                 setIngredientAdded16,
@@ -1530,10 +1564,10 @@ const [ingredientAdded, setIngredientAdded] = useState(false);
                 "measure16"
               )}
             >
-              Valider ingrédient
+              Valider
             </button>
             <button
-              className="btn btn-primary-reverse"
+              className="buttonDeleteRecipe"
               onClick={handleDeleteIngredient(
                 "ingredients16",
                 setIngredientAdded16,
@@ -1541,30 +1575,34 @@ const [ingredientAdded, setIngredientAdded] = useState(false);
                 "measure16"
               )}
             >
-              Supprimer ingrédient
+              Supprimer
             </button>
           </div>
         </div>
+      </div>
 
-        <div className={`${inputIngredientAdded17}`}>
-          <div
-            className={`${styles.inputDeco} p10 d-flex justify-content-center`}
-          >
-            <div className={`${styles.inputStart}`}></div>
-            <input
-              type="text"
-              onInput={(e) => handleInputIngredient(e, 17)}
-              className="flex-fill"
-              placeholder="Search ..."
-              disabled={ingredientAdded17}
-            ></input>
+      <div className={`${inputIngredientAdded17}`}>
+        <div
+          className={`${styles.inputDeco} p10 d-flex justify-content-center`}
+        >
+          <div className={`${styles.containerSelect}`}>
+            <div>
+              <div className={`${styles.inputStart}`}></div>
+              <input
+                type="text"
+                onInput={(e) => handleInputIngredient(e, 17)}
+                className="flex-fill"
+                placeholder="Search ..."
+                disabled={ingredientAdded17}
+              ></input>
+            </div>
             <select id="ingredients17" disabled={ingredientAdded17}>
               <option value="" disabled>
                 Quel ingrédient ?
               </option>
               {ingredientList
                 .filter((i) =>
-                  i.INGREDIENT_FR_NAME.toLowerCase().startsWith(
+                  i.INGREDIENT_FR_NAME.toLowerCase().includes(
                     searchIngredient17
                   )
                 )
@@ -1577,30 +1615,28 @@ const [ingredientAdded, setIngredientAdded] = useState(false);
                   </option>
                 ))}
             </select>
-            <select id="quantities17" disabled={ingredientAdded17}>
-              <option value="" disabled>
-                Quelle quantité?
+          </div> <div className={`${styles.containerSelect}`}>
+          <select id="quantities17" disabled={ingredientAdded17}>
+            <option value="" disabled>
+              Quelle quantité?
+            </option>
+            {Array.from(Array(9900).keys()).map((quantity17) => (
+              <option key={quantity17} value={(quantity17 + 1) / 10} step="0.1">
+                {(quantity17 + 1) / 10}
               </option>
-              {Array.from(Array(2000).keys()).map((quantity17) => (
-                <option
-                  key={quantity17}
-                  value={(quantity17 + 1) / 10}
-                  step="0.1"
-                >
-                  {(quantity17 + 1) / 10}
-                </option>
-              ))}
-            </select>
-            <select id="measure17" disabled={ingredientAdded17}>
-              {arrayMeasure.map((measure17) => (
-                <option key={measure17} value={measure17}>
-                  {" "}
-                  {measure17}{" "}
-                </option>
-              ))}
-            </select>
+            ))}
+          </select>
+          <select id="measure17" disabled={ingredientAdded17}>
+            {arrayMeasure.map((measure17) => (
+              <option key={measure17} value={measure17}>
+                {" "}
+                {measure17}{" "}
+              </option>
+            ))}
+          </select></div>
+          <div className={`${styles.containerButton}`}>
             <button
-              className="btn btn-primary"
+              className="buttonAddRecipe"
               onClick={handleAddIngredient(
                 "ingredients17",
                 setIngredientAdded17,
@@ -1608,10 +1644,10 @@ const [ingredientAdded, setIngredientAdded] = useState(false);
                 "measure17"
               )}
             >
-              Valider ingrédient
+              Valider
             </button>
             <button
-              className="btn btn-primary-reverse"
+              className="buttonDeleteRecipe"
               onClick={handleDeleteIngredient(
                 "ingredients17",
                 setIngredientAdded17,
@@ -1619,30 +1655,34 @@ const [ingredientAdded, setIngredientAdded] = useState(false);
                 "measure17"
               )}
             >
-              Supprimer ingrédient
+              Supprimer
             </button>
           </div>
         </div>
+      </div>
 
-        <div className={`${inputIngredientAdded18}`}>
-          <div
-            className={`${styles.inputDeco} p10 d-flex justify-content-center`}
-          >
-            <div className={`${styles.inputStart}`}></div>
-            <input
-              type="text"
-              onInput={(e) => handleInputIngredient(e, 18)}
-              className="flex-fill"
-              placeholder="Search ..."
-              disabled={ingredientAdded18}
-            ></input>
+      <div className={`${inputIngredientAdded18}`}>
+        <div
+          className={`${styles.inputDeco} p10 d-flex justify-content-center`}
+        >
+          <div className={`${styles.containerSelect}`}>
+            <div>
+              <div className={`${styles.inputStart}`}></div>
+              <input
+                type="text"
+                onInput={(e) => handleInputIngredient(e, 18)}
+                className="flex-fill"
+                placeholder="Search ..."
+                disabled={ingredientAdded18}
+              ></input>
+            </div>
             <select id="ingredients18" disabled={ingredientAdded18}>
               <option value="" disabled>
                 Quel ingrédient ?
               </option>
               {ingredientList
                 .filter((i) =>
-                  i.INGREDIENT_FR_NAME.toLowerCase().startsWith(
+                  i.INGREDIENT_FR_NAME.toLowerCase().includes(
                     searchIngredient18
                   )
                 )
@@ -1655,30 +1695,28 @@ const [ingredientAdded, setIngredientAdded] = useState(false);
                   </option>
                 ))}
             </select>
-            <select id="quantities18" disabled={ingredientAdded18}>
-              <option value="" disabled>
-                Quelle quantité?
+          </div> <div className={`${styles.containerSelect}`}>
+          <select id="quantities18" disabled={ingredientAdded18}>
+            <option value="" disabled>
+              Quelle quantité?
+            </option>
+            {Array.from(Array(9900).keys()).map((quantity18) => (
+              <option key={quantity18} value={(quantity18 + 1) / 10} step="0.1">
+                {(quantity18 + 1) / 10}
               </option>
-              {Array.from(Array(2000).keys()).map((quantity18) => (
-                <option
-                  key={quantity18}
-                  value={(quantity18 + 1) / 10}
-                  step="0.1"
-                >
-                  {(quantity18 + 1) / 10}
-                </option>
-              ))}
-            </select>
-            <select id="measure18" disabled={ingredientAdded18}>
-              {arrayMeasure.map((measure18) => (
-                <option key={measure18} value={measure18}>
-                  {" "}
-                  {measure18}{" "}
-                </option>
-              ))}
-            </select>
+            ))}
+          </select>
+          <select id="measure18" disabled={ingredientAdded18}>
+            {arrayMeasure.map((measure18) => (
+              <option key={measure18} value={measure18}>
+                {" "}
+                {measure18}{" "}
+              </option>
+            ))}
+          </select></div>
+          <div className={`${styles.containerButton}`}>
             <button
-              className="btn btn-primary"
+              className="buttonAddRecipe"
               onClick={handleAddIngredient(
                 "ingredients18",
                 setIngredientAdded18,
@@ -1686,10 +1724,10 @@ const [ingredientAdded, setIngredientAdded] = useState(false);
                 "measure18"
               )}
             >
-              Valider ingrédient
+              Valider
             </button>
             <button
-              className="btn btn-primary-reverse"
+              className="buttonDeleteRecipe"
               onClick={handleDeleteIngredient(
                 "ingredients18",
                 setIngredientAdded18,
@@ -1697,30 +1735,34 @@ const [ingredientAdded, setIngredientAdded] = useState(false);
                 "measure18"
               )}
             >
-              Supprimer ingrédient
+              Supprimer
             </button>
           </div>
         </div>
+      </div>
 
-        <div className={`${inputIngredientAdded19}`}>
-          <div
-            className={`${styles.inputDeco} p10 d-flex justify-content-center`}
-          >
-            <div className={`${styles.inputStart}`}></div>
-            <input
-              type="text"
-              onInput={(e) => handleInputIngredient(e, 19)}
-              className="flex-fill"
-              placeholder="Search ..."
-              disabled={ingredientAdded19}
-            ></input>
+      <div className={`${inputIngredientAdded19}`}>
+        <div
+          className={`${styles.inputDeco} p10 d-flex justify-content-center`}
+        >
+          <div className={`${styles.containerSelect}`}>
+            <div>
+              <div className={`${styles.inputStart}`}></div>
+              <input
+                type="text"
+                onInput={(e) => handleInputIngredient(e, 19)}
+                className="flex-fill"
+                placeholder="Search ..."
+                disabled={ingredientAdded19}
+              ></input>
+            </div>
             <select id="ingredients19" disabled={ingredientAdded19}>
               <option value="" disabled>
                 Quel ingrédient ?
               </option>
               {ingredientList
                 .filter((i) =>
-                  i.INGREDIENT_FR_NAME.toLowerCase().startsWith(
+                  i.INGREDIENT_FR_NAME.toLowerCase().includes(
                     searchIngredient19
                   )
                 )
@@ -1733,30 +1775,28 @@ const [ingredientAdded, setIngredientAdded] = useState(false);
                   </option>
                 ))}
             </select>
-            <select id="quantities19" disabled={ingredientAdded19}>
-              <option value="" disabled>
-                Quelle quantité?
+          </div> <div className={`${styles.containerSelect}`}>
+          <select id="quantities19" disabled={ingredientAdded19}>
+            <option value="" disabled>
+              Quelle quantité?
+            </option>
+            {Array.from(Array(9900).keys()).map((quantity19) => (
+              <option key={quantity19} value={(quantity19 + 1) / 10} step="0.1">
+                {(quantity19 + 1) / 10}
               </option>
-              {Array.from(Array(2000).keys()).map((quantity19) => (
-                <option
-                  key={quantity19}
-                  value={(quantity19 + 1) / 10}
-                  step="0.1"
-                >
-                  {(quantity19 + 1) / 10}
-                </option>
-              ))}
-            </select>
-            <select id="measure19" disabled={ingredientAdded19}>
-              {arrayMeasure.map((measure19) => (
-                <option key={measure19} value={measure19}>
-                  {" "}
-                  {measure19}{" "}
-                </option>
-              ))}
-            </select>
+            ))}
+          </select>
+          <select id="measure19" disabled={ingredientAdded19}>
+            {arrayMeasure.map((measure19) => (
+              <option key={measure19} value={measure19}>
+                {" "}
+                {measure19}{" "}
+              </option>
+            ))}
+          </select></div>
+          <div className={`${styles.containerButton}`}>
             <button
-              className="btn btn-primary"
+              className="buttonAddRecipe"
               onClick={handleAddIngredient(
                 "ingredients19",
                 setIngredientAdded19,
@@ -1764,10 +1804,10 @@ const [ingredientAdded, setIngredientAdded] = useState(false);
                 "measure19"
               )}
             >
-              Valider ingrédient
+              Valider
             </button>
             <button
-              className="btn btn-primary-reverse"
+              className="buttonDeleteRecipe"
               onClick={handleDeleteIngredient(
                 "ingredients19",
                 setIngredientAdded19,
@@ -1775,30 +1815,34 @@ const [ingredientAdded, setIngredientAdded] = useState(false);
                 "measure19"
               )}
             >
-              Supprimer ingrédient
+              Supprimer
             </button>
           </div>
         </div>
+      </div>
 
-        <div className={`${inputIngredientAdded20}`}>
-          <div
-            className={`${styles.inputDeco} p10 d-flex justify-content-center`}
-          >
-            <div className={`${styles.inputStart}`}></div>
-            <input
-              type="text"
-              onInput={(e) => handleInputIngredient(e, 20)}
-              className="flex-fill"
-              placeholder="Search ..."
-              disabled={ingredientAdded20}
-            ></input>
+      <div className={`${inputIngredientAdded20}`}>
+        <div
+          className={`${styles.inputDeco} p10 d-flex justify-content-center`}
+        >
+          <div className={`${styles.containerSelect}`}>
+            <div>
+              <div className={`${styles.inputStart}`}></div>
+              <input
+                type="text"
+                onInput={(e) => handleInputIngredient(e, 20)}
+                className="flex-fill"
+                placeholder="Search ..."
+                disabled={ingredientAdded20}
+              ></input>
+            </div>
             <select id="ingredients20" disabled={ingredientAdded20}>
               <option value="" disabled>
                 Quel ingrédient ?
               </option>
               {ingredientList
                 .filter((i) =>
-                  i.INGREDIENT_FR_NAME.toLowerCase().startsWith(
+                  i.INGREDIENT_FR_NAME.toLowerCase().includes(
                     searchIngredient20
                   )
                 )
@@ -1811,30 +1855,28 @@ const [ingredientAdded, setIngredientAdded] = useState(false);
                   </option>
                 ))}
             </select>
-            <select id="quantities20" disabled={ingredientAdded20}>
-              <option value="" disabled>
-                Quelle quantité?
+          </div> <div className={`${styles.containerSelect}`}>
+          <select id="quantities20" disabled={ingredientAdded20}>
+            <option value="" disabled>
+              Quelle quantité?
+            </option>
+            {Array.from(Array(9900).keys()).map((quantity20) => (
+              <option key={quantity20} value={(quantity20 + 1) / 10} step="0.1">
+                {(quantity20 + 1) / 10}
               </option>
-              {Array.from(Array(2000).keys()).map((quantity20) => (
-                <option
-                  key={quantity20}
-                  value={(quantity20 + 1) / 10}
-                  step="0.1"
-                >
-                  {(quantity20 + 1) / 10}
-                </option>
-              ))}
-            </select>
-            <select id="measure20" disabled={ingredientAdded20}>
-              {arrayMeasure.map((measure20) => (
-                <option key={measure20} value={measure20}>
-                  {" "}
-                  {measure20}{" "}
-                </option>
-              ))}
-            </select>
+            ))}
+          </select>
+          <select id="measure20" disabled={ingredientAdded20}>
+            {arrayMeasure.map((measure20) => (
+              <option key={measure20} value={measure20}>
+                {" "}
+                {measure20}{" "}
+              </option>
+            ))}
+          </select></div>
+          <div className={`${styles.containerButton}`}>
             <button
-              className="btn btn-primary"
+              className="buttonAddRecipe"
               onClick={handleAddIngredient(
                 "ingredients20",
                 setIngredientAdded20,
@@ -1842,10 +1884,10 @@ const [ingredientAdded, setIngredientAdded] = useState(false);
                 "measure20"
               )}
             >
-              Valider ingrédient
+              Valider
             </button>
             <button
-              className="btn btn-primary-reverse"
+              className="buttonDeleteRecipe"
               onClick={handleDeleteIngredient(
                 "ingredients20",
                 setIngredientAdded20,
@@ -1853,30 +1895,34 @@ const [ingredientAdded, setIngredientAdded] = useState(false);
                 "measure20"
               )}
             >
-              Supprimer ingrédient
+              Supprimer
             </button>
           </div>
         </div>
+      </div>
 
-        <div className={`${inputIngredientAdded21}`}>
-          <div
-            className={`${styles.inputDeco} p10 d-flex justify-content-center`}
-          >
-            <div className={`${styles.inputStart}`}></div>
-            <input
-              type="text"
-              onInput={(e) => handleInputIngredient(e, 21)}
-              className="flex-fill"
-              placeholder="Search ..."
-              disabled={ingredientAdded21}
-            ></input>
+      <div className={`${inputIngredientAdded21}`}>
+        <div
+          className={`${styles.inputDeco} p10 d-flex justify-content-center`}
+        >
+          <div className={`${styles.containerSelect}`}>
+            <div>
+              <div className={`${styles.inputStart}`}></div>
+              <input
+                type="text"
+                onInput={(e) => handleInputIngredient(e, 21)}
+                className="flex-fill"
+                placeholder="Search ..."
+                disabled={ingredientAdded21}
+              ></input>
+            </div>
             <select id="ingredients21" disabled={ingredientAdded21}>
               <option value="" disabled>
                 Quel ingrédient ?
               </option>
               {ingredientList
                 .filter((i) =>
-                  i.INGREDIENT_FR_NAME.toLowerCase().startsWith(
+                  i.INGREDIENT_FR_NAME.toLowerCase().includes(
                     searchIngredient21
                   )
                 )
@@ -1889,30 +1935,28 @@ const [ingredientAdded, setIngredientAdded] = useState(false);
                   </option>
                 ))}
             </select>
-            <select id="quantities21" disabled={ingredientAdded21}>
-              <option value="" disabled>
-                Quelle quantité?
+          </div> <div className={`${styles.containerSelect}`}>
+          <select id="quantities21" disabled={ingredientAdded21}>
+            <option value="" disabled>
+              Quelle quantité?
+            </option>
+            {Array.from(Array(9900).keys()).map((quantity21) => (
+              <option key={quantity21} value={(quantity21 + 1) / 10} step="0.1">
+                {(quantity21 + 1) / 10}
               </option>
-              {Array.from(Array(2000).keys()).map((quantity21) => (
-                <option
-                  key={quantity21}
-                  value={(quantity21 + 1) / 10}
-                  step="0.1"
-                >
-                  {(quantity21 + 1) / 10}
-                </option>
-              ))}
-            </select>
-            <select id="measure21" disabled={ingredientAdded21}>
-              {arrayMeasure.map((measure21) => (
-                <option key={measure21} value={measure21}>
-                  {" "}
-                  {measure21}{" "}
-                </option>
-              ))}
-            </select>
+            ))}
+          </select>
+          <select id="measure21" disabled={ingredientAdded21}>
+            {arrayMeasure.map((measure21) => (
+              <option key={measure21} value={measure21}>
+                {" "}
+                {measure21}{" "}
+              </option>
+            ))}
+          </select></div>
+          <div className={`${styles.containerButton}`}>
             <button
-              className="btn btn-primary"
+              className="buttonAddRecipe"
               onClick={handleAddIngredient(
                 "ingredients21",
                 setIngredientAdded21,
@@ -1920,10 +1964,10 @@ const [ingredientAdded, setIngredientAdded] = useState(false);
                 "measure21"
               )}
             >
-              Valider ingrédient
+              Valider
             </button>
             <button
-              className="btn btn-primary-reverse"
+              className="buttonDeleteRecipe"
               onClick={handleDeleteIngredient(
                 "ingredients21",
                 setIngredientAdded21,
@@ -1931,30 +1975,34 @@ const [ingredientAdded, setIngredientAdded] = useState(false);
                 "measure21"
               )}
             >
-              Supprimer ingrédient
+              Supprimer
             </button>
           </div>
         </div>
+      </div>
 
-        <div className={`${inputIngredientAdded22}`}>
-          <div
-            className={`${styles.inputDeco} p10 d-flex justify-content-center`}
-          >
-            <div className={`${styles.inputStart}`}></div>
-            <input
-              type="text"
-              onInput={(e) => handleInputIngredient(e, 22)}
-              className="flex-fill"
-              placeholder="Search ..."
-              disabled={ingredientAdded22}
-            ></input>
+      <div className={`${inputIngredientAdded22}`}>
+        <div
+          className={`${styles.inputDeco} p10 d-flex justify-content-center`}
+        >
+          <div className={`${styles.containerSelect}`}>
+            <div>
+              <div className={`${styles.inputStart}`}></div>
+              <input
+                type="text"
+                onInput={(e) => handleInputIngredient(e, 22)}
+                className="flex-fill"
+                placeholder="Search ..."
+                disabled={ingredientAdded22}
+              ></input>
+            </div>
             <select id="ingredients22" disabled={ingredientAdded22}>
               <option value="" disabled>
                 Quel ingrédient ?
               </option>
               {ingredientList
                 .filter((i) =>
-                  i.INGREDIENT_FR_NAME.toLowerCase().startsWith(
+                  i.INGREDIENT_FR_NAME.toLowerCase().includes(
                     searchIngredient22
                   )
                 )
@@ -1967,30 +2015,28 @@ const [ingredientAdded, setIngredientAdded] = useState(false);
                   </option>
                 ))}
             </select>
-            <select id="quantities22" disabled={ingredientAdded22}>
-              <option value="" disabled>
-                Quelle quantité?
+          </div> <div className={`${styles.containerSelect}`}>
+          <select id="quantities22" disabled={ingredientAdded22}>
+            <option value="" disabled>
+              Quelle quantité?
+            </option>
+            {Array.from(Array(9900).keys()).map((quantity22) => (
+              <option key={quantity22} value={(quantity22 + 1) / 10} step="0.1">
+                {(quantity22 + 1) / 10}
               </option>
-              {Array.from(Array(2000).keys()).map((quantity22) => (
-                <option
-                  key={quantity22}
-                  value={(quantity22 + 1) / 10}
-                  step="0.1"
-                >
-                  {(quantity22 + 1) / 10}
-                </option>
-              ))}
-            </select>
-            <select id="measure22" disabled={ingredientAdded22}>
-              {arrayMeasure.map((measure22) => (
-                <option key={measure22} value={measure22}>
-                  {" "}
-                  {measure22}{" "}
-                </option>
-              ))}
-            </select>
+            ))}
+          </select>
+          <select id="measure22" disabled={ingredientAdded22}>
+            {arrayMeasure.map((measure22) => (
+              <option key={measure22} value={measure22}>
+                {" "}
+                {measure22}{" "}
+              </option>
+            ))}
+          </select></div>
+          <div className={`${styles.containerButton}`}>
             <button
-              className="btn btn-primary"
+              className="buttonAddRecipe"
               onClick={handleAddIngredient(
                 "ingredients22",
                 setIngredientAdded22,
@@ -1998,10 +2044,10 @@ const [ingredientAdded, setIngredientAdded] = useState(false);
                 "measure22"
               )}
             >
-              Valider ingrédient
+              Valider
             </button>
             <button
-              className="btn btn-primary-reverse"
+              className="buttonDeleteRecipe"
               onClick={handleDeleteIngredient(
                 "ingredients22",
                 setIngredientAdded22,
@@ -2009,30 +2055,34 @@ const [ingredientAdded, setIngredientAdded] = useState(false);
                 "measure22"
               )}
             >
-              Supprimer ingrédient
+              Supprimer
             </button>
           </div>
         </div>
+      </div>
 
-        <div className={`${inputIngredientAdded23}`}>
-          <div
-            className={`${styles.inputDeco} p10 d-flex justify-content-center`}
-          >
-            <div className={`${styles.inputStart}`}></div>
-            <input
-              type="text"
-              onInput={(e) => handleInputIngredient(e, 23)}
-              className="flex-fill"
-              placeholder="Search ..."
-              disabled={ingredientAdded23}
-            ></input>
+      <div className={`${inputIngredientAdded23}`}>
+        <div
+          className={`${styles.inputDeco} p10 d-flex justify-content-center`}
+        >
+          <div className={`${styles.containerSelect}`}>
+            <div>
+              <div className={`${styles.inputStart}`}></div>
+              <input
+                type="text"
+                onInput={(e) => handleInputIngredient(e, 23)}
+                className="flex-fill"
+                placeholder="Search ..."
+                disabled={ingredientAdded23}
+              ></input>
+            </div>
             <select id="ingredients23" disabled={ingredientAdded23}>
               <option value="" disabled>
                 Quel ingrédient ?
               </option>
               {ingredientList
                 .filter((i) =>
-                  i.INGREDIENT_FR_NAME.toLowerCase().startsWith(
+                  i.INGREDIENT_FR_NAME.toLowerCase().includes(
                     searchIngredient23
                   )
                 )
@@ -2045,30 +2095,28 @@ const [ingredientAdded, setIngredientAdded] = useState(false);
                   </option>
                 ))}
             </select>
-            <select id="quantities23" disabled={ingredientAdded23}>
-              <option value="" disabled>
-                Quelle quantité?
+          </div> <div className={`${styles.containerSelect}`}>
+          <select id="quantities23" disabled={ingredientAdded23}>
+            <option value="" disabled>
+              Quelle quantité?
+            </option>
+            {Array.from(Array(9900).keys()).map((quantity23) => (
+              <option key={quantity23} value={(quantity23 + 1) / 10} step="0.1">
+                {(quantity23 + 1) / 10}
               </option>
-              {Array.from(Array(2000).keys()).map((quantity23) => (
-                <option
-                  key={quantity23}
-                  value={(quantity23 + 1) / 10}
-                  step="0.1"
-                >
-                  {(quantity23 + 1) / 10}
-                </option>
-              ))}
-            </select>
-            <select id="measure23" disabled={ingredientAdded23}>
-              {arrayMeasure.map((measure23) => (
-                <option key={measure23} value={measure23}>
-                  {" "}
-                  {measure23}{" "}
-                </option>
-              ))}
-            </select>
+            ))}
+          </select>
+          <select id="measure23" disabled={ingredientAdded23}>
+            {arrayMeasure.map((measure23) => (
+              <option key={measure23} value={measure23}>
+                {" "}
+                {measure23}{" "}
+              </option>
+            ))}
+          </select></div>
+          <div className={`${styles.containerButton}`}>
             <button
-              className="btn btn-primary"
+              className="buttonAddRecipe"
               onClick={handleAddIngredient(
                 "ingredients23",
                 setIngredientAdded23,
@@ -2076,10 +2124,10 @@ const [ingredientAdded, setIngredientAdded] = useState(false);
                 "measure23"
               )}
             >
-              Valider ingrédient
+              Valider
             </button>
             <button
-              className="btn btn-primary-reverse"
+              className="buttonDeleteRecipe"
               onClick={handleDeleteIngredient(
                 "ingredients23",
                 setIngredientAdded23,
@@ -2087,30 +2135,34 @@ const [ingredientAdded, setIngredientAdded] = useState(false);
                 "measure23"
               )}
             >
-              Supprimer ingrédient
+              Supprimer
             </button>
           </div>
         </div>
+      </div>
 
-        <div className={`${inputIngredientAdded24}`}>
-          <div
-            className={`${styles.inputDeco} p10 d-flex justify-content-center`}
-          >
-            <div className={`${styles.inputStart}`}></div>
-            <input
-              type="text"
-              onInput={(e) => handleInputIngredient(e, 24)}
-              className="flex-fill"
-              placeholder="Search ..."
-              disabled={ingredientAdded24}
-            ></input>
+      <div className={`${inputIngredientAdded24}`}>
+        <div
+          className={`${styles.inputDeco} p10 d-flex justify-content-center`}
+        >
+          <div className={`${styles.containerSelect}`}>
+            <div>
+              <div className={`${styles.inputStart}`}></div>
+              <input
+                type="text"
+                onInput={(e) => handleInputIngredient(e, 24)}
+                className="flex-fill"
+                placeholder="Search ..."
+                disabled={ingredientAdded24}
+              ></input>
+            </div>
             <select id="ingredients24" disabled={ingredientAdded24}>
               <option value="" disabled>
                 Quel ingrédient ?
               </option>
               {ingredientList
                 .filter((i) =>
-                  i.INGREDIENT_FR_NAME.toLowerCase().startsWith(
+                  i.INGREDIENT_FR_NAME.toLowerCase().includes(
                     searchIngredient24
                   )
                 )
@@ -2123,30 +2175,28 @@ const [ingredientAdded, setIngredientAdded] = useState(false);
                   </option>
                 ))}
             </select>
-            <select id="quantities24" disabled={ingredientAdded24}>
-              <option value="" disabled>
-                Quelle quantité?
+          </div> <div className={`${styles.containerSelect}`}>
+          <select id="quantities24" disabled={ingredientAdded24}>
+            <option value="" disabled>
+              Quelle quantité?
+            </option>
+            {Array.from(Array(9900).keys()).map((quantity24) => (
+              <option key={quantity24} value={(quantity24 + 1) / 10} step="0.1">
+                {(quantity24 + 1) / 10}
               </option>
-              {Array.from(Array(2000).keys()).map((quantity24) => (
-                <option
-                  key={quantity24}
-                  value={(quantity24 + 1) / 10}
-                  step="0.1"
-                >
-                  {(quantity24 + 1) / 10}
-                </option>
-              ))}
-            </select>
-            <select id="measure24" disabled={ingredientAdded24}>
-              {arrayMeasure.map((measure24) => (
-                <option key={measure24} value={measure24}>
-                  {" "}
-                  {measure24}{" "}
-                </option>
-              ))}
-            </select>
+            ))}
+          </select>
+          <select id="measure24" disabled={ingredientAdded24}>
+            {arrayMeasure.map((measure24) => (
+              <option key={measure24} value={measure24}>
+                {" "}
+                {measure24}{" "}
+              </option>
+            ))}
+          </select></div>
+          <div className={`${styles.containerButton}`}>
             <button
-              className="btn btn-primary"
+              className="buttonAddRecipe"
               onClick={handleAddIngredient(
                 "ingredients24",
                 setIngredientAdded24,
@@ -2154,10 +2204,10 @@ const [ingredientAdded, setIngredientAdded] = useState(false);
                 "measure24"
               )}
             >
-              Valider ingrédient
+              Valider
             </button>
             <button
-              className="btn btn-primary"
+              className="buttonAddRecipe"
               onClick={handleDeleteIngredient(
                 "ingredients24",
                 setIngredientAdded24,
@@ -2165,35 +2215,36 @@ const [ingredientAdded, setIngredientAdded] = useState(false);
                 "measure24"
               )}
             >
-              Supprimer ingrédient
+              Supprimer
             </button>
           </div>
         </div>
-
-        <i
-          className="btn btn-primary d-flex justify-content-center"
-          onClick={addInputIngredient}
-        >
-          Ajouter un autre ingrédient ?
-        </i>
-        <div>
-          Listes des ingrédients :
-          <br />
-          <span>
-            {ingredientChoose.map((i) => (
-              <img
-                className={`${styles.iconUstensil}`}
-                key={i}
-                src={`../../assets/LOGO_ingrédients_png/${i.id}`}
-                alt="ingrédients"
-              ></img>
-            ))}
-          </span>
-        </div>
       </div>
-    )
+
+      <i
+        className="btn btn-primary d-flex justify-content-center"
+        onClick={addInputIngredient}
+      >
+        Ajouter un autre ingrédient ?
+      </i>
+      <div>
+        Listes des ingrédients :
+        <br />
+        <span>
+          {ingredientChoose.map((i) => (
+            <img
+              className={`${styles.iconUstensil}`}
+              key={i}
+              src={`../../assets/LOGO_ingrédients_png/${i.id}`}
+              alt="ingrédients"
+            ></img>
+          ))}
+        </span>
+      </div>
+    </div>
+  );
 }
 
 IngredientRecipe.defaultProps = {
-    stepIngredient: [],
-  };
+  stepIngredient: [],
+};

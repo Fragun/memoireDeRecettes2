@@ -99,7 +99,7 @@ export default function AdminMoment() {
 
   return (
     <>
-      {user[0].USER_ROLE === "ADMIN" && (
+      {user && user[0].USER_ROLE === "ADMIN" && (
         <div className="d-flex justify-content-start ">
           <MenuMyAccountAdmin />
           <div className={`${styles.tableau}`}>

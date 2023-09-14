@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import styles from "./RecipePage.module.scss";
 import { useState, useEffect, useContext } from "react";
 import logoPreparation from "../../assets/images/logoPreparation.png";
@@ -10,79 +10,74 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { AuthContext } from "../../context/AuthContext";
 import SweetAlert from "../components/alert/AlertSweet";
+import { getImages } from "../../apis/recipe";
+import LikeRecipes from "../components/likeRecipe/LikeRecipes";
+import ShoppingListButton from "../components/shoppingList/ShoppingListButton";
+import Difficulty from "../components/difficulty/Difficulty";
+import Price from "../components/price/Price";
+import { RecipeContext } from "../../context/RecipeContext";
+import StarRender from "../components/rating/StarRender";
+import AlertBad from "../components/alert/AlertBad";
+import TrickRecipe from "../components/trickRecipe/TrickRecipe.";
+import LikeUserButton from "../components/likeUser/LikeUserButton";
+import ImageViewer from "../components/imageViewer/ImageViewer";
 const URL_API = "/api/recette";
-// import imageDefault from "./defaultImage";
 
 export default function RecipePage() {
+  const [imageFile, setImageFile] = useState("");
   const { user } = useContext(AuthContext);
-
   const [recipeClick, setRecipeClick] = useState([]);
-  console.log(recipeClick);
   const [ustensilsRecipe, setUstensilsRecipe] = useState([]);
   const [ingredientsRecipe, setIngredientsRecipe] = useState([]);
-  //console.log(ingredientsRecipe);
+  const [newIngredientsRecipe, setNewIngredientsRecipe] =
+    useState(ingredientsRecipe);
   const [noticeRecipe, setNoticeRecipe] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [previewImageRecipe, setPreviewImageRecipe] = useState();
-  console.log(previewImageRecipe);
-
   const [stageRecipe, setStageRecipe] = useState([]);
-  // console.log(stageRecipe);
-  // console.log(previewImageRecipe);
-
-  useEffect(() => {
-    const fetchImageAndSetPreviewImageRecipe = async () => {
-      if (recipeClick.length > 0) {
-        const imageRecipe = recipeClick[0].PHOTO_NAME;
-
-        console.log("imageRecipe /", imageRecipe.data);
-        const uint8Array = new Uint8Array(imageRecipe.data);
-        const blob = new Blob([uint8Array]);
-        const urlImage = URL.createObjectURL(blob);
-        console.log(urlImage);
-        const response = await fetch(urlImage);
-        console.log(response);
-        const text = await response.text();
-        console.log(text);
-        setPreviewImageRecipe(text);
-      }
-    };
-
-    fetchImageAndSetPreviewImageRecipe();
-  }, [recipeClick, previewImageRecipe]);
-
+  const [rating, setRating] = useState(0);
+  const { recipesRating } = useContext(RecipeContext);
+  const [newNumberOfPlate, setNewNumberOfPlate] = useState();
   let { id } = useParams();
-
-  let difficulty, price;
   let dateStr, date, formattedDate;
+  let idUser;
 
-  let { idUser } = useParams();
-  //console.log({idUser});
-  if (user != null) {
+  if (user) {
     idUser = user[0].USER_ID;
   }
 
-  const [rating, setRating] = useState(0);
 
-  const handleStarClick = (index) => {
-    setRating(index);
+  const handleChange = (event) => {
+    const newNumberOfPlate = event.target.value;
+    setNewNumberOfPlate(newNumberOfPlate);
+    const initialNumberOfPlate = recipeClick[0].RECIPE_NUMBER_PLATE;
+    const factor = newNumberOfPlate / initialNumberOfPlate;
+    const newQuantityIngredientList = [...ingredientsRecipe];
+    const newMeasure = newQuantityIngredientList.map((ingredient) => ({
+      ...ingredient,
+      INGREDIENT_QUANTITY: (ingredient.INGREDIENT_QUANTITY * factor).toFixed(2),
+    }));
+    setNewIngredientsRecipe(newMeasure);
   };
 
-  const renderStarRating = (starCount) => {
-    const maxStars = 5;
-    const fullStar = <i className="la la-star"></i>;
-    const emptyStar = <i className="lar la-star"></i>;
-
-    const stars = [];
-    for (let i = 1; i <= maxStars; i++) {
-      if (i <= starCount) {
-        stars.push(fullStar);
-      } else {
-        stars.push(emptyStar);
+  useEffect(() => {
+    const fetchImages = async () => {
+      if (recipeClick[0]) {
+        try {
+          const response = await getImages(recipeClick[0].PHOTO_NAME);
+          if (response.ok) {
+            setImageFile(response.url);
+          }
+        } catch (error) {
+          console.error(error);
+        }
       }
-    }
+    };
+    fetchImages();
+  }, [recipeClick]);
 
-    return <div>{stars}</div>;
+  const handleStarClick = (index) => {
+    recipesRating(id);
+    setRating(index);
   };
 
   useEffect(() => {
@@ -92,6 +87,8 @@ export default function RecipePage() {
         if (response.ok) {
           const recipeClicked = await response.json();
           setRecipeClick(recipeClicked);
+          const initialValue = recipeClicked[0].RECIPE_NUMBER_PLATE;
+          setNewNumberOfPlate(initialValue);
           setIsLoading(false);
         }
       } catch (error) {
@@ -127,6 +124,7 @@ export default function RecipePage() {
           const ingredient = await response.json();
           setIngredientsRecipe(ingredient);
           setIsLoading(false);
+          setNewIngredientsRecipe(ingredient);
         }
       } catch (error) {
         console.error(error);
@@ -167,99 +165,36 @@ export default function RecipePage() {
     getNotice();
   }, [id]);
 
-  if (!isLoading && recipeClick.length > 0) {
-    difficulty = recipeClick[0].RECIPE_DIFFICULTY;
-    price = recipeClick[0].RECIPE_PRICE;
+  if (!isLoading && recipeClick[0]) {
     dateStr = recipeClick[0].RECIPE_PUBLICATION_DATE;
     date = moment(dateStr);
     formattedDate = date.locale("fr").format("DD MMMM YYYY");
   }
-
-  function difficultyRecipe() {
-    switch (difficulty) {
-      case 1:
-        return (
-          <div className="d-flex justify-content-center align-items-center">
-            <p>Difficulté : </p>
-            <i class="las la-mitten la-2x"></i>
-          </div>
-        );
-      case 2:
-        return (
-          <div className="d-flex justify-content-center align-items-center">
-            <p>Difficulté : </p>
-            <div>
-              <i class="las la-mitten la-2x"></i>
-              <i class="las la-mitten la-2x"></i>{" "}
-            </div>
-          </div>
-        );
-      case 3:
-        return (
-          <div className="d-flex justify-content-center align-items-center">
-            <p>Difficulté : </p>
-            <div>
-              <i class="las la-mitten la-2x"></i>
-              <i class="las la-mitten la-2x"></i>
-              <i class="las la-mitten la-2x"></i>{" "}
-            </div>
-          </div>
-        );
-
-      default:
-        break;
+  const renderStars = (NOTICE_STAR_NUMBER) => {
+    const stars = [];
+    for (let i = 1; i <= 5; i++) {
+      if (i <= NOTICE_STAR_NUMBER) {
+        stars.push(<i key={i} className="la la-star"></i>);
+      } else {
+        stars.push(<i key={i} className="lar la-star"></i>);
+      }
     }
-  }
-  function priceRecipe() {
-    switch (price) {
-      case 1:
-        return (
-          <div
-            className={` ${styles.price} d-flex justify-content-center align-items-center`}
-          >
-            <p>Prix : </p>
-            <i class="las la-euro-sign la-2x"></i>
-          </div>
-        );
-      case 2:
-        return (
-          <div
-            className={` ${styles.price} d-flex justify-content-center align-items-center`}
-          >
-            <p>Prix : </p>
-            <i class="las la-euro-sign la-2x"></i>
-            <i class="las la-euro-sign la-2x"></i>
-          </div>
-        );
-
-      case 3:
-        return (
-          <div
-            className={` ${styles.price} d-flex justify-content-center align-items-center`}
-          >
-            <p>Prix : </p>
-            <i class="las la-euro-sign la-2x"></i>
-            <i class="las la-euro-sign la-2x"></i>
-            <i class="las la-euro-sign la-2x"></i>
-          </div>
-        );
-
-      default:
-        return <></>;
-    }
-  }
+    return <div>{stars}</div>;
+  };
 
   const yupSchema = yup.object({
-    astuce: yup.string().notRequired(false),
-    score: yup.number().required(false),
-    notice: yup.string().notRequired(),
+    score: yup.number().required(),
+    notice: yup
+      .string()
+      .notRequired()
+      .min(3, "L'avis doit contenir au moins 3 caractères."),
   });
 
   const defaultValues = {
-    astuce: "",
     score: rating,
     notice: "",
   };
+
   const {
     register,
     handleSubmit,
@@ -272,15 +207,16 @@ export default function RecipePage() {
     resolver: yupResolver(yupSchema),
   });
 
-  function handleClickAstuce() {
-    {
-      SweetAlert("Bravo", "Votre message a bien été envoyé");
-    }
-  }
-
   const submit = handleSubmit(async (values) => {
-    console.log(values);
     try {
+      if (rating === 0) {
+        // Vérifiez si le champ de score est vide
+        setError("score", {
+          type: "required",
+          message: "Le score est obligatoire (minimum 1 étoile)",
+        });
+        return;
+      }
       clearErrors();
       const response = await fetch(`${URL_API}/addNotice/${id}/${idUser}`, {
         method: "POST",
@@ -293,9 +229,10 @@ export default function RecipePage() {
         }),
       });
       if (response.ok) {
-        const notice = await response.json();
         reset(defaultValues);
-        console.log(notice);
+        SweetAlert("Bravo", "Votre message a bien été envoyé");
+      } else {
+        AlertBad("Désolé", "Vous ne pouvez pas noter deux fois une recette");
       }
     } catch (message) {
       setError("generic", { type: "generic", message });
@@ -306,26 +243,26 @@ export default function RecipePage() {
     <div className="d-flex flex-column justify-content-center">
       {isLoading ? (
         <p>Loading...</p>
-      ) : recipeClick.length > 0 ? (
+      ) : recipeClick && recipeClick.length > 0 ? (
         <div className={`m0`}>
           <div className={`${styles.container2}  m10 d-flex flex-column`}>
             <div
               className={`${styles.mobileColumn} flex-fill d-flex justify-content-around m10`}
             >
               <div className={` align-items-start ${styles.posAbsolute}`}>
-                {recipeClick[0].DIET_IMAGE.length > 0 ? (
+                {recipeClick[0].DIET_IMAGE ? (
                   <img
                     className={` ${styles.regime}`}
                     src={`../../assets/images/${recipeClick[0].DIET_IMAGE}`}
-                    alt="logo avatar"
+                    alt="régime alimentaire"
                   />
                 ) : (
                   ""
                 )}
                 <div className="d-flex flex-column justify-content-center align-items-center">
                   <img
-                    className={`${styles.bigImage} m10 d-flex `}
-                    src={`${previewImageRecipe}`}
+                    className={`${styles.bigImage} m10 d-flex`}
+                    src={imageFile}
                     alt="recette principale"
                   />
                   <div className="d-flex justify-content-center">
@@ -365,16 +302,12 @@ export default function RecipePage() {
                     <p>
                       Créée par {recipeClick[0].USER_PSEUDO} le {formattedDate}
                     </p>
-                    {recipeClick[0].USER_PHOTO ? (
-                      <div className="  d-flex justify-content-center ">
-                        <img
-                          className={` ${styles.avatar}`}
-                          src={`../../assets/images/${recipeClick[0].USER_PHOTO}`}
-                          alt="logo avatar"
-                        />
-                      </div>
-                    ) : (
-                      ""
+                    {recipeClick[0].USER_PHOTO && (
+                      <Link to={`/myRecipesPage/${recipeClick[0].USER_ID}`}>
+                        <div className="  d-flex justify-content-center ">
+                          <ImageViewer imageData={recipeClick[0].USER_PHOTO} />
+                        </div>
+                      </Link>
                     )}
                   </div>
                   <div className="align-items-center justify-content-center ml20">
@@ -389,8 +322,10 @@ export default function RecipePage() {
                       <img src={logoCuisson} alt="temps de cuisson"></img>
                       <p>{recipeClick[0].COOKING_TIME}</p>
                     </div>
-                    {difficultyRecipe()}
-                    {priceRecipe()}
+                    <div className="d-flex justify-content-center">
+                      {Difficulty(recipeClick[0].RECIPE_DIFFICULTY)}
+                    </div>
+                    <div>{Price(recipeClick[0].RECIPE_PRICE)}</div>
                     {recipeClick[0].DIET_TYPE_NAME.length > 0 ? (
                       <p>Régime : {recipeClick[0].DIET_TYPE_NAME}</p>
                     ) : (
@@ -400,185 +335,152 @@ export default function RecipePage() {
                 </div>
               </div>
             </div>
-            <h3 className="ml20 pl20">Ustensiles</h3>
-            <div
-              className={`${styles.container4} m10 d-flex flex-row justify-content-evenly`}
-            >
-              {ustensilsRecipe.map((a, i) => (
-                <div className="d-flex flex-column">
-                  <div>{a.USTENSIL_NAME}</div>
-                  <img
-                    src={`../assets/images/LogoUstensiles/${a.USTENSIL_ICON}`}
-                    alt="icones ustensiles"
-                    className={`${styles.logoSize}`}
-                  />
-                </div>
-              ))}
-            </div>
-            <h3 className="ml20 pl20">Ingrédients</h3>
-            <div
-              className={`${styles.container4} m10 d-flex flex-row justify-content-evenly`}
-            >
-              {ingredientsRecipe.map((a, i) => (
-                <div className="d-flex flex-column">
-                  <div>{a.INGREDIENT_FR_NAME}</div>
-                  <img
-                    src={`../assets/LOGO_ingrédients_png/${a.INGREDIENT_ICON}`}
-                    alt="icones ingrédients"
-                    className={`${styles.logoSize}`}
-                  />
-                </div>
-              ))}
-            </div>
-
-            <h4 className="ml20 pl20">Etape 1</h4>
-            <p>
-              Id laboris dolor nostrud ex esse reprehenderit dolore laborum
-              magna. Veniam eiusat deserunt qui duis dolor proident magna Lorem
-              eu eiusmod dolor sit. Consectetur tempor voluptate consequat
-              excepteur eiusmod et voluptate labore aliqua dolor sunt qui
-              voluptate.
-            </p>
-            <h4 className="ml20 pl20">Etape 2</h4>
-            <p>
-              Id laboris dolor nostrud ex esse reprehenderit dolore laborum
-              magna. Veniam eiusat deserunt qui duis dolor proident magna Lorem
-              eu eiusmod dolor sit. Consectetur tempor voluptate consequat
-              excepteur eiusmod et voluptate labore aliqua dolor sunt qui
-              voluptate.
-            </p>
-            <h4 className="ml20 pl20">Etape 3</h4>
-            <p>
-              Id laboris dolor nostrud ex esse reprehenderit dolore laborum
-              magna. Veniam eiusat deserunt qui duis dolor proident magna Lorem
-              eu eiusmod dolor sit. Consectetur tempor voluptate consequat
-              excepteur eiusmod et voluptate labore aliqua dolor sunt qui
-              voluptate.
-            </p>
-            <h4 className="ml20 pl20">Etape 4</h4>
-            <p>
-              Id laboris dolor nostrud ex esse reprehenderit dolore laborum
-              magna. Veniam eiusat deserunt qui duis dolor proident magna Lorem
-              eu eiusmod dolor sit. Consectetur tempor voluptate consequat
-              excepteur eiusmod et voluptate labore aliqua dolor sunt qui
-              voluptate.
-            </p>
-          </div>
-          <form onSubmit={submit} className={`m10`}>
-            <div
-              className={`${styles.container5}  d-flex flex-column justify-content-evenly pb20`}
-            >
-              <h3 className="m20 pl20">Le coin des astuces</h3>
-              <div className={`${styles.mobileFlex}`}>
-                <div className={`${styles.container6}`}>
-                  {noticeRecipe.map((n, i) => (
-                    <div className={` d-flex flex-column`}>
-                      {n.NOTICE_TRICK_RECIPE.length > 0 ? (
-                        <>
-                          <div className={`d-flex flex-row`}>
-                            <img
-                              src={`../../assets/images/${n.USER_PHOTO}`}
-                              alt="logo du propriétaire de la recette"
-                              className={`${styles.imgUserSize}`}
-                            />
-                            {n.NOTICE_STAR_NUMBER
-                              ? renderStarRating(n.NOTICE_STAR_NUMBER)
-                              : ""}
-                            <p>Chef {n.USER_PSEUDO}</p>
-                          </div>
-                          <div className={`d-flex flex-row`}>
-                            <div className={`${styles.littleGreen2}`}> </div>
-                            <p className={`${styles.container7}`}>
-                              {n.NOTICE_TRICK_RECIPE}
-                            </p>
-                          </div>
-                        </>
-                      ) : (
-                        ""
-                      )}
-                    </div>
-                  ))}
-                </div>
-                {user ? (
-                  <div className="d-flex flex-column justify-content-end m1">
-                    <h3>Partager une astuce :</h3>
-                    <div className={`d-flex flex-row`}>
-                      <div className={`${styles.littleGreen}`}></div>
-                      <textarea
-                        placeholder="Noter ici une astuce pour cette recette..."
-                        className={``}
-                        {...register("astuce")}
-                      ></textarea>
-                    </div>
-                    <div>
-                      {errors?.astuce && <p>{errors.astuce.message}</p>}
-                    </div>
+            <div className={`d-flex justify-content-around`}>
+              <div className={`${styles.mobilePosition}`}>
+                {recipeClick[0].AVERAGE_SCORE ? (
+                  <div className={` ${styles.stars}`}>
+                    <StarRender starCount={recipeClick[0].AVERAGE_SCORE} />
                   </div>
                 ) : (
                   ""
                 )}
+                <select value={newNumberOfPlate} onChange={handleChange}>
+                  {Array.from({ length: 12 }, (_, index) => index + 1).map(
+                    (value) => (
+                      <option key={value} value={value}>
+                        {value} assiette(s)
+                      </option>
+                    )
+                  )}
+                </select>
               </div>
+             {user != null && <div className={`${styles.mobilePosition}`}>
+                <div>
+                  <LikeRecipes idRecipe={recipeClick[0].RECIPE_ID} />
+                </div>
+                {recipeClick[0].USER_ID !== idUser && (
+                  <div>
+                    <LikeUserButton idUserLiked={recipeClick[0].USER_ID} />
+                  </div>
+                )}
+                <div>
+                  <ShoppingListButton
+                    newIngredientsRecipe={newIngredientsRecipe}
+                  />
+                </div>
+              </div>}
             </div>
-
+            <h3 className="ml20 pl20">Ustensiles</h3>
+            <div className={`${styles.container4} m10`}>
+              {ustensilsRecipe.map((a) => (
+                <div
+                  className="d-flex flex-column  align-items-center"
+                  key={a.USTENSIL_ID}
+                >
+                  <div
+                    className={
+                      a.USTENSIL_NAME.length > 12 ? "scroll-on-hover" : ""
+                    }
+                  >
+                    <span className="scroll-text">{a.USTENSIL_NAME}</span>
+                  </div>
+                  <div>
+                    {a.USTENSIL_ICON ? (
+                      <img
+                        src={`../assets/images/LogoUstensiles/${a.USTENSIL_ICON}`}
+                        alt="icones ustensiles"
+                        className={`${styles.logoSize}`}
+                      />
+                    ) : (
+                      <img
+                        src={`../assets/images/LogoUstensiles/imageDefault.gif`}
+                        alt="icones ustensiles"
+                        className={`${styles.logoSize}`}
+                      />
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+            <h3 className="ml20 pl20">Ingrédients</h3>
+            <div className={`${styles.container4} m10`}>
+              {newIngredientsRecipe
+                ? newIngredientsRecipe.map((a) => (
+                    <div
+                      className="d-flex flex-column text-align-center"
+                      key={a.INGREDIENT_ID}
+                    >
+                      <div
+                        className={
+                          a.INGREDIENT_FR_NAME.length > 12
+                            ? "scroll-on-hover"
+                            : ""
+                        }
+                      >
+                        <span className="scroll-text">
+                          {a.INGREDIENT_FR_NAME}
+                        </span>
+                      </div>
+                      <div className="text-align-center">
+                        <img
+                          src={`../assets/LOGO_ingrédients_png/${a.INGREDIENT_ICON}`}
+                          alt="icones ingrédients"
+                          className={`${styles.logoSize}`}
+                        />
+                      </div>
+                      <p>
+                        {a.INGREDIENT_QUANTITY} {a.MEASURE_UNITY}
+                      </p>
+                    </div>
+                  ))
+                : ""}
+            </div>
+            {stageRecipe.map((sr) => (
+              <div key={sr.STAGE_RECIPE_ID}>
+                <h3 className={`ml20 pl20 ${styles.titleExplication}`}>
+                  Etape {sr.STAGE_NUM}
+                </h3>{" "}
+                <div className="d-flex">
+                  <div
+                    className={`d-flex justify-content-center ${styles.inputCheckbokCenter}`}
+                  >
+                    <input
+                      type="checkbox"
+                      className={`${styles.checkboxStage} ml10`}
+                    />
+                  </div>
+                  <p className={`${styles.explication}`}>
+                    {sr.STAGE_RECIPE_EXPLICATION}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className={`m10`}>
+            <TrickRecipe id={id} />
+          </div>
+          <form onSubmit={handleSubmit(submit)} className={`m10`}>
             <div
               className={`${styles.container5}  d-flex flex-column justify-content-evenly mt10 pb20`}
             >
               <h3 className="m20 pl20">Le coin des avis</h3>
               <div className={`${styles.mobileFlex}`}>
-                <div className={`${styles.container6} `}>
-                  {noticeRecipe.map((n, i) => (
-                    <div className={` d-flex flex-column `}>
+                <div className={`${styles.container6} m0`}>
+                  {noticeRecipe.map((n) => (
+                    <div className={` d-flex flex-column `} key={n.NOTICE_ID}>
                       {n.NOTICE_RECIPE.length > 0 ? (
                         <>
                           <div className={`d-flex flex-row `}>
-                            <img
-                              src={`../../assets/images/${n.USER_PHOTO}`}
-                              alt="logo du propriétaire de la recette"
-                              className={`${styles.imgUserSize}`}
-                            />
-                            {n.NOTICE_STAR_NUMBER === 1 ? (
-                              <div>
-                                <i class="la la-star"></i>
-                                <i class="lar la-star"></i>
-                                <i class="lar la-star"></i>
-                                <i class="lar la-star"></i>
-                                <i class="lar la-star"></i>
-                              </div>
-                            ) : n.NOTICE_STAR_NUMBER === 2 ? (
-                              <div>
-                                <i class="la la-star"></i>
-                                <i class="la la-star"></i>
-                                <i class="lar la-star"></i>
-                                <i class="lar la-star"></i>
-                                <i class="lar la-star"></i>
-                              </div>
-                            ) : n.NOTICE_STAR_NUMBER === 3 ? (
-                              <div>
-                                <i class="la la-star"></i>
-                                <i class="la la-star"></i>
-                                <i class="la la-star"></i>
-                                <i class="lar la-star"></i>
-                                <i class="lar la-star"></i>
-                              </div>
-                            ) : n.NOTICE_STAR_NUMBER === 4 ? (
-                              <div>
-                                <i class="la la-star"></i>
-                                <i class="la la-star"></i>
-                                <i class="la la-star"></i>
-                                <i class="la la-star"></i>
-                                <i class="lar la-star"></i>
-                              </div>
-                            ) : n.NOTICE_STAR_NUMBER === 5 ? (
-                              <div>
-                                <i class="la la-star"></i>
-                                <i class="la la-star"></i>
-                                <i class="la la-star"></i>
-                                <i class="la la-star"></i>
-                                <i class="la la-star"></i>
-                              </div>
-                            ) : (
-                              ""
-                            )}
+                            <div>
+                              {" "}
+                              {n.USER_PHOTO && (
+                                <ImageViewer imageData={n.USER_PHOTO} />
+                              )}
+                            </div>
+                            {n.NOTICE_STAR_NUMBER >= 1 &&
+                            n.NOTICE_STAR_NUMBER <= 5
+                              ? renderStars(n.NOTICE_STAR_NUMBER)
+                              : ""}
                             <p>Chef {n.USER_PSEUDO}</p>
                           </div>
                           <div className={`d-flex flex-row`}>
@@ -597,7 +499,7 @@ export default function RecipePage() {
                 {user ? (
                   <div className="d-flex flex-column justify-content-start m1 align-items-center">
                     <div>
-                      <h3>Donner votre avis ici :</h3>
+                      <h3>Donnez votre avis ici :</h3>
                       {[...Array(5)].map((star, index) => {
                         index += 1;
                         return (
@@ -612,25 +514,28 @@ export default function RecipePage() {
                           ></div>
                         );
                       })}
-
-                      {rating ? <p>Votre note : {rating} étoiles</p> : ""}
+                      <div>
+                        {errors?.score && <p>{errors.score.message}</p>}
+                      </div>
+                      {rating ? <p>Votre note : {rating} étoile(s)</p> : ""}
                     </div>
-
                     <div className={`d-flex flex-row`}>
                       <div className={`${styles.littleGreen}`}></div>
                       <textarea
                         rows="4"
                         cols="50"
-                        placeholder="Ou simplement une remarque ou un avis sur la recette..."
+                        placeholder="Une remarque ou un avis sur la recette..."
                         className={``}
                         {...register("notice")}
                       ></textarea>
+                    </div>{" "}
+                    <div>
+                      {errors?.notice && <p>{errors.notice.message}</p>}
                     </div>
                     <button
                       disabled={isSubmitting}
-                      onClick={() => handleClickAstuce()}
                       className=" mt10 btn btn-primary"
-                      id="addAstuce"
+                      id="addNotice"
                     >
                       Valider
                     </button>
@@ -639,12 +544,11 @@ export default function RecipePage() {
                   ""
                 )}
               </div>
-              <div>{errors?.notice && <p>{errors.notice.message}</p>}</div>
             </div>
           </form>
         </div>
       ) : (
-        <p>not found</p>
+        <p>No recipe data found.</p>
       )}
     </div>
   );

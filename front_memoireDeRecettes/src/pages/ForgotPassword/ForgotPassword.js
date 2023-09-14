@@ -8,8 +8,6 @@ import { AuthContext } from "../../context/AuthContext";
 import { Link, Navigate } from "react-router-dom";
 import { UpdateContext } from "../../context/UpdateContext";
 
-
-
 export default function ForgotPassword() {
   const { forgotpassword } = useContext(UpdateContext);
   const { user } = useContext(AuthContext);
@@ -36,10 +34,9 @@ export default function ForgotPassword() {
   });
 
   const submit = handleSubmit(async (values) => {
-    console.log(values);
     try {
       clearErrors();
-      await forgotpassword(values)
+      await forgotpassword(values);
     } catch (message) {
       setError("generic", { type: "generic", message });
     }

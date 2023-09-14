@@ -1,5 +1,5 @@
 import { useState } from "react";
-import AlertBad from "../alert/AlertBad";
+//import AlertBad from "../alert/AlertBad";
 //import SweetAlert from "../alert/AlertSweet";
 
 export default function FileUpload({ onFileUpload }) {

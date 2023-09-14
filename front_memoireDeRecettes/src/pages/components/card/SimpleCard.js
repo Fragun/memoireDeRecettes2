@@ -1,148 +1,94 @@
 import styles from "./SimpleCard.module.scss";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import logoPreparation from "../../../assets/images/logoPreparation.png";
 import logoCuisson from "../../../assets/images/logoCuisson.png";
 import { Link } from "react-router-dom";
+import { getImages } from "../../../apis/recipe";
+import LikeRecipes from "../likeRecipe/LikeRecipes";
+import Difficulty from "../difficulty/Difficulty";
+import Price from "../price/Price";
+import StarRender from "../rating/StarRender";
+import ImageViewer from "../imageViewer/ImageViewer";
 
 export default function SimpleCard({
   title,
   image,
   description,
-  imageAvatar,
   difficulty,
   price,
   prepTime,
   timeCooking,
   regimeImage,
   idRecipe,
+  averageScore,
+  imageAvatar,
+  idUser,
 }) {
-  const [liked, setLiked] = useState(false);
+  const [imageFile, setImageFile] = useState("");
 
-  const handleClick = () => {
-    setLiked(!liked);
-  };
+  useEffect(() => {
+    setImageFile("");
+    const fetchImages = async () => {
+      try {
+        const response = await getImages(image);
 
-  function difficultyRecipe() {
-    switch (difficulty) {
-      case 1:
-        return (
-          <div className="d-flex justify-content-center align-items-center">
-            <h4>Facile</h4>
-            <i class="las la-mitten la-2x"></i>
-          </div>
-        );
-      case 2:
-        return (
-          <div className="d-flex justify-content-center align-items-center">
-            <h4> Moyenne</h4>
-            <div>
-              <i class="las la-mitten la-2x"></i>
-              <i class="las la-mitten la-2x"></i>{" "}
-            </div>
-          </div>
-        );
-      case 3:
-        return (
-          <div className="d-flex justify-content-center align-items-center">
-            <h4>Difficile</h4>
-            <div>
-              <i class="las la-mitten la-2x"></i>
-              <i class="las la-mitten la-2x"></i>
-              <i class="las la-mitten la-2x"></i>{" "}
-            </div>
-          </div>
-        );
-
-      default:
-        break;
-    }
-  }
-  function priceRecipe() {
-    switch (price) {
-      case 1:
-        return (
-          <div
-            className={` ${styles.price} d-flex justify-content-center align-items-center`}
-          >
-            <i class="las la-euro-sign"></i>
-          </div>
-        );
-      case 2:
-        return (
-          <div
-            className={` ${styles.price} d-flex justify-content-center align-items-center`}
-          >
-            <i class="las la-euro-sign"></i>
-            <i class="las la-euro-sign"></i>
-          </div>
-        );
-
-      case 3:
-        return (
-          <div
-            className={` ${styles.price} d-flex justify-content-center align-items-center`}
-          >
-            <i class="las la-euro-sign"></i>
-            <i class="las la-euro-sign"></i>
-            <i class="las la-euro-sign"></i>
-          </div>
-        );
-
-      default:
-        return <></>;
-        break;
-    }
-  }
+        if (response.ok) {
+          setImageFile(response.url);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchImages();
+  }, [image]);
 
   return (
-    <Link to={`/recipePage/${idRecipe}`} className="decoNone">
-      <div onClick={handleClick} className={`${styles.article}`}>
-        <div className={`${styles.imgContainer}`}>
-          <img
-            className={styles.image}
-            src={`../../assets/images/${image}`}
-            alt="recette"
-          />
-
-          {imageAvatar ? (
-            <img
-              className={` ${styles.avatar}`}
-              src={`../../assets/images/${imageAvatar}`}
-              alt="logo avatar"
-            />
-          ) : (
-            ""
-          )}
-          {regimeImage.length > 0 ? (
+    <div className={`${styles.article}`}>
+      <div className={`${styles.imgContainer}`}>
+        <Link to={`/recipePage/${idRecipe}`} className="decoNone">
+          <img className={styles.image} src={imageFile} alt="recette" />
+          {regimeImage && (
             <img
               className={` ${styles.regime}`}
               src={`../../assets/images/${regimeImage}`}
-              alt="logo avatar"
+              alt="régime alimentaire"
             />
-          ) : (
-            ""
           )}
-          {priceRecipe()}
-        </div>
-        <div
-          className={`flex-column justify-content-center align-items-center ${styles.title}`}
-        >
-          <h3> {title} </h3>
-          <p>{description}</p>
-          <i className={`fas fa-heart ${liked ? "text-primary" : ""}`}> </i>
-          <div className={`d-flex justify-content-center ${styles.ensemble}`}>
-            <div className="flex-column justify-content-center align-items-center">
-              <div className={`${styles.time}`}>{prepTime}</div>
-              <img src={logoPreparation} alt="temps de préparation"></img>
-            </div>
-            <div className="ml10 flex-column justify-content-center align-items-center">
-              <div className={`${styles.time}`}>{timeCooking}</div>
-              <img src={logoCuisson} alt="temps de cuisson"></img>
-            </div>
+          <div className={` ${styles.stars}`}>
+            {averageScore ? <StarRender starCount={averageScore} /> : ""}
           </div>
-          {difficultyRecipe()}
-        </div>
+          <div className={` ${styles.price}`}>{Price(price)}</div>
+          <div className={`${styles.heart}`}>
+            <LikeRecipes idRecipe={idRecipe} />
+          </div>
+        </Link>
       </div>
-    </Link>
+      <div
+        className={`flex-column justify-content-center align-items-center ${styles.title}`}
+      >
+        <h3 className={`${styles.titleText}`}> {title} </h3>
+        <p>{description}</p>
+
+        <div className={`d-flex justify-content-center ${styles.ensemble}`}>
+          <div className="flex-column justify-content-center align-items-center">
+            <div className={`${styles.time}`}>{prepTime}</div>
+            <img src={logoPreparation} alt="temps de préparation"></img>
+          </div>
+          <div className="ml10 flex-column justify-content-center align-items-center">
+            <div className={`${styles.time}`}>{timeCooking}</div>
+            <img src={logoCuisson} alt="temps de cuisson"></img>
+          </div>
+        </div>
+
+        <div className="d-flex flex-row justify-content-center">
+          {Difficulty(difficulty)}
+        </div>
+       {imageAvatar && <Link to={`/myRecipesPage/${idUser}`}>
+          <div className={`${styles.imageAvatarPosition}`}>
+            <ImageViewer imageData={imageAvatar}/>
+          </div>
+        </Link>}
+      </div>
+    </div>
   );
 }

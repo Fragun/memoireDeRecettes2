@@ -1,7 +1,6 @@
 const API_UPDATE = "/api/update";
 
 export async function resetPassword(email) {
-  console.log(email.user_mail);
   const response = await fetch(`${API_UPDATE}`, {
     method: "POST",
     headers: {

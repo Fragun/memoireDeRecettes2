@@ -3,22 +3,21 @@ import styles from "./Register.module.scss";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import ReCAPTCHA from "react-google-recaptcha";
 import { createUser } from "../../apis/users";
 import { useNavigate } from "react-router-dom";
 import SweetAlert from "../components/alert/AlertSweet";
-import ReactGA from 'react-ga4';
+import ReactGA from "react-ga4";
+import AlertBad from "../components/alert/AlertBad";
 
 export default function Register() {
+  const [clickCount, setClickCount] = useState(0);
 
-  const [clickCount, setClickCount] = useState(0)
-  
   const trackButtonClick = () => {
     setClickCount(count + 1);
     ReactGA.event({
       action: "tentative d'inscription",
       category: "login_category",
-      label: 'email',
+      label: "email",
       value: clickCount,
     });
   };
@@ -26,27 +25,19 @@ export default function Register() {
   const navigate = useNavigate();
   const [count, setCount] = useState(0);
 
-  function onChange(value) {
-    console.log("Captcha value:", value);
-  }
-
   function generateRandomUsername() {
     const letters = "abcdefghijklmnopqrstuvwxyz";
     let username = "";
 
-    // génère les 5 premières lettres aléatoires
     for (let i = 0; i < 5; i++) {
       username += letters.charAt(Math.floor(Math.random() * letters.length));
     }
 
-    // génère les 10 chiffres aléatoires
     for (let i = 0; i < 3; i++) {
       username += Math.floor(Math.random() * 3);
     }
     return username;
   }
-
-  
 
   const yupSchema = yup.object({
     name: yup.string().required(false),
@@ -102,7 +93,6 @@ export default function Register() {
     register,
     handleSubmit,
     setError,
-    clearErrors,
     formState: { errors, isSubmitting },
   } = useForm({
     defaultValues,
@@ -110,10 +100,16 @@ export default function Register() {
   });
 
   const submit = handleSubmit(async (values) => {
+    console.log(values);
     try {
-      await createUser(values);
-      SweetAlert("Bravo", "Vous êtes inscrit");
-      navigate("/login");
+      const response = await createUser(values);
+      if (response) {
+        SweetAlert("Bravo", "Vous êtes inscrit");
+        navigate("/login");
+      } else{
+        AlertBad("Erreur", "il y a déjà un compte avec cette adresse mail")
+      }
+     
     } catch (message) {
       setError("generic", { type: "generic", message });
     }
@@ -127,7 +123,7 @@ export default function Register() {
           onSubmit={submit}
           className="d-flex flex-column justify-content-center align-items-center p20"
         >
-          <div className="mb10 d-flex flex-column">
+          {/* <div className="mb10 d-flex flex-column">
             <label htmlFor="fichier">Photo de profil</label>
             <input type="file" name="fichier" {...register("fichier")} />
           </div>
@@ -135,7 +131,7 @@ export default function Register() {
             <div className="mb10">
               <p className="form-error">{errors.generic.message.toString()}</p>
             </div>
-          )}
+          )} */}
           <div className="d-flex flex-column">
             <label className="mb10 pl20" htmlFor="pseudo">
               Pseudo :
@@ -194,15 +190,10 @@ export default function Register() {
             <input type="checkbox" id="condition" {...register("condition")} />
             {errors?.condition && <p>{errors.condition.message}</p>}
           </div>
-          <ReCAPTCHA
-            sitekey={`${process.env.REACT_APP_RECAPTCHA}`}
-            onChange={onChange}
-          />
-
           <button
             onClick={() => {
               addCount();
-              trackButtonClick()
+              trackButtonClick();
             }}
             disabled={isSubmitting}
             className="btn btn-primary"

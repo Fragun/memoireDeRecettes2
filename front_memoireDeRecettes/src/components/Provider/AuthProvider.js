@@ -1,6 +1,11 @@
 import { useState } from "react";
 import { useLoaderData } from "react-router-dom";
-import { fetchUsers, signin as loginn, signout as logout, modifyUser} from "../../apis/auth";
+import {
+  fetchUsers,
+  signin as loginn,
+  signout as logout,
+  modifyUser,
+} from "../../apis/auth";
 import { AuthContext } from "../../context";
 import { deleteUserById } from "../../apis/users";
 
@@ -25,7 +30,7 @@ export default function AuthProvider({ children }) {
   }
 
   async function deleteUser(idUser) {
-    const userDelete = await deleteUserById(idUser);
+    await deleteUserById(idUser);
   }
 
   async function modifyUserById(user) {

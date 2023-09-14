@@ -1,168 +1,135 @@
-// import styles from "./MultiCard.module.scss";
+import styles from "./MultiCard.module.scss";
+import logoPreparation from "../../../assets/images/logoPreparation.png";
+import logoCuisson from "../../../assets/images/logoCuisson.png";
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+import { getImages } from "../../../apis/recipe";
+import { useEffect, useState } from "react";
+import Difficulty from "../difficulty/Difficulty";
+import Price from "../price/Price";
+import StarRender from "../rating/StarRender";
+import LikeRecipes from "../likeRecipe/LikeRecipes";
+import { Link } from "react-router-dom";
+import ImageViewer from "../imageViewer/ImageViewer";
 
+export default function MultiCard({ recipes, textSpeciality }) {
+  const settings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+  };
+  const [imageFiles, setImageFiles] = useState({});
 
-// export default function MultiCard({
-//     title,
-//     image,
-//     description,
-//     imageAvatar,
-//     difficulty,
-//     price,
-//     prepTime,
-//     timeCooking,
-//     regimeImage,
-//     idRecipe, }) {
+  const fetchImages = async (imageName, recipeId) => {
+    try {
+      const response = await getImages(imageName);
 
-//     function difficultyRecipe() {
-//         switch (difficulty) {
-//             case 1:
-//                 return (
-//                     <div className="d-flex justify-content-center align-items-center">
-//                         <h4>Facile</h4>
-//                         <i class="las la-mitten la-2x"></i>
-//                     </div>
-//                 );
-//             case 2:
-//                 return (
-//                     <div className="d-flex justify-content-center align-items-center">
-//                         <h4> Moyenne</h4>
-//                         <div>
-//                             <i class="las la-mitten la-2x"></i>
-//                             <i class="las la-mitten la-2x"></i>{" "}
-//                         </div>
-//                     </div>
-//                 );
-//             case 3:
-//                 return (
-//                     <div className="d-flex justify-content-center align-items-center">
-//                         <h4>Difficile</h4>
-//                         <div>
-//                             <i class="las la-mitten la-2x"></i>
-//                             <i class="las la-mitten la-2x"></i>
-//                             <i class="las la-mitten la-2x"></i>{" "}
-//                         </div>
-//                     </div>
-//                 );
+      if (response.ok) {
+        setImageFiles((prevImages) => ({
+          ...prevImages,
+          [recipeId]: response.url,
+        }));
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
-//             default:
-//                 break;
-//         }
-//     }
+  useEffect(() => {
+    recipes.forEach((recipe) => {
+      if (recipe.PHOTO_NAME) {
+        fetchImages(recipe.PHOTO_NAME, recipe.RECIPE_ID);
+      }
+    });
+  }, [recipes]);
 
-//     return (
-//         <div className={`${styles.multiCard} `}>
-//             <div className={`${styles.imgPrincipale}`}>
-//                 <div className={`${styles.arrierePlan}`}>
-//                     <img className={`${styles.focus} `} src={image} alt="recette" />
-//                 </div>
-//                 <div className={`${styles.premierPlan}`}>
-//                     <p className={`${styles.titreMultiCard}`}>Spécialité { }</p>
-//                     <p className={`${styles.nbrRecetteMultiCard} d-flex flex-column justify-content-end align-items-end`}> 66 recettes </p>
-//                 </div>
-//             </div>
-//             <div className={`d-flex flex-row justify-content-around ${styles.miniCard}`}>
-//                 <div>
-//                     <div className={`${styles.ensemble}`}>
-//                         <div className={`${styles.imageDeFond}`}>
-//                             <img className={` ${styles.imgParTrois}`} src={image} alt="recette" />
-//                         </div>
-//                         <div className={`${styles.elementsSurImage} `}>
-//                             {regimeImage.length > 0 ? (
-//                                 <img
-//                                     className={` ${styles.regime}`}
-//                                     src={`../../assets/images/${regimeImage}`}
-//                                     alt="logo avatar"
-//                                 />
-//                             ) : (
-//                                 ""
-//                             )}
-//                             <img className={` ${styles.iconeAvatar} `} src={imageAvatar} alt="avatar"></img>
-//                         </div>
-//                     </div>
-//                     <div className="mt135">
-//                         <p className=""> {title} </p>
-//                         <div className="d-flex flex-column ">
-//                             <div className="d-flex flex-row">
-//                                 <div className={` ${styles.iconMinicard}`}>{prepTime}</div>
-//                                 <img src={logoPreparation} alt="temps de préparation"></img>
-//                             </div>
-//                             <div className="d-flex flex-row">
-//                                 <div className={` ${styles.iconMinicard}`}>{timeCooking}</div>
-//                                 <img src={logoCuisson} alt="temps de cuisson"></img>
-//                             </div>
+  return (
+    <div className={`${styles.multiCard} `}>
+      <p className={`${styles.titreMultiCard}`}>
+        Spécialité {textSpeciality}
+        <span className={`${styles.numberRecipe}`}>
+          ({recipes.length} recettes)
+        </span>
+      </p>
+      <Slider {...settings}>
+        {recipes.map((recipe, index) => (
+          <div key={index}>
+            <div className={`${styles.imgPrincipale}`}>
+              <Link to={`/recipePage/${recipe.RECIPE_ID}`} className="decoNone">
+                <img
+                  className={`${styles.focus} `}
+                  src={imageFiles[recipe.RECIPE_ID]}
+                  alt="recette"
+                />
+              </Link>
+              <div className={` ${styles.stars}`}>
+                {recipe.AVERAGE_SCORE && (
+                  <StarRender starCount={recipe.AVERAGE_SCORE} />
+                )}
+              </div>
+              <div className={`${styles.heart}`}>
+                <LikeRecipes idRecipe={recipe.RECIPE_ID} />
+              </div>
+              <div className={`${styles.price}`}>
+                {recipe.RECIPE_PRICE && Price(recipe.RECIPE_PRICE)}
+              </div>
+              {recipe.DIET_IMAGE && (
+                <img
+                  className={` ${styles.regime}`}
+                  src={`../../assets/images/${recipe.DIET_IMAGE}`}
+                  alt="régime alimentaire"
+                />
+              )}
+            </div>
+            <div className={`${styles.pRelativ}`}>
+              <div
+                className={`${styles.containerTitleRecipe}  d-flex justify-content-center `}
+              >
+                <h2 className={`${styles.titleRecipe} text-align-center`}>
+                  {recipe.RECIPE_TITLE}{" "}
+                </h2>
+              </div>
+              <p>{recipe.RECIPE_DESCRIPTION}</p>
+              <div
+                className={`d-flex justify-content-center ${styles.ensemble}`}
+              >
+                <div className="flex-column justify-content-center align-items-center">
+                  <div className={`${styles.time}`}>{recipe.PREP_TIME}</div>
+                  <img
+                    className={` ${styles.iconMinicard} ml10`}
+                    src={logoPreparation}
+                    alt="temps de préparation"
+                  ></img>
+                </div>
+                <div className="ml10 flex-column justify-content-center align-items-center ">
+                  <div className={`${styles.time}`}>{recipe.COOKING_TIME}</div>
+                  <img
+                    className={` ${styles.iconMinicard} ml10`}
+                    src={logoCuisson}
+                    alt="temps de cuisson"
+                  ></img>
+                </div>
+              </div>
+              <div className="d-flex flex-row justify-content-center">
+                <div className={`${styles.difficulty}`}>
+                  {Difficulty(recipe.RECIPE_DIFFICULTY)}{" "}
+                </div>
+              </div>
 
-//                             <div className="d-flex flex-row">
-//                                 <img className={` ${styles.iconMinicard}`} src={imageDifficulte} alt="difficulté" />
-//                                 <p>Facile</p>
-//                             </div>
-//                         </div>
-//                     </div>
-
-//                 </div>
-//                 <div>
-//                     <div className={`${styles.ensemble}`}>
-//                         <div className={`${styles.imageDeFond}`}>
-//                             <img className={` ${styles.imgParTrois}`} src={image} alt="recette" />
-//                         </div>
-//                         <div className={`${styles.elementsSurImage} `}>
-
-//                             <img className={` ${styles.iconeElementsPrincipaux} `} src={imageVegetarien} alt="icone végan"></img>
-//                             <img className={` ${styles.iconeElementsPrincipaux} `} src={imageVegan} alt="icone végan"></img>
-//                             <img className={` ${styles.iconeElementsPrincipaux} `} src={imageSansGluten} alt="icone végan"></img>
-//                             <img className={` ${styles.iconeAvatar} `} src={imageAvatar} alt="avatar"></img>
-//                         </div>
-//                     </div>
-//                     <div className="mt135">
-//                         <p className=""> {title} </p>
-//                         <div className="d-flex flex-column ">
-//                             <div className="d-flex flex-row">
-//                                 <img className={` ${styles.iconMinicard}`} src={imagePreparation} alt="temps de préparation" />
-//                                 <p>30 minutes</p>
-//                             </div>
-//                             <div className="d-flex flex-row">
-//                                 <img className={` ${styles.iconMinicard}`} src={imageCuisson} alt="temps de cuisson" />
-//                                 <p>30 minutes</p>
-//                             </div>
-//                             <div className="d-flex flex-row">
-//                                 <img className={` ${styles.iconMinicard}`} src={imageDifficulte} alt="difficulté" />
-//                                 <p>Facile</p>
-//                             </div>
-//                         </div>
-//                     </div>
-
-//                 </div>
-//                 <div>
-//                     <div className={`${styles.ensemble} d-flex justify-content-between`}>
-//                         <div className={`${styles.imageDeFond}`}>
-//                             <img className={` ${styles.imgParTrois}`} src={image} alt="recette" />
-//                         </div>
-//                         <div className={`${styles.elementsSurImage} `}>
-
-//                             <img className={` ${styles.iconeElementsPrincipaux} `} src={imageVegetarien} alt="icone végan"></img>
-//                             <img className={` ${styles.iconeElementsPrincipaux} `} src={imageVegan} alt="icone végan"></img>
-//                             <img className={` ${styles.iconeElementsPrincipaux} `} src={imageSansGluten} alt="icone végan"></img>
-//                             <img className={` ${styles.iconeAvatar} `} src={imageAvatar} alt="avatar"></img>
-//                         </div>
-//                     </div>
-//                     <div className="mt135">
-//                         <p className=""> {title} </p>
-//                         <div className="d-flex flex-column ">
-//                             <div className="d-flex flex-row">
-//                                 <img className={` ${styles.iconMinicard}`} src={imagePreparation} alt="temps de préparation" />
-//                                 <p>30 minutes</p>
-//                             </div>
-//                             <div className="d-flex flex-row">
-//                                 <img className={` ${styles.iconMinicard}`} src={imageCuisson} alt="temps de cuisson" />
-//                                 <p>30 minutes</p>
-//                             </div>
-//                             <div className="d-flex flex-row">
-//                                 {difficultyRecipe()}
-//                             </div>
-//                         </div>
-
-//                     </div>
-//                 </div>
-//             </div>
-//             </div>
-//             );
-// }
+              {recipe.USER_PHOTO && (
+                <Link to={`/myRecipesPage/${recipe.USER_ID}`}>
+                  <div className={`${styles.imageAvatarPosition} `}>
+                    <ImageViewer imageData={recipe.USER_PHOTO}/>
+                  </div>
+                </Link>
+              )}
+            </div>
+          </div>
+        ))}
+      </Slider>
+    </div>
+  );
+}

@@ -1,88 +1,40 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import styles from "../addRecipe/AddRecipe.module.scss";
+import styles from "./AddRecipe.module.scss";
 import euro from "../../assets/images/euro.png";
 import difficulty from "../../assets/images/gantDifficulte.png";
-import FileUpload from "../components/fileUpload/fileUpload";
+import FileUpload from "../components/fileUpload/fileUpload2";
 import timePng from "../../assets/images/icons8-horloge-40.png";
 import { AuthContext } from "../../context";
 import Description from "../components/inputAddDescriptionRecipe/DescriptionRecipe";
 import SweetAlert from "../components/alert/AlertSweet";
 import Ingredients from "../components/inputAddDescriptionRecipe/IngredientRecipe";
 import { RecipeContext } from "../../context/RecipeContext";
+import UstensilInput from "./components/UstensilInput";
 
-const API_INDEX = "/api/recette";
+const API_RECETTE = "/api/recette";
 
 export default function AddRecipe() {
+
+  const [isStepValid, setIsStepValid] = useState(false);
+  const [ingredientChoose, setIngredientChoose] = useState([]);
+  const [uploadedImage, setUploadedImage] = useState(null);
+  const [ustensilChoosed, setUstensilChoosed] = useState([]);
   const { user } = useContext(AuthContext);
   const idUser = user[0].USER_ID;
-  const {
-    mealType,
-    season,
-    origin,
-    dietType,
-    mealMoment,
-    ustensils,
-    ingredients,
-  } = useContext(RecipeContext);
+  const { mealType, season, origin, dietType, mealMoment } =
+    useContext(RecipeContext);
   const mealTypeList = mealType;
   const seasonList = season;
   const cookingList = origin;
   const dietList = dietType;
   const mealList = mealMoment;
-  const ustensilList = ustensils;
-
-  //permet de récupérer la description de la recette
   const [stepDescriptions, setStepDescriptions] = useState([]);
   const handleStepDescriptionsChange = (newDescriptions) => {
     setStepDescriptions(newDescriptions);
   };
-
-  const [ingredientChoose, setIngredientChoose] = useState([]);
-
-  const [search, setSearch] = useState("");
-  const [search2, setSearch2] = useState("");
-  const [search3, setSearch3] = useState("");
-  const [search4, setSearch4] = useState("");
-  const [search5, setSearch5] = useState("");
-  const [search6, setSearch6] = useState("");
-  const [search7, setSearch7] = useState("");
-  const [search8, setSearch8] = useState("");
-
-  const [ustensilChoose, setUstensilChoose] = useState([]);
-
-  //const [automaticNumStage, setAutomaticNumStage] = useState('1');
-  //console.log(automaticNumStage);
-
-  const [ustensilAdded1, setUstensilAdded1] = useState(false);
-  const [ustensilAdded2, setUstensilAdded2] = useState(false);
-  const [ustensilAdded3, setUstensilAdded3] = useState(false);
-  const [ustensilAdded4, setUstensilAdded4] = useState(false);
-  const [ustensilAdded5, setUstensilAdded5] = useState(false);
-  const [ustensilAdded6, setUstensilAdded6] = useState(false);
-  const [ustensilAdded7, setUstensilAdded7] = useState(false);
-  const [ustensilAdded8, setUstensilAdded8] = useState(false);
-  //const [ustensilAdded, setUstensilAdded] = useState(Array(8).fill(false));
-
-  const [inputUstensilAdded1, setInputUstensiladded1] = useState("dnone");
-  const [inputUstensilAdded2, setInputUstensiladded2] = useState("dnone");
-  const [inputUstensilAdded3, setInputUstensiladded3] = useState("dnone");
-  const [inputUstensilAdded4, setInputUstensiladded4] = useState("dnone");
-  const [inputUstensilAdded5, setInputUstensiladded5] = useState("dnone");
-  const [inputUstensilAdded6, setInputUstensiladded6] = useState("dnone");
-  const [inputUstensilAdded7, setInputUstensiladded7] = useState("dnone");
-
-  const [count, setCount] = useState(0);
-
-  const [recipeObj, setRecipeObj] = useState();
-  console.log(recipeObj);
-
-  const handleFileUpload = (obj) => {
-    setRecipeObj(obj.value);
-  };
-
 
   const yupSchema = yup.object({
     titleRecipe: yup.string().required("Titre de la recette requise"),
@@ -112,7 +64,7 @@ export default function AddRecipe() {
       .required("Veuillez selectionner un type de cuisson principal"),
     dietType: yup.string().required("Veuillez selectionner un type de régime"),
     mealType: yup.string().required("Veuillez selectionner un type de repas"),
-    ustensil: yup.array().default(() => ustensilChoose),
+    ustensil: yup.array().default(() => ustensilChoosed),
     ingredient: yup.array().default(() => ingredientChoose),
     descriptions: yup.array().default(() => stepDescriptions),
     //nameImage: yup.object().default(() => recipeObj),
@@ -135,8 +87,6 @@ export default function AddRecipe() {
     dietType: "",
     mealType: "",
   };
-
-  // console.log(defaultValues);
   const {
     register,
     handleSubmit,
@@ -147,103 +97,33 @@ export default function AddRecipe() {
     resolver: yupResolver(yupSchema),
   });
 
+  const handleImageUpload = (image) => {
+    setUploadedImage(image);
+  };
+  const [imageError, setImageError] = useState("");
   const submit = async (values) => {
-    // console.log(values);
+    if (!uploadedImage) {
+      // Si aucune image n'a été téléchargée, affichez un message d'erreur
+      setImageError("Veuillez télécharger une image");
+      return;
+    }
+    const formData = new FormData();
+    formData.append("image", uploadedImage);
+    formData.append("data", JSON.stringify(values));
     try {
-      values.nameImage = recipeObj
-      const response = await fetch(`${API_INDEX}/addRecipe`, {
+      const response = await fetch(`${API_RECETTE}/addRecipe`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(values),
+        body: formData,
       });
       if (response.ok) {
-        SweetAlert("Bravo", "Votre recette a bien été enregistrée").then(() => {
-          window.location.reload();
-        });
-        const recipe = await response.json();
+        SweetAlert("Bravo", "Votre recette a bien été enregistrée")
+        await response.json();
         reset(defaultValues);
-        //console.log(recipe);
       }
     } catch (error) {
       console.error(error);
     }
   };
-
-  function handleInput(e, setSearchFunction) {
-    // console.log(e.target.value);
-    const keyBoardInput = e.target.value;
-    setSearchFunction(keyBoardInput.trim().toLowerCase());
-  }
-
-  function handleAddUstensil(event, id) {
-    event.preventDefault();
-    const selectedUstensilId = document.getElementById(id).value;
-    //console.log(selectedUstensilId);
-    if (!ustensilChoose.includes(selectedUstensilId)) {
-      setUstensilChoose([...ustensilChoose, selectedUstensilId]);
-      switch (id) {
-        case "ustensils":
-          setUstensilAdded1(true);
-          break;
-        case "ustensils2":
-          setUstensilAdded2(true);
-          break;
-        case "ustensils3":
-          setUstensilAdded3(true);
-          break;
-        case "ustensils4":
-          setUstensilAdded4(true);
-          break;
-        case "ustensils5":
-          setUstensilAdded5(true);
-          break;
-        case "ustensils6":
-          setUstensilAdded6(true);
-          break;
-        case "ustensils7":
-          setUstensilAdded7(true);
-          break;
-        case "ustensils8":
-          setUstensilAdded8(true);
-          break;
-        default:
-          break;
-      }
-    }
-  }
-
-  /**
-   * permet de rendre visible les input d'ajout d'ustensil selon le compteur
-   *
-   * @param {*} e
-   */
-  function addInputUstensil(e) {
-    e.preventDefault();
-    if (count === 0) {
-      setInputUstensiladded1("dBlock");
-    }
-    if (count === 1) {
-      setInputUstensiladded2("dBlock");
-    }
-    if (count === 2) {
-      setInputUstensiladded3("dBlock");
-    }
-    if (count === 3) {
-      setInputUstensiladded4("dBlock");
-    }
-    if (count === 4) {
-      setInputUstensiladded5("dBlock");
-    }
-    if (count === 5) {
-      setInputUstensiladded6("dBlock");
-    }
-    if (count === 6) {
-      setInputUstensiladded7("dBlock");
-    }
-    setCount(count + 1);
-  }
 
   /**
    * permet de mettre à jour le tableau d'ingrédient choisi depuis le composant enfant IngredientRecipe
@@ -253,6 +133,14 @@ export default function AddRecipe() {
   function handleIngredientChooseUpdate(newIngredientChoose) {
     setIngredientChoose(newIngredientChoose);
   }
+
+  function handleAddUstensil(ustensils) {
+    setUstensilChoosed(ustensils);
+  }
+
+  const handleIsStepValid = (valid) => {
+    setIsStepValid(valid);
+  };
 
   return (
     <div className="d-flex justify-content-center">
@@ -294,216 +182,64 @@ export default function AddRecipe() {
               </div>
             </div>
             <h2 className="mt10">Ajouter des images pour votre recette :</h2>
-            <FileUpload onFileUpload={handleFileUpload} />
+            <FileUpload onImageUpload={handleImageUpload} />
+            {imageError && (<p>Veuillez ajouter une image ici!</p>)}
             <h2 className="mt10">
               Quelle est votre estimation du prix de la recette ?
             </h2>
             <div className="d-flex flex-row justify-content-between">
-              <div className="d-flex flex-row align-items-center">
-                <label htmlFor="price1">
-                  <img
-                    className={`${styles.size}`}
-                    src={euro}
-                    alt="symbole euro"
-                  ></img>
-                </label>
-                <input
-                  type="radio"
-                  id="price1"
-                  value="1"
-                  {...register("priceEstimation")}
-                />
-              </div>
-              <div className="d-flex flex-row align-items-center">
-                <label
-                  htmlFor="price2"
-                  className={`d-flex justify-content-evenly ml10`}
-                >
-                  <img
-                    className={`${styles.size}`}
-                    src={euro}
-                    alt="symbole euro"
-                  ></img>
-                  <img
-                    className={`${styles.size}`}
-                    src={euro}
-                    alt="symbole euro"
-                  ></img>
-                </label>
-                <input
-                  type="radio"
-                  id="price2"
-                  value="2"
-                  {...register("priceEstimation")}
-                />
-              </div>
-              <div className="d-flex flex-row align-items-center">
-                <label
-                  htmlFor="price3"
-                  className={`d-flex justify-content-evenly ml10`}
-                >
-                  <img
-                    className={`${styles.size}`}
-                    src={euro}
-                    alt="symbole euro"
-                  ></img>
-                  <img
-                    className={`${styles.size}`}
-                    src={euro}
-                    alt="symbole euro"
-                  ></img>
-                  <img
-                    className={`${styles.size}`}
-                    src={euro}
-                    alt="symbole euro"
-                  ></img>
-                </label>
-                <input
-                  className=""
-                  type="radio"
-                  id="price3"
-                  value="3"
-                  {...register("priceEstimation")}
-                />
-              </div>
-              <div className="d-flex flex-row align-items-center">
-                <label
-                  htmlFor="price4"
-                  className={`d-flex justify-content-evenly ml10`}
-                >
-                  <img
-                    className={`${styles.size}`}
-                    src={euro}
-                    alt="symbole euro"
-                  ></img>
-                  <img
-                    className={`${styles.size}`}
-                    src={euro}
-                    alt="symbole euro"
-                  ></img>
-                  <img
-                    className={`${styles.size}`}
-                    src={euro}
-                    alt="symbole euro"
-                  ></img>
-                  <img
-                    className={`${styles.size}`}
-                    src={euro}
-                    alt="symbole euro"
-                  ></img>
-                </label>
-                <input
-                  type="radio"
-                  id="price4"
-                  value="4"
-                  {...register("priceEstimation")}
-                />
-              </div>
+              {Array.from({ length: 4 }, (_, index) => (
+                <div className="d-flex flex-row align-items-center" key={index}>
+                  <label
+                    htmlFor={`price${index + 1}`}
+                    className={`d-flex justify-content-evenly ml10`}
+                  >
+                    {Array.from({ length: index + 1 }, (_, i) => (
+                      <img
+                        key={i}
+                        className={`${styles.size}`}
+                        src={euro}
+                        alt="symbole euro"
+                      ></img>
+                    ))}
+                  </label>
+                  <input
+                    type="radio"
+                    id={`price${index + 1}`}
+                    value={`${index + 1}`}
+                    {...register("priceEstimation")}
+                  />
+                </div>
+              ))}
             </div>
             {errors?.priceEstimation && <p>{errors.priceEstimation.message}</p>}
             <h2 className="mt10">
               Quelle est votre estimation de la difficulté de la recette ?
             </h2>
             <div className="d-flex flex-row justify-content-between">
-              <div className="d-flex flex-row align-items-center">
-                <label htmlFor="difficulty1">
-                  <img
-                    className={`${styles.size}`}
-                    src={difficulty}
-                    alt="symbole euro"
-                  ></img>
-                </label>
-                <input
-                  id="difficulty1"
-                  type="radio"
-                  value="1"
-                  {...register("difficultyEstimation")}
-                />
-              </div>
-              <div className="d-flex flex-row align-items-center">
-                <label
-                  htmlFor="difficulty2"
-                  className={`d-flex justify-content-evenly ml10`}
-                >
-                  <img
-                    className={`${styles.size}`}
-                    src={difficulty}
-                    alt="symbole euro"
-                  ></img>
-                  <img
-                    className={`${styles.size}`}
-                    src={difficulty}
-                    alt="symbole euro"
-                  ></img>
-                </label>
-                <input
-                  id="difficulty2"
-                  type="radio"
-                  value="2"
-                  {...register("difficultyEstimation")}
-                />
-              </div>
-              <div className="d-flex flex-row align-items-center">
-                <label
-                  htmlFor="difficulty3"
-                  className={`d-flex justify-content-evenly ml10`}
-                >
-                  <img
-                    className={`${styles.size}`}
-                    src={difficulty}
-                    alt="symbole euro"
-                  ></img>
-                  <img
-                    className={`${styles.size}`}
-                    src={difficulty}
-                    alt="symbole euro"
-                  ></img>
-                  <img
-                    className={`${styles.size}`}
-                    src={difficulty}
-                    alt="symbole euro"
-                  ></img>
-                </label>
-                <input
-                  id="difficulty3"
-                  type="radio"
-                  value="3"
-                  {...register("difficultyEstimation")}
-                />
-              </div>
-              <div className="d-flex flex-row align-items-center">
-                <label
-                  htmlFor="difficulty4"
-                  className={`d-flex justify-content-evenly ml10`}
-                >
-                  <img
-                    className={`${styles.size}`}
-                    src={difficulty}
-                    alt="symbole euro"
-                  ></img>
-                  <img
-                    className={`${styles.size}`}
-                    src={difficulty}
-                    alt="symbole euro"
-                  ></img>
-                  <img
-                    className={`${styles.size}`}
-                    src={difficulty}
-                    alt="symbole euro"
-                  ></img>
-                  <img
-                    className={`${styles.size}`}
-                    src={difficulty}
-                    alt="symbole euro"
-                  ></img>
-                </label>
-                <input
-                  id="difficulty4"
-                  type="radio"
-                  value="4"
-                  {...register("difficultyEstimation")}
-                />
-              </div>
+              {Array.from({ length: 4 }, (_, index) => (
+                <div className="d-flex flex-row align-items-center" key={index}>
+                  <label
+                    htmlFor={`difficulty${index + 1}`}
+                    className={`d-flex justify-content-evenly ml10`}
+                  >
+                    {Array.from({ length: index + 1 }, (_, i) => (
+                      <img
+                        key={i}
+                        className={`${styles.size}`}
+                        src={difficulty}
+                        alt="symbole gant"
+                      ></img>
+                    ))}
+                  </label>
+                  <input
+                    id={`difficulty${index + 1}`}
+                    type="radio"
+                    value={`${index + 1}`}
+                    {...register("difficultyEstimation")}
+                  />
+                </div>
+              ))}
             </div>
             {errors?.difficultyEstimation && (
               <p>{errors.difficultyEstimation.message}</p>
@@ -713,340 +449,25 @@ export default function AddRecipe() {
               </div>
               {errors?.mealType && <p>{errors.mealType.message}</p>}
             </div>
-            <div className="d-flex flex-column mb20">
-              <h2>De quels ustensiles de cuisine a t-on besoin ?</h2>
-              <div className="d-flex">
-                <div
-                  className={`${styles.inputDeco} p10 d-flex justify-content-center`}
-                >
-                  <div className={`${styles.inputStart}`}></div>
-                  <input
-                    type="text"
-                    onInput={(e) => handleInput(e, setSearch)}
-                    className="flex-fill"
-                    placeholder="Search ..."
-                    disabled={ustensilAdded1}
-                  ></input>
-                  <select id="ustensils" disabled={ustensilAdded1}>
-                    <option value="" disabled>
-                      Quel ustensile ?
-                    </option>
-                    {ustensilList
-                      .filter((u) =>
-                        u.USTENSIL_NAME.toLowerCase().startsWith(search)
-                      )
-                      .map((ustensil) => (
-                        <option
-                          key={ustensil.USTENSIL_ID}
-                          value={ustensil.USTENSIL_ICON}
-                        >
-                          {ustensil.USTENSIL_NAME}
-                        </option>
-                      ))}
-                  </select>
-                  <button
-                  role="button"
-                    className="btn btn-primary"
-                    onClick={(e) => handleAddUstensil(e, "ustensils")}
-                  >
-                    Valider ustensile
-                  </button>
-                </div>
-              </div>
-              <div className={`${inputUstensilAdded1}`}>
-                <div
-                  className={`${styles.inputDeco} p10 d-flex justify-content-center`}
-                >
-                  <div className={`${styles.inputStart}`}></div>
-                  <input
-                    type="text"
-                    onInput={(e) => handleInput(e, setSearch2)}
-                    className="flex-fill"
-                    placeholder="Search ..."
-                    disabled={ustensilAdded2}
-                  ></input>
-                  <select id="ustensils2" disabled={ustensilAdded2}>
-                    <option value="" disabled>
-                      Quel ustensile ?
-                    </option>
-                    {ustensilList
-                      .filter((u) =>
-                        u.USTENSIL_NAME.toLowerCase().startsWith(search2)
-                      )
-                      .map((ustensil2) => (
-                        <option
-                          key={ustensil2.USTENSIL_ID}
-                          value={ustensil2.USTENSIL_ICON}
-                        >
-                          {ustensil2.USTENSIL_NAME}
-                        </option>
-                      ))}
-                  </select>
-                  <button
-                  role="button"
-                    className="btn btn-primary"
-                    onClick={(e) => handleAddUstensil(e, "ustensils2")}
-                  >
-                    Valider ustensil
-                  </button>
-                </div>
-              </div>
-              <div className={`${inputUstensilAdded2}`}>
-                <div
-                  className={`${styles.inputDeco} p10 d-flex justify-content-center`}
-                >
-                  <div className={`${styles.inputStart}`}></div>
-                  <input
-                    type="text"
-                    onInput={(e) => handleInput(e, setSearch3)}
-                    className="flex-fill"
-                    placeholder="Search ..."
-                    disabled={ustensilAdded3}
-                  ></input>
-                  <select id="ustensils3" disabled={ustensilAdded3}>
-                    <option value="" disabled>
-                      Quel ustensile ?
-                    </option>
-                    {ustensilList
-                      .filter((u) =>
-                        u.USTENSIL_NAME.toLowerCase().startsWith(search3)
-                      )
-                      .map((ustensil3) => (
-                        <option
-                          key={ustensil3.USTENSIL_ID}
-                          value={ustensil3.USTENSIL_ICON}
-                        >
-                          {ustensil3.USTENSIL_NAME}
-                        </option>
-                      ))}
-                  </select>
-                  <button
-                  role="button"
-                    className="btn btn-primary"
-                    onClick={(e) => handleAddUstensil(e, "ustensils3")}
-                  >
-                    Valider ustensil
-                  </button>
-                </div>
-              </div>
-              <div className={`${inputUstensilAdded3}`}>
-                <div
-                  className={`${styles.inputDeco} p10 d-flex justify-content-center`}
-                >
-                  <div className={`${styles.inputStart}`}></div>
-                  <input
-                    type="text"
-                    onInput={(e) => handleInput(e, setSearch4)}
-                    className="flex-fill"
-                    placeholder="Search ..."
-                    disabled={ustensilAdded4}
-                  ></input>
-                  <select id="ustensils4" disabled={ustensilAdded4}>
-                    <option value="" disabled>
-                      Quel ustensile ?
-                    </option>
-                    {ustensilList
-                      .filter((u) =>
-                        u.USTENSIL_NAME.toLowerCase().startsWith(search4)
-                      )
-                      .map((ustensil4) => (
-                        <option
-                          key={ustensil4.USTENSIL_ID}
-                          value={ustensil4.USTENSIL_ICON}
-                        >
-                          {ustensil4.USTENSIL_NAME}
-                        </option>
-                      ))}
-                  </select>
-                  <button
-                  role="button"
-                    className="btn btn-primary"
-                    onClick={(e) => handleAddUstensil(e, "ustensils4")}
-                  >
-                    Valider ustensil
-                  </button>
-                </div>
-              </div>
-              <div className={`${inputUstensilAdded4}`}>
-                <div
-                  className={`${styles.inputDeco} p10 d-flex justify-content-center`}
-                >
-                  <div className={`${styles.inputStart}`}></div>
-                  <input
-                    type="text"
-                    onInput={(e) => handleInput(e, setSearch5)}
-                    className="flex-fill"
-                    placeholder="Search ..."
-                    disabled={ustensilAdded5}
-                  ></input>
-                  <select id="ustensils5" disabled={ustensilAdded5}>
-                    <option value="" disabled>
-                      Quel ustensile ?
-                    </option>
-                    {ustensilList
-                      .filter((u) =>
-                        u.USTENSIL_NAME.toLowerCase().startsWith(search5)
-                      )
-                      .map((ustensil5) => (
-                        <option
-                          key={ustensil5.USTENSIL_ID}
-                          value={ustensil5.USTENSIL_ICON}
-                        >
-                          {ustensil5.USTENSIL_NAME}
-                        </option>
-                      ))}
-                  </select>
-                  <button
-                  role="button"
-                    className="btn btn-primary"
-                    onClick={(e) => handleAddUstensil(e, "ustensils5")}
-                  >
-                    Valider ustensil
-                  </button>
-                </div>
-              </div>
-              <div className={`${inputUstensilAdded5}`}>
-                <div
-                  className={`${styles.inputDeco} p10 d-flex justify-content-center`}
-                >
-                  <div className={`${styles.inputStart}`}></div>
-                  <input
-                    type="text"
-                    onInput={(e) => handleInput(e, setSearch6)}
-                    className="flex-fill"
-                    placeholder="Search ..."
-                    disabled={ustensilAdded6}
-                  ></input>
-                  <select id="ustensils6" disabled={ustensilAdded6}>
-                    <option value="" disabled>
-                      Quel ustensile ?
-                    </option>
-                    {ustensilList
-                      .filter((u) =>
-                        u.USTENSIL_NAME.toLowerCase().startsWith(search6)
-                      )
-                      .map((ustensil6) => (
-                        <option
-                          key={ustensil6.USTENSIL_ID}
-                          value={ustensil6.USTENSIL_ICON}
-                        >
-                          {ustensil6.USTENSIL_NAME}
-                        </option>
-                      ))}
-                  </select>
-                  <button
-                    role="button"
-                    className="btn btn-primary"
-                    onClick={(e) => handleAddUstensil(e, "ustensils6")}
-                  >
-                    Valider ustensil
-                  </button>
-                </div>
-              </div>
-              <div className={`${inputUstensilAdded6}`}>
-                <div
-                  className={`${styles.inputDeco} p10 d-flex justify-content-center`}
-                >
-                  <div className={`${styles.inputStart}`}></div>
-                  <input
-                    type="text"
-                    onInput={(e) => handleInput(e, setSearch7)}
-                    className="flex-fill"
-                    placeholder="Search ..."
-                    disabled={ustensilAdded7}
-                  ></input>
-                  <select id="ustensils7" disabled={ustensilAdded7}>
-                    <option value="" disabled>
-                      Quel ustensile ?
-                    </option>
-                    {ustensilList
-                      .filter((u) =>
-                        u.USTENSIL_NAME.toLowerCase().startsWith(search7)
-                      )
-                      .map((ustensil7) => (
-                        <option
-                          key={ustensil7.USTENSIL_ID}
-                          value={ustensil7.USTENSIL_ICON}
-                        >
-                          {ustensil7.USTENSIL_NAME}
-                        </option>
-                      ))}
-                  </select>
-                  <button
-                    role="button"
-                    className="btn btn-primary"
-                    onClick={(e) => handleAddUstensil(e, "ustensils7")}
-                  >
-                    Valider ustensil
-                  </button>
-                </div>
-              </div>
-              <div className={`${inputUstensilAdded7}`}>
-                <div className={`${styles.inputStart}`}></div>
-                <div
-                  className={`${styles.inputDeco} p10 d-flex justify-content-center`}
-                >
-                  <input
-                    type="text"
-                    onInput={(e) => handleInput(e, setSearch8)}
-                    className="flex-fill"
-                    placeholder="Search ..."
-                    disabled={ustensilAdded8}
-                  ></input>
-                  <select id="ustensils8" disabled={ustensilAdded8}>
-                    <option value="" disabled>
-                      Quel ustensile ?
-                    </option>
-                    {ustensilList
-                      .filter((u) =>
-                        u.USTENSIL_NAME.toLowerCase().startsWith(search8)
-                      )
-                      .map((ustensil8) => (
-                        <option
-                          key={ustensil8.USTENSIL_ID}
-                          value={ustensil8.USTENSIL_ICON}
-                        >
-                          {ustensil8.USTENSIL_NAME}
-                        </option>
-                      ))}
-                  </select>
-                  <button
-                    role="button"
-                    className="btn btn-primary"
-                    onClick={(e) => handleAddUstensil(e, "ustensils8")}
-                  >
-                    Valider ustensil
-                  </button>
-                </div>
-              </div>
-              <i className="btn btn-primary" onClick={addInputUstensil}>
-                Ajouter un autre ustensile ?
-              </i>
-              <div>
-                Listes des ustensiles :
-                <br />
-                <span>
-                  {ustensilChoose.map((ustensill) => (
-                    <img
-                      className={`${styles.iconUstensil}`}
-                      key={ustensill}
-                      src={`../../assets/images/LogoUstensiles/${ustensill}`}
-                      alt="ustensile"
-                    ></img>
-                  ))}
-                </span>
-              </div>
-            </div>
+            <UstensilInput onUstensilsChange={handleAddUstensil} />
             <Ingredients
               onIngredientChooseUpdate={handleIngredientChooseUpdate}
             />
             <Description
               stepDescriptions={stepDescriptions}
               onStepDescriptionsChange={handleStepDescriptionsChange}
+              isValid={handleIsStepValid}
             />
+            {!isStepValid && (
+              <p className={`${styles.messageErreur}`}>
+                Veuillez ajouter au moins une étape avec 10 caractères minimum.
+              </p>
+            )}
+            {imageError && (<p className={`${styles.messageErreur}`}> Vous avez oublié d'ajouter une photo pour votre recette ! C'est obligatoire ! Pensez à prendre des photos de vos plats.</p>)}
             <button
-             disabled={isSubmitting} 
-             className="btn btn-primary">
+              disabled={!isStepValid || isSubmitting}
+              className="btn btn-primary"
+            >
               Ajouter à vos recettes
             </button>
           </div>

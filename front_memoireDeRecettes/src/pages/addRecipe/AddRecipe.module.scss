@@ -5,21 +5,37 @@
   box-shadow: var(--box-shadow2);
   width: 90%;
   border-radius: 20px;
+  input{
+    background-color: #D9D9D9;
+    font-size: 16px;
+    padding: 0.25em 0.5em;
+    border: 3px dashed #A4C395;
+    width: 200px;
+    transition: 180ms box-shadow ease-in-out;
+
+    @include mixin.md-lt {
+      width: 150px;
+    }
+
+    @include mixin.xs {
+      width: 100px;
+    }
+  }
 
   .input, select {
     background-color: #D9D9D9;
     font-size: 16px;
     padding: 0.25em 0.5em;
     border: 3px dashed #A4C395;
-    width: 430px;
+    width: 330px;
     transition: 180ms box-shadow ease-in-out;
 
     @include mixin.md-lt {
-      width: 300px;
+      width: 200px;
     }
 
     @include mixin.xs {
-      width: 150px;
+      width: 100px;
     }
   }
 
@@ -109,10 +125,27 @@
     width: 25px;
     background-color: var(--primary);
   }
-
-  //select {
-
-  //color: white;
-
-  //}
+}
+.messageErreur{
+  color: var(--error);
+}
+.containerButton{
+  display: flex;
+  flex-direction: row;
+  
+  @include mixin.md-lt {
+    flex-direction: column;
+}
+}
+.containerSelect{
+  display: flex;
+  flex-direction: column;
+  
+  @include mixin.md-lt {
+    flex-direction: column;
+}
+}
+.selectWidth{
+  width: 20px;
+  color: red;
 }

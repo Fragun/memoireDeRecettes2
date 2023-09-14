@@ -8,19 +8,26 @@
         opacity: 0.8;
     }
     &-primary{
-        background-color: var(--primary);
-        color: white;
-        border : 2px solid var(--primary)
+        box-shadow: var(--box-shadow);
+        color: var(--text-color);
+        font-size: medium;
+        background-color: var(--background-color4);
     }
     &-secundary{
         background-color: var(--secundary);
         color: white;
         border : 2px solid var(--primary)
     }
+    &-tertiary{
+        box-shadow: var(--box-shadow);
+        color: var(--background-color);
+        font-size: medium;
+        background-color: var(--background-color4);
+    }
     &-primary-reverse{
         background-color: var(--red);
         color: white;
-        border : 2px solid var(--red)
+        box-shadow: var(--box-shadow);
     }
 
 }
@@ -28,4 +35,36 @@
 .card{
     border-radius: 20px;
     //background-color: white;
+}
+.buttonAddRecipe{
+    background-color: var(--primary);
+    width: 100px;
+    height: 40px;
+    box-shadow: var(--box-shadow);
+    color: var(--text-color);
+    font-size: medium;
+    padding: 5px 10px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: 0.2s opacity;
+    &:hover{
+        transition: 0.2s opacity;
+        opacity: 0.8;
+    }
+}
+.buttonDeleteRecipe{
+    background-color: var(--error);
+    width: 100px;
+    height: 40px;
+    box-shadow: var(--box-shadow);
+    color: var(--text-color);
+    font-size: medium;
+    padding: 5px 15px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: 0.2s opacity;
+    &:hover{
+        transition: 0.2s opacity;
+        opacity: 0.8;
+    }
 }

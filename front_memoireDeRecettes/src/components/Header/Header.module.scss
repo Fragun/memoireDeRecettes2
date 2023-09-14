@@ -2,28 +2,57 @@
 
 .header {
   padding: 0px 20px;
-  box-shadow: var(--box-shadow);
-  color: var(--primary);
+  box-shadow: var(--box-shadow3);
+  background-color: var(--background-color);
 
   img {
-    margin-top: 33px;
+    margin-top: 3px;
     width: 300px;
+
     @include mixin.xs {
       width: 150px;
     }
   }
 
   .desktopHeader {
-    @include mixin.xs {
+    @include mixin.md-lt {
       display: none;
     }
 
-    button {
-      border-radius: 0 0 10px 10px;
-      min-width: 70px;
-      height: 35px;
-      padding: 0px 10px;
+    .signoutButton {
+      border-radius: 25px;
+      width: 39px;
+      height: 39px;
       cursor: pointer;
+
+      @include mixin.lg {
+        width: 127px;
+      }
+
+      @include mixin.md {
+        width: 100px;
+      }
+
+      &:hover {
+        box-shadow: 2px -8px 25px 2px rgba(0, 0, 0, 0.22);
+        transition: 0.2s opacity;
+        opacity: 0.8;
+      }
+    }
+
+    button {
+      border-radius: 0 0 10px 0px;
+      width: 155px;
+      height: 39px;
+      cursor: pointer;
+
+      @include mixin.lg {
+        width: 127px;
+      }
+
+      @include mixin.md {
+        width: 100px;
+      }
 
       &:hover {
         box-shadow: 2px -8px 25px 2px rgba(0, 0, 0, 0.22);
@@ -44,7 +73,7 @@
     display: none;
     cursor: pointer;
 
-    @include mixin.xs {
+    @include mixin.md-lt {
       display: block;
     }
   }

@@ -8,9 +8,12 @@ import { AuthContext } from "../../context";
 
 export default function Header() {
   const { user, signout } = useContext(AuthContext);
-  //console.log(user);
   const [showMenu, setShowMenu] = useState(false);
   const [count, setCount] = useState(0);
+  let idUser;
+  if (user) {
+    idUser = user[0].USER_ID;
+  }
 
   function addCount() {
     setCount(count + 1);
@@ -28,45 +31,48 @@ export default function Header() {
   return (
     <header className={`${styles.header}`}>
       <div className="d-flex justify-content-center">
-        <ul className={`${styles.desktopHeader}`}>
+        <div
+          className={`${styles.desktopHeader} d-flex justify-content-between`}
+        >
           {user ? (
-            <ul className="d-flex justify-content-evenly">
+            <>
               <Link to="/">
                 <button className="btn-primary las la-home">
                   <span>Accueil</span>
                 </button>
               </Link>
               <Link to="profile">
-                <button className="btn-primary ml10 las la-user">
+                <button className="btn-primary ml10 las la-user ">
                   <span>Mon profil</span>
                 </button>
               </Link>
               <Link to="/addRecipe">
                 <button className={`btn-primary ml10 las la-plus-circle`}>
-                  <span>Ajouter recette</span>
+                  <span>Ajouter</span>
                 </button>
               </Link>
-              <Link to="/">
+              <Link to={`/MyRecipesPage/${idUser}`}>
                 <button className={`btn btn-primary las la-book-open ml10`}>
                   <span>Mes recettes</span>
                 </button>
               </Link>
-              <Link to="/">
+              <Link to="/FavoritesPage">
                 <button className={`btn btn-primary las la-heart ml10`}>
                   <span>Mes favoris</span>
                 </button>
               </Link>
-              <Link to="/">
+              <Link to="/ShoppingList">
                 <button className={`btn btn-primary las la-calendar ml10`}>
-                  <span>Agenda des repas</span>
+                  <span>Listes</span>
                 </button>
               </Link>
-
-              <Link onClick={() => signout()}>
-                <button className="btn-primary-reverse ml10 las la-sign-out-alt">
-                  <span className={`${styles.te}`}>Deconnexion</span>
-                </button>
-              </Link>
+              <div className=" justify-content-center align-items-center d-flex ">
+                <Link onClick={() => signout()}>
+                  <button
+                    className={`btn-primary-reverse ml10 las la-sign-out-alt la-2x ${styles.signoutButton}`}
+                  ></button>
+                </Link>
+              </div>
               {user[0].USER_ROLE === "ADMIN" && (
                 <Link to="/admin">
                   <button className={`btn btn-primary-reverse ml10`}>
@@ -74,7 +80,7 @@ export default function Header() {
                   </button>
                 </Link>
               )}
-            </ul>
+            </>
           ) : (
             <ul>
               <Link to="/register">
@@ -91,7 +97,7 @@ export default function Header() {
               </Link>
             </ul>
           )}
-        </ul>
+        </div>
         <i
           onClick={handleClick}
           className={`las la-bars mr10 positionFixed`}
@@ -102,7 +108,6 @@ export default function Header() {
           </>
         )}
       </div>
-
       <div className="d-flex justify-content-center">
         <Link to="/">
           <img src={logo} alt="Logo Mémoire de Recettes" />

@@ -1,72 +1,123 @@
-@use "../../../assets/styles/mixins" as mixin; 
+@use "../../../assets/styles/mixins" as mixin;
 
 
 .multiCard {
 
-    background-color: var(--background-color2);
-    border-radius: 20px;
+    background-color: var(--background-color);
+    border-radius: 20px 20px 20px 0;
     box-shadow: var(--box-shadow2);
     cursor: pointer;
-    
+    width: 400px;
+    height: 700px;
+
+    @include mixin.xl {
+        width: 350px;
+        margin: 1px;
+    }
+    @include mixin.lg {
+        width: 350px;
+    }
+
+    @include mixin.xs {
+        width: 330px;
+        margin: auto;
+    }
+
+    .numberRecipe {
+        margin-left: 5px;
+        font-size: 18px;
+    }
+
+
+
+    .titreMultiCard {
+        color: black;
+        font-weight: bold;
+        font-size: 25px;
+        -webkit-text-stroke: 0.4px white;
+        background-color: var(--background-color);
+        border-radius: 10px;
+    }
 
     .imgPrincipale {
-        position:relative;
-        height:  250px;
-        width: 100%;
+        position: relative;
+        height: 300px;
+        width: 110%;
         overflow: hidden;
-        border-radius: 20px 20px 0 0;
 
-        .arrierePlan{
-            position:absolute;
-            z-index:1;
-            
+        .stars {
+            position: absolute;
+            z-index: 7;
+            color: rgb(241, 241, 89);
+            top: 5px;
+            background-color: var(--background-color-transparent);
+            border-radius: 0 10px 10px 0;
         }
-        .premierPlan{
-            height: auto;
-            width: 100%;
-            position:absolute; 
-            z-index:2;
-            display: flex;
-            flex-direction: column;
+
+        .stars:hover {
+            background-color: var(--color-logo);
         }
+
+        .heart {
+            position: absolute;
+            z-index: 10;
+            width: 50px;
+            height: 50px;
+            top: 5px;
+            right: 40px;
+            color: var(--error);
+        }
+
+        .regime {
+            position: absolute;
+            z-index: 1000;
+            width: 60px;
+            height: 60px;
+            bottom: 10px;
+            right: 45px;
+            border-radius: 30px;
+        }
+
+
         .focus {
-            height: 250px;
-            width: 350px;
+            height: 300px;
+            width: 100%;
             transition: 1s transform;
-            &:hover{
-                transform: scale(1.05);
-            }
-        }
-        .titreMultiCard {
-            color : black ;
-            font-weight: bold;
-            font-size: 25px;
-            -webkit-text-stroke: 0.4px white;
-            background-color: var(--background-color-transparent);
-            border-radius: 10px;
-        }
-        .nbrRecetteMultiCard{
+            position: absolute;
+            z-index: 1;
+            bottom: 5px;
+            right: 5px;
 
-            color : black ;
+            &:hover {
+                transform: scale(1.1);
+            }
+        }
+
+
+        .iconeAvatar {
+            width: 35px;
+            position: absolute;
+            z-index: 3;
+            bottom: 5px;
+        }
+
+        .price {
+            color: black;
             font-size: 20px;
-            font-weight: bold;
             -webkit-text-stroke: 0.4px white;
             background-color: var(--background-color-transparent);
-            border-radius: 10px;
-            margin-top: 120px;
-            margin-left: 70%;
-           
-            @include mixin.sm {
-                margin-top: 110px;
-                margin-left: 55%;
-            }
-            @include mixin.xs {
-                margin-top: 100px;
-                margin-left: 55%;
-            }
+            border-radius: 0 10px 10px 0;
+            position: absolute;
+            z-index: 3;
+            bottom: 10px;
+
+
+            @include mixin.sm {}
+
+            @include mixin.xs {}
         }
     }
-    
+
     .miniCard {
         height: 270px;
         //min-width: 116px;
@@ -74,63 +125,80 @@
         border-bottom-left-radius: 20px;
         border-bottom-right-radius: 20px;
         transition: 0.6s color;
+        background-color: var(--background-color-transparent);
+
+    }
 
 
-        
 
-        p{
-            margin: 0;
-            padding: 1px;
-            font-size: 16px;
-            @include mixin.xs {
-                font-size: 10px;
-            }
 
+    .iconMinicard {
+        width: 50px;
+        height: 50px;
+
+    }
+
+
+
+    .imageDeFond {
+        position: absolute;
+        z-index: 1;
+
+    }
+
+    .elementsSurImage {
+        position: absolute;
+        z-index: 2;
+        display: grid;
+        //justify-content: flex-start;
+        //flex-direction: column;
+
+        .regime {
+            width: 30px;
+            height: auto;
         }
-        
-        .iconMinicard {
-            width : 20px;
-            height: 20px;
-            
+
+
+        .iconeElementsPrincipaux {
+            width: 30px;
+            margin-left: 70px;
+            //margin-bottom: 90px;
         }
 
-        .ensemble {
-            position: relative;
-            
-            .imageDeFond {
-                position: absolute;
-                z-index: 1;
-                
-                
-                
-                .imgParTrois {
-   
-                    height: 130px;
-                    width: 100px;
-                    
-                }
+    }
 
-            }
 
-            .elementsSurImage {
-                position: absolute;
-                z-index: 2; 
-                display: grid;
-                //justify-content: flex-start;
-                //flex-direction: column;
-                  
-                .iconeAvatar {
-                    width: 35px;
-                    margin-top: 0px;
-                    //margin: 90px 0 0 5px
-                }
-                .iconeElementsPrincipaux {
-                    width: 30px;
-                    margin-left: 70px;
-                    //margin-bottom: 90px;
-                }
-            }
+}
+
+.time {
+    box-shadow: var(--box-shadow);
+    border-radius: 10px 10px 10px 0;
+    margin: 5px;
+    padding: 5px;
+}
+
+.difficulty i {
+    color: var(--primary);
+}
+
+.imageAvatar {
+    width: 30px;
+    height: 30px;
+
+
+}
+
+.pRelativ {
+    position: relative;
+
+    .imageAvatarPosition {
+        position: absolute;
+        z-index: 5;
+        bottom: 0px;
+        right: 2px;
+
+        .imageAvatar {
+            width: 5px;
         }
-        
     }
 }

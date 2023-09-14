@@ -1,0 +1,34 @@
+.shoppingListContainer {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+  margin: 10px;
+}
+
+.shoppingGroup {
+  box-shadow: var(--box-shadow2);
+  padding: 10px;
+  background-color: #d9d9d9;
+  border-radius: 10px 10px 10px 0;
+}
+
+.shoppingGroupTitle {
+  font-size: 24px;
+  color: var(--text-color);
+  margin-bottom: 10px;
+}
+
+.ingredientList {
+  list-style: none;
+  padding: 0;
+}
+
+.ingredientItem {
+  font-size: 20px;
+  color: #666;
+  margin-bottom: 5px;
+}
+
+.activeButton:active {
+  background-color: var(--primary);
+}
